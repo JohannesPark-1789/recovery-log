@@ -1010,6 +1010,215 @@
     margin-top: 2px;
   }
 
+  /* ─── Doctor card ─── */
+  .doctor-card {
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .doctor-name {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .doctor-name em {
+    font-style: italic;
+    color: var(--mute);
+    font-weight: 400;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+  .doctor-dept {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-top: 4px;
+  }
+  .doctor-contact {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .doctor-contact a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--line-2);
+  }
+  .doctor-note {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line);
+    font-size: 12px;
+    color: var(--mute);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* ─── Document list ─── */
+  .doc-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .doc-item:last-child { border-bottom: none; }
+  .doc-thumb {
+    width: 56px;
+    height: 56px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .doc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .doc-thumb .doc-icon {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--mute);
+    text-align: center;
+    line-height: 1.3;
+  }
+  .doc-info { min-width: 0; }
+  .doc-title {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+  .doc-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+  .doc-meta .cat-chip {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid var(--line);
+    margin-right: 6px;
+    text-transform: uppercase;
+  }
+  .doc-note {
+    font-size: 11px;
+    color: var(--mute);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .doc-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+  }
+
+  /* ─── X-ray grid (slightly larger) ─── */
+  .xray-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .xray-item {
+    aspect-ratio: 4 / 5;
+    background: #0a0a0a;
+    border: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .xray-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .xray-item .xray-label {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    right: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--paper);
+    background: rgba(0,0,0,0.7);
+    padding: 3px 6px;
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: space-between;
+  }
+  .xray-add {
+    aspect-ratio: 4 / 5;
+    border: 1px dashed var(--line-2);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mute);
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 200;
+  }
+
+  /* Image lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.95);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .lightbox.show { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: calc(20px + var(--safe-top));
+    right: 20px;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    z-index: 501;
+    background: rgba(0,0,0,0.6);
+    padding: 8px 14px;
+  }
+  .lightbox-meta {
+    position: absolute;
+    bottom: calc(20px + var(--safe-bottom));
+    left: 20px;
+    right: 20px;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+
 </style>
 </head>
 <body>
@@ -1039,6 +1248,8 @@
       <small>청구성심병원</small>
     </div>
   </div>
+
+  <div id="doctorCard"></div>
 
   <div class="today-summary">
     <div class="today-date" id="todayDateFull"></div>
@@ -1193,7 +1404,13 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>Medications</span><span class="ord" id="medCount">— meds</span></div>
+    <div class="section-label">
+      <span>Medications</span>
+      <span class="ord"><button class="btn btn-sm btn-ghost" onclick="openMedModal()">+ Add</button></span>
+    </div>
+    <div style="font-family: 'JetBrains Mono', monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em; margin: 8px 0 4px;">
+      <span id="medCount">— meds</span>
+    </div>
     <div id="medList"></div>
   </div>
 
@@ -1234,6 +1451,39 @@
     </div>
     <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
       같은 각도·같은 조명으로 촬영하면 비교가 정확해집니다.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">
+      <span>X-ray</span>
+      <span class="ord">
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('xrayInput').click()">+ Add</button>
+        <input type="file" accept="image/*" id="xrayInput" style="display:none;" />
+      </span>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em; margin: 8px 0;">
+      <span id="xrayCount">0 images</span>
+    </div>
+    <div class="xray-grid" id="xrayGrid"></div>
+    <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
+      X-ray 필름을 모니터에서 촬영하거나, 병원 영상자료 출력본을 찍어 보관하세요.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">
+      <span>Documents</span>
+      <span class="ord">
+        <button class="btn btn-sm btn-ghost" onclick="openDocModal()">+ Add</button>
+      </span>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em; margin: 8px 0;">
+      <span id="docCount">0 documents</span>
+    </div>
+    <div id="docList"></div>
+    <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
+      진단서 · 소견서 · 처방전 · 입퇴원확인서 · 영수증 등을 사진 또는 PDF로 보관.
     </div>
   </div>
 
@@ -1312,6 +1562,35 @@
     </div>
     <div style="margin-top:14px;">
       <button class="btn btn-primary btn-sm" onclick="saveProfile()">Save profile</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><span>Attending physician</span><span class="ord">주치의</span></div>
+    <div class="field">
+      <span class="field-label">Name</span>
+      <input type="text" id="prfDocName" placeholder="홍길동" />
+    </div>
+    <div class="field">
+      <span class="field-label">Department / Specialty</span>
+      <input type="text" id="prfDocDept" placeholder="정형외과 · 견주관절" />
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Phone</span>
+        <input type="text" id="prfDocPhone" placeholder="02-1234-5678" inputmode="tel" />
+      </div>
+      <div class="field">
+        <span class="field-label">Email</span>
+        <input type="text" id="prfDocEmail" placeholder="dr@hospital.kr" inputmode="email" />
+      </div>
+    </div>
+    <div class="field">
+      <span class="field-label">Note</span>
+      <textarea id="prfDocNote" placeholder="진료 메모, 특이사항, 외래 일정 등"></textarea>
+    </div>
+    <div style="margin-top:14px;">
+      <button class="btn btn-primary btn-sm" onclick="saveDoctor()">Save doctor info</button>
     </div>
   </div>
 
@@ -1474,6 +1753,122 @@
   </div>
 </div>
 
+<!-- ═══ Med modal ═══ -->
+<div class="modal-bg" id="medModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="medModalTitle">New <em>medication</em></span>
+      <span class="modal-close" onclick="closeMedModal()">CLOSE ✕</span>
+    </div>
+
+    <div class="field" style="display:grid; grid-template-columns: 80px 1fr; gap:12px; align-items:start;">
+      <div>
+        <span class="field-label">Photo</span>
+        <div class="med-photo" id="mfPhotoPreview" style="width:80px; height:80px;">
+          <span class="placeholder">no photo</span>
+        </div>
+        <input type="file" accept="image/*" capture="environment" id="mfPhotoInput" style="display:none;" onchange="onMedPhotoSelected(this)" />
+        <div style="margin-top: 6px; display:flex; flex-direction:column; gap: 4px;">
+          <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('mfPhotoInput').click()">Add photo</button>
+          <button class="btn btn-sm btn-ghost" type="button" onclick="clearMedPhoto()">Clear</button>
+        </div>
+        <input type="hidden" id="mfPhotoData" value="" />
+      </div>
+      <div>
+        <div class="field" style="margin-top:0;">
+          <span class="field-label">Name <span style="color:var(--accent); text-transform:none; letter-spacing:0;">*</span></span>
+          <input type="text" id="mfName" placeholder="칼디플러스정" />
+        </div>
+        <div class="field">
+          <span class="field-label">Generic / Strength</span>
+          <input type="text" id="mfGeneric" placeholder="Acetaminophen 325mg + ..." />
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Purpose / Indication</span>
+      <textarea id="mfPurpose" placeholder="효능, 처방 이유..."></textarea>
+    </div>
+    <div class="field">
+      <span class="field-label">Schedule</span>
+      <input type="text" id="mfSchedule" placeholder="아침/저녁 식후 30분" />
+    </div>
+    <div class="field">
+      <span class="field-label">Caution / Side effects</span>
+      <textarea id="mfCaution" placeholder="주의사항, 부작용..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveMed()">Save</button>
+      <button class="btn btn-ghost" onclick="closeMedModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Document modal ═══ -->
+<div class="modal-bg" id="docModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="docModalTitle">New <em>document</em></span>
+      <span class="modal-close" onclick="closeDocModal()">CLOSE ✕</span>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Title <span style="color:var(--accent); text-transform:none; letter-spacing:0;">*</span></span>
+      <input type="text" id="dfTitle" placeholder="진단서 / 소견서 / 처방전 / 입퇴원확인서" />
+    </div>
+
+    <div class="field">
+      <span class="field-label">Category</span>
+      <div class="chip-row" id="dfCategoryChips"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Date</span>
+        <input type="date" id="dfDate" />
+      </div>
+      <div class="field">
+        <span class="field-label">From</span>
+        <input type="text" id="dfFrom" placeholder="청구성심병원" />
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">File <span style="color:var(--accent); text-transform:none; letter-spacing:0;">*</span></span>
+      <div id="dfFilePreview" style="margin-top:8px; padding: 14px; border: 1px dashed var(--line-2); background: var(--paper-2); text-align: center; color: var(--mute); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.05em;">
+        NO FILE SELECTED
+      </div>
+      <input type="file" accept="image/*,application/pdf" id="dfFileInput" style="display:none;" onchange="onDocFileSelected(this)" />
+      <input type="hidden" id="dfFileData" value="" />
+      <input type="hidden" id="dfFileType" value="" />
+      <input type="hidden" id="dfFileName" value="" />
+      <div style="margin-top: 8px; display:flex; gap: 6px;">
+        <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('dfFileInput').click()">Choose file</button>
+        <button class="btn btn-sm btn-ghost" type="button" onclick="clearDocFile()">Clear</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Note</span>
+      <textarea id="dfNote" placeholder="용도, 발급 목적, 비고 등"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveDoc()">Save</button>
+      <button class="btn btn-ghost" onclick="closeDocModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Image lightbox ═══ -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">CLOSE ✕</span>
+  <img id="lightboxImg" src="" alt="" />
+  <div class="lightbox-meta" id="lightboxMeta"></div>
+</div>
+
 <!-- ═══ Toast ═══ -->
 <div class="toast" id="toast"></div>
 
@@ -1543,9 +1938,9 @@ const SEED_IMAGES = {
   ];
 
   // ────────────────────────────────────────────────────────
-  // MEDICATIONS — 청구성심병원 처방 (2026-05-11)
+  // MEDICATIONS — 청구성심병원 처방 (2026-05-11), 초기 시드 데이터
   // ────────────────────────────────────────────────────────
-  const MEDICATIONS = [
+  const DEFAULT_MEDICATIONS = [
     {
       id: 'caldi',
       name: '칼디플러스정',
@@ -1781,17 +2176,36 @@ const SEED_IMAGES = {
       date: SURGERY_DATE,
       hospital: '청구성심병원 정형외과',
       pid: '01463490',
-      room: '312'
+      room: '312',
+      doctor: { name: '', dept: '', phone: '', email: '', note: '' }
     },
     pain: [],
-    exercises: {},   // {date: {exerciseId: {done: bool, rom: {flexion, abduction, er}}}}
+    exercises: {},
     schedule: [],
     photos: [],
     journal: [],
-    sleep: {},       // {date: hours}
-    vitals: [],      // [{id, date, time, spo2, pr, rr, bp, temp, sleep, note}]
+    sleep: {},
+    vitals: [],
+    medications: [],
+    documents: [],   // [{id, title, category, date, from, fileData, fileType, fileName, note, day}]
+    xrays: [],       // [{id, date, day, data, label, note}]
     selected: { nrs: null, locations: [], qualities: [] },
-    schedSelected: { type: 'med' }
+    schedSelected: { type: 'med' },
+    docSelected: { category: 'diagnosis' },
+    editingMedId: null,
+    editingDocId: null
+  };
+
+  const DOC_CATEGORIES = ['diagnosis', 'opinion', 'prescription', 'admission', 'discharge', 'receipt', 'lab', 'other'];
+  const DOC_CAT_LABELS = {
+    diagnosis: '진단서',
+    opinion: '소견서',
+    prescription: '처방전',
+    admission: '입원확인',
+    discharge: '퇴원확인',
+    receipt: '영수증',
+    lab: '검사결과',
+    other: '기타'
   };
 
   // ════════════════════════════════════════════════════════════════
@@ -1809,7 +2223,10 @@ const SEED_IMAGES = {
       photos: state.photos,
       journal: state.journal,
       sleep: state.sleep,
-      vitals: state.vitals
+      vitals: state.vitals,
+      medications: state.medications,
+      documents: state.documents,
+      xrays: state.xrays
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(persist));
@@ -2313,13 +2730,14 @@ const SEED_IMAGES = {
         <img src="${p.data}" alt="day ${p.day}" />
         <div class="photo-day">D${p.day}</div>
       `;
-      item.onclick = () => {
+      item.onclick = () => openLightbox(p.data, `Surgical site · Day ${p.day} · ${p.date}`, () => {
         if (confirm(`Delete photo from day ${p.day}?`)) {
           state.photos = state.photos.filter(x => x.id !== p.id);
           save();
           renderPhotos();
+          closeLightbox();
         }
-      };
+      });
       grid.insertBefore(item, addBtn);
     });
 
@@ -2342,14 +2760,321 @@ const SEED_IMAGES = {
     e.target.value = '';
   });
 
-  async function compressImage(file) {
+  // ════════════════════════════════════════════════════════════════
+  // X-RAYS
+  // ════════════════════════════════════════════════════════════════
+
+  function renderXrays() {
+    const grid = document.getElementById('xrayGrid');
+    document.getElementById('xrayCount').textContent = `${state.xrays.length} images`;
+    grid.innerHTML = '';
+
+    state.xrays.slice().reverse().forEach(x => {
+      const item = document.createElement('div');
+      item.className = 'xray-item';
+      const dayStr = x.day != null ? `D${x.day}` : '';
+      const dateStr = x.date ? fmtDate(x.date) : '';
+      item.innerHTML = `
+        <img src="${x.data}" alt="x-ray ${x.label || ''}" />
+        <div class="xray-label">
+          <span>${escapeHtml(x.label || 'X-ray')}</span>
+          <span>${dayStr || dateStr}</span>
+        </div>
+      `;
+      item.onclick = () => openLightbox(
+        x.data,
+        `X-ray · ${x.label || ''} · ${dateStr}${dayStr ? ' · ' + dayStr : ''}${x.note ? ' · ' + x.note : ''}`,
+        () => {
+          if (confirm(`Delete this X-ray?`)) {
+            state.xrays = state.xrays.filter(y => y.id !== x.id);
+            save();
+            renderXrays();
+            closeLightbox();
+          }
+        }
+      );
+      grid.appendChild(item);
+    });
+
+    if (!state.xrays.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.style.gridColumn = '1 / -1';
+      empty.textContent = 'no x-rays yet';
+      grid.appendChild(empty);
+    }
+  }
+
+  document.getElementById('xrayInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const label = prompt('X-ray label (예: 술전 / 술후 / 6주 follow-up)', '');
+    if (label === null) { e.target.value = ''; return; }
+    const compressed = await compressImage(file, 1600, 0.85); // Higher quality for X-rays
+    state.xrays.push({
+      id: Date.now(),
+      date: todayISO(),
+      day: dayCount(),
+      data: compressed,
+      label: label.trim() || 'X-ray',
+      note: ''
+    });
+    save();
+    renderXrays();
+    toast(`X-ray added`);
+    e.target.value = '';
+  });
+
+  // ════════════════════════════════════════════════════════════════
+  // DOCUMENTS
+  // ════════════════════════════════════════════════════════════════
+
+  function renderDocuments() {
+    const wrap = document.getElementById('docList');
+    document.getElementById('docCount').textContent = `${state.documents.length} documents`;
+    if (!state.documents.length) {
+      wrap.innerHTML = '<div class="empty">no documents yet</div>';
+      return;
+    }
+    const sorted = state.documents.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    wrap.innerHTML = sorted.map(d => {
+      const isImage = (d.fileType || '').startsWith('image/');
+      const isPdf = (d.fileType || '') === 'application/pdf';
+      let thumb;
+      if (isImage && d.fileData) {
+        thumb = `<img src="${d.fileData}" alt="${escapeHtml(d.title)}" />`;
+      } else if (isPdf) {
+        thumb = '<span class="doc-icon">PDF</span>';
+      } else {
+        thumb = '<span class="doc-icon">FILE</span>';
+      }
+      const catLabel = DOC_CAT_LABELS[d.category] || d.category || 'doc';
+      return `
+        <div class="doc-item">
+          <div class="doc-thumb" onclick="openDocFile('${d.id}')">${thumb}</div>
+          <div class="doc-info">
+            <div class="doc-title">${escapeHtml(d.title)}</div>
+            <div class="doc-meta">
+              <span class="cat-chip">${escapeHtml(catLabel)}</span>
+              ${d.date ? fmtDate(d.date) : ''}
+              ${d.from ? ' · ' + escapeHtml(d.from) : ''}
+            </div>
+            ${d.note ? `<div class="doc-note">${escapeHtml(d.note)}</div>` : ''}
+          </div>
+          <div class="doc-actions">
+            <button class="log-del" onclick="editDoc('${d.id}')" style="color:var(--mute);">edit</button>
+            <button class="log-del" onclick="deleteDoc('${d.id}')">✕</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openDocFile(id) {
+    const d = state.documents.find(x => x.id === id);
+    if (!d || !d.fileData) return;
+    if ((d.fileType || '').startsWith('image/')) {
+      openLightbox(
+        d.fileData,
+        `${d.title}${d.date ? ' · ' + d.date : ''}${d.from ? ' · ' + d.from : ''}`
+      );
+    } else if ((d.fileType || '') === 'application/pdf') {
+      // Open PDF in new tab
+      const win = window.open();
+      if (win) {
+        win.document.write(`
+          <html><head><title>${escapeHtml(d.title)}</title></head>
+          <body style="margin:0;background:#0a0a0a;">
+          <iframe src="${d.fileData}" style="width:100%;height:100vh;border:0;"></iframe>
+          </body></html>
+        `);
+      } else {
+        toast('Popup blocked');
+      }
+    }
+  }
+
+  function openDocModal(docId) {
+    state.editingDocId = docId || null;
+    const d = docId ? state.documents.find(x => x.id === docId) : null;
+    document.getElementById('docModalTitle').innerHTML = docId
+      ? 'Edit <em>document</em>'
+      : 'New <em>document</em>';
+    document.getElementById('dfTitle').value = d?.title || '';
+    document.getElementById('dfDate').value = d?.date || todayISO();
+    document.getElementById('dfFrom').value = d?.from || state.profile.hospital || '';
+    document.getElementById('dfNote').value = d?.note || '';
+    document.getElementById('dfFileData').value = d?.fileData || '';
+    document.getElementById('dfFileType').value = d?.fileType || '';
+    document.getElementById('dfFileName').value = d?.fileName || '';
+
+    state.docSelected.category = d?.category || 'diagnosis';
+    renderDocCategoryChips();
+    updateDocFilePreview();
+
+    document.getElementById('docModal').classList.add('show');
+  }
+
+  function closeDocModal() {
+    document.getElementById('docModal').classList.remove('show');
+    state.editingDocId = null;
+  }
+
+  function editDoc(id) { openDocModal(id); }
+
+  function deleteDoc(id) {
+    const d = state.documents.find(x => x.id === id);
+    if (!d) return;
+    if (!confirm(`Delete "${d.title}"?`)) return;
+    state.documents = state.documents.filter(x => x.id !== id);
+    save();
+    renderDocuments();
+    toast('Document deleted');
+  }
+
+  function renderDocCategoryChips() {
+    const wrap = document.getElementById('dfCategoryChips');
+    wrap.innerHTML = '';
+    DOC_CATEGORIES.forEach(c => {
+      const chip = document.createElement('button');
+      chip.className = 'chip' + (state.docSelected.category === c ? ' active' : '');
+      chip.textContent = DOC_CAT_LABELS[c];
+      chip.onclick = () => {
+        state.docSelected.category = c;
+        renderDocCategoryChips();
+      };
+      wrap.appendChild(chip);
+    });
+  }
+
+  function updateDocFilePreview() {
+    const preview = document.getElementById('dfFilePreview');
+    const data = document.getElementById('dfFileData').value;
+    const type = document.getElementById('dfFileType').value;
+    const name = document.getElementById('dfFileName').value;
+    if (!data) {
+      preview.innerHTML = 'NO FILE SELECTED';
+      preview.style.cssText = 'margin-top:8px; padding:14px; border:1px dashed var(--line-2); background:var(--paper-2); text-align:center; color:var(--mute); font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:0.05em;';
+      return;
+    }
+    if (type.startsWith('image/')) {
+      preview.innerHTML = `<img src="${data}" alt="preview" style="max-width:100%; max-height:160px; display:block; margin:0 auto;" />`;
+      preview.style.cssText = 'margin-top:8px; padding:8px; border:1px solid var(--line); background:var(--paper);';
+    } else if (type === 'application/pdf') {
+      preview.innerHTML = `<div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink); letter-spacing:0.05em;">PDF · ${escapeHtml(name || 'document.pdf')}</div>`;
+      preview.style.cssText = 'margin-top:8px; padding:14px; border:1px solid var(--line); background:var(--paper); text-align:center;';
+    } else {
+      preview.innerHTML = `<div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mute);">${escapeHtml(name || 'file')}</div>`;
+    }
+  }
+
+  async function onDocFileSelected(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    if (file.type.startsWith('image/')) {
+      const compressed = await compressImage(file, 1600, 0.8);
+      document.getElementById('dfFileData').value = compressed;
+      document.getElementById('dfFileType').value = 'image/jpeg';
+      document.getElementById('dfFileName').value = file.name;
+    } else if (file.type === 'application/pdf') {
+      if (file.size > 5 * 1024 * 1024) {
+        toast('PDF too large (max 5MB)');
+        input.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('dfFileData').value = e.target.result;
+        document.getElementById('dfFileType').value = 'application/pdf';
+        document.getElementById('dfFileName').value = file.name;
+        updateDocFilePreview();
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+      return;
+    } else {
+      toast('Only images or PDFs');
+      input.value = '';
+      return;
+    }
+    updateDocFilePreview();
+    input.value = '';
+  }
+
+  function clearDocFile() {
+    document.getElementById('dfFileData').value = '';
+    document.getElementById('dfFileType').value = '';
+    document.getElementById('dfFileName').value = '';
+    updateDocFilePreview();
+  }
+
+  function saveDoc() {
+    const title = document.getElementById('dfTitle').value.trim();
+    const fileData = document.getElementById('dfFileData').value;
+    if (!title) { toast('Title required'); return; }
+    if (!fileData) { toast('File required'); return; }
+
+    const data = {
+      title,
+      category: state.docSelected.category,
+      date: document.getElementById('dfDate').value,
+      from: document.getElementById('dfFrom').value.trim(),
+      fileData,
+      fileType: document.getElementById('dfFileType').value,
+      fileName: document.getElementById('dfFileName').value,
+      note: document.getElementById('dfNote').value.trim()
+    };
+
+    if (state.editingDocId) {
+      const idx = state.documents.findIndex(x => x.id === state.editingDocId);
+      if (idx >= 0) {
+        state.documents[idx] = { ...state.documents[idx], ...data };
+      }
+    } else {
+      const surgery = new Date(state.profile.date);
+      const docDate = new Date(data.date || todayISO());
+      const day = Math.floor((docDate - surgery) / (1000*60*60*24));
+      state.documents.push({
+        id: 'doc_' + Date.now(),
+        day,
+        ...data
+      });
+    }
+    save();
+    closeDocModal();
+    renderDocuments();
+    toast(state.editingDocId ? 'Document updated' : 'Document added');
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // LIGHTBOX
+  // ════════════════════════════════════════════════════════════════
+
+  let _lightboxDeleteCb = null;
+
+  function openLightbox(src, meta, onDelete) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxMeta').textContent = meta || '';
+    document.getElementById('lightbox').classList.add('show');
+    _lightboxDeleteCb = onDelete || null;
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('show');
+    document.getElementById('lightboxImg').src = '';
+    _lightboxDeleteCb = null;
+  }
+
+  async function compressImage(file, maxDim, quality) {
+    if (maxDim == null) maxDim = 1200;
+    if (quality == null) quality = 0.7;
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const maxDim = 1200;
           let w = img.width, h = img.height;
           if (w > h && w > maxDim) { h = (h / w) * maxDim; w = maxDim; }
           else if (h > maxDim) { w = (w / h) * maxDim; h = maxDim; }
@@ -2357,7 +3082,7 @@ const SEED_IMAGES = {
           canvas.height = h;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', 0.7));
+          resolve(canvas.toDataURL('image/jpeg', quality));
         };
         img.src = e.target.result;
       };
@@ -2421,21 +3146,59 @@ const SEED_IMAGES = {
     document.getElementById('prfHosp').value = state.profile.hospital || '';
     document.getElementById('prfPid').value = state.profile.pid || '';
     document.getElementById('prfRoom').value = state.profile.room || '';
+    const d = state.profile.doctor || {};
+    document.getElementById('prfDocName').value = d.name || '';
+    document.getElementById('prfDocDept').value = d.dept || '';
+    document.getElementById('prfDocPhone').value = d.phone || '';
+    document.getElementById('prfDocEmail').value = d.email || '';
+    document.getElementById('prfDocNote').value = d.note || '';
   }
 
   function saveProfile() {
-    state.profile = {
-      name: document.getElementById('prfName').value,
-      proc: document.getElementById('prfProc').value,
-      date: document.getElementById('prfDate').value || SURGERY_DATE,
-      hospital: document.getElementById('prfHosp').value,
-      pid: document.getElementById('prfPid').value,
-      room: document.getElementById('prfRoom').value
-    };
+    state.profile.name = document.getElementById('prfName').value;
+    state.profile.proc = document.getElementById('prfProc').value;
+    state.profile.date = document.getElementById('prfDate').value || SURGERY_DATE;
+    state.profile.hospital = document.getElementById('prfHosp').value;
+    state.profile.pid = document.getElementById('prfPid').value;
+    state.profile.room = document.getElementById('prfRoom').value;
     save();
     renderHeader();
+    renderDoctorCard();
     renderTimeline();
     toast('Profile updated');
+  }
+
+  function saveDoctor() {
+    state.profile.doctor = {
+      name: document.getElementById('prfDocName').value.trim(),
+      dept: document.getElementById('prfDocDept').value.trim(),
+      phone: document.getElementById('prfDocPhone').value.trim(),
+      email: document.getElementById('prfDocEmail').value.trim(),
+      note: document.getElementById('prfDocNote').value.trim()
+    };
+    save();
+    renderDoctorCard();
+    toast('Doctor info saved');
+  }
+
+  function renderDoctorCard() {
+    const wrap = document.getElementById('doctorCard');
+    if (!wrap) return;
+    const d = state.profile.doctor || {};
+    if (!d.name && !d.dept && !d.phone && !d.email && !d.note) {
+      wrap.innerHTML = '';
+      return;
+    }
+    const contactBits = [];
+    if (d.phone) contactBits.push(`<a href="tel:${escapeHtml(d.phone.replace(/[^0-9+]/g,''))}">${escapeHtml(d.phone)}</a>`);
+    if (d.email) contactBits.push(`<a href="mailto:${escapeHtml(d.email)}">${escapeHtml(d.email)}</a>`);
+    wrap.innerHTML = `
+      <div class="doctor-card">
+        <div class="doctor-name">${escapeHtml(d.name || '—')}${d.dept ? `<em>${escapeHtml(d.dept)}</em>` : ''}</div>
+        ${contactBits.length ? `<div class="doctor-contact">${contactBits.join(' · ')}</div>` : ''}
+        ${d.note ? `<div class="doctor-note">${escapeHtml(d.note)}</div>` : ''}
+      </div>
+    `;
   }
 
   // ════════════════════════════════════════════════════════════════
@@ -2520,27 +3283,125 @@ const SEED_IMAGES = {
 
   function renderMedications() {
     const wrap = document.getElementById('medList');
-    document.getElementById('medCount').textContent = `${MEDICATIONS.length} meds`;
-    wrap.innerHTML = MEDICATIONS.map(m => {
-      const photo = (m.photoKey && typeof SEED_IMAGES !== 'undefined' && SEED_IMAGES[m.photoKey])
-        ? `<img src="${SEED_IMAGES[m.photoKey]}" alt="${m.name}" />`
-        : `<span class="placeholder">${m.name.slice(0,2)}</span>`;
+    document.getElementById('medCount').textContent = `${state.medications.length} meds`;
+    if (!state.medications.length) {
+      wrap.innerHTML = '<div class="empty">no medications added</div>';
+      return;
+    }
+    wrap.innerHTML = state.medications.map(m => {
+      const photo = m.photo
+        ? `<img src="${m.photo}" alt="${escapeHtml(m.name)}" />`
+        : `<span class="placeholder">${escapeHtml((m.name || '').slice(0,2))}</span>`;
       return `
         <div class="med-card">
           <div class="med-photo">${photo}</div>
           <div>
-            <div class="med-name">${m.name}</div>
-            <div class="med-generic">${m.generic}</div>
-            <div class="med-purpose">${m.purpose}</div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;">
+              <div class="med-name">${escapeHtml(m.name)}</div>
+              <div style="display:flex; gap:8px; flex-shrink:0;">
+                <button class="log-del" onclick="editMed('${m.id}')" style="color:var(--mute);">edit</button>
+                <button class="log-del" onclick="deleteMed('${m.id}')">✕</button>
+              </div>
+            </div>
+            ${m.generic ? `<div class="med-generic">${escapeHtml(m.generic)}</div>` : ''}
+            ${m.purpose ? `<div class="med-purpose">${escapeHtml(m.purpose)}</div>` : ''}
             <div class="med-meta">
-              <span>${m.schedule}</span>
+              ${m.schedule ? `<span>${escapeHtml(m.schedule)}</span>` : ''}
               ${m.caution ? '<span style="color: var(--accent); border-color: var(--accent-soft);">caution</span>' : ''}
             </div>
-            ${m.caution ? `<div style="font-size:11px; color:var(--mute); margin-top:6px; line-height:1.5;">${m.caution}</div>` : ''}
+            ${m.caution ? `<div style="font-size:11px; color:var(--mute); margin-top:6px; line-height:1.5;">${escapeHtml(m.caution)}</div>` : ''}
           </div>
         </div>
       `;
     }).join('');
+  }
+
+  // ── Medication editing ────────────────────────────────────
+  function openMedModal(medId) {
+    state.editingMedId = medId || null;
+    const m = medId ? state.medications.find(x => x.id === medId) : null;
+    document.getElementById('medModalTitle').textContent = medId ? 'Edit medication' : 'New medication';
+    document.getElementById('mfName').value = m?.name || '';
+    document.getElementById('mfGeneric').value = m?.generic || '';
+    document.getElementById('mfPurpose').value = m?.purpose || '';
+    document.getElementById('mfSchedule').value = m?.schedule || '';
+    document.getElementById('mfCaution').value = m?.caution || '';
+    document.getElementById('mfPhotoData').value = m?.photo || '';
+
+    // Photo preview
+    const preview = document.getElementById('mfPhotoPreview');
+    if (m?.photo) {
+      preview.innerHTML = `<img src="${m.photo}" alt="preview" />`;
+    } else {
+      preview.innerHTML = '<span class="placeholder">no photo</span>';
+    }
+
+    document.getElementById('medModal').classList.add('show');
+  }
+
+  function closeMedModal() {
+    document.getElementById('medModal').classList.remove('show');
+    state.editingMedId = null;
+  }
+
+  function editMed(id) {
+    openMedModal(id);
+  }
+
+  function deleteMed(id) {
+    const m = state.medications.find(x => x.id === id);
+    if (!m) return;
+    if (!confirm(`Delete "${m.name}"?`)) return;
+    state.medications = state.medications.filter(x => x.id !== id);
+    save();
+    renderMedications();
+    toast('Medication deleted');
+  }
+
+  function saveMed() {
+    const name = document.getElementById('mfName').value.trim();
+    if (!name) { toast('Name required'); return; }
+
+    const data = {
+      name,
+      generic: document.getElementById('mfGeneric').value.trim(),
+      purpose: document.getElementById('mfPurpose').value.trim(),
+      schedule: document.getElementById('mfSchedule').value.trim(),
+      caution: document.getElementById('mfCaution').value.trim(),
+      photo: document.getElementById('mfPhotoData').value || null
+    };
+
+    if (state.editingMedId) {
+      const idx = state.medications.findIndex(x => x.id === state.editingMedId);
+      if (idx >= 0) {
+        state.medications[idx] = { ...state.medications[idx], ...data };
+      }
+    } else {
+      state.medications.push({
+        id: 'med_' + Date.now(),
+        ...data,
+        custom: true
+      });
+    }
+    save();
+    closeMedModal();
+    renderMedications();
+    toast(state.editingMedId ? 'Medication updated' : 'Medication added');
+  }
+
+  // Photo capture for medication
+  async function onMedPhotoSelected(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const compressed = await compressImage(file, 500, 0.7);
+    document.getElementById('mfPhotoData').value = compressed;
+    document.getElementById('mfPhotoPreview').innerHTML = `<img src="${compressed}" alt="preview" />`;
+    input.value = '';
+  }
+
+  function clearMedPhoto() {
+    document.getElementById('mfPhotoData').value = '';
+    document.getElementById('mfPhotoPreview').innerHTML = '<span class="placeholder">no photo</span>';
   }
 
   // ════════════════════════════════════════════════════════════════
@@ -2604,8 +3465,11 @@ const SEED_IMAGES = {
       journal: state.journal,
       sleep: state.sleep,
       vitals: state.vitals,
+      medications: state.medications,
+      documents: state.documents,
+      xrays: state.xrays,
       exportedAt: new Date().toISOString(),
-      version: 2
+      version: 4
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -2622,7 +3486,7 @@ const SEED_IMAGES = {
   // ────────────────────────────────────────────────────────
   // If no data exists, seed mobiCARE measurement and surgery-day baseline
   function seedFirstRun() {
-    if (state.vitals.length || state.pain.length) return;
+    if (state.vitals.length || state.pain.length || state.medications.length) return;
     state.vitals.push({
       id: Date.now(),
       date: SURGERY_DATE,
@@ -2635,6 +3499,18 @@ const SEED_IMAGES = {
       sleep: null,
       note: 'mobiCARE +Pulse · PI 10.6%'
     });
+    // Seed default medications, attaching embedded photos
+    state.medications = DEFAULT_MEDICATIONS.map(m => ({
+      id: m.id,
+      name: m.name,
+      generic: m.generic,
+      maker: m.maker || '',
+      purpose: m.purpose,
+      schedule: m.schedule,
+      photo: (m.photoKey && typeof SEED_IMAGES !== 'undefined' && SEED_IMAGES[m.photoKey]) ? SEED_IMAGES[m.photoKey] : null,
+      caution: m.caution || '',
+      custom: false
+    }));
     save();
   }
 
@@ -2650,6 +3526,7 @@ const SEED_IMAGES = {
       try {
         const data = JSON.parse(ev.target.result);
         state.profile = data.profile || state.profile;
+        if (!state.profile.doctor) state.profile.doctor = { name: '', dept: '', phone: '', email: '', note: '' };
         state.pain = data.pain || [];
         state.exercises = data.exercises || {};
         state.schedule = data.schedule || [];
@@ -2657,6 +3534,9 @@ const SEED_IMAGES = {
         state.journal = data.journal || [];
         state.sleep = data.sleep || {};
         state.vitals = data.vitals || [];
+        state.medications = data.medications || [];
+        state.documents = data.documents || [];
+        state.xrays = data.xrays || [];
         save();
         renderAll();
         toast('Imported successfully');
@@ -2721,10 +3601,10 @@ const SEED_IMAGES = {
     document.querySelector(`.nav-item[data-view="${view}"]`).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
 
-    if (view === 'today') renderVitals();
+    if (view === 'today') { renderVitals(); renderDoctorCard(); }
     if (view === 'exercise') renderExercises();
     if (view === 'schedule') { renderSchedule(); renderMedications(); }
-    if (view === 'timeline') { renderTimeline(); renderPhotos(); renderJournal(); }
+    if (view === 'timeline') { renderTimeline(); renderPhotos(); renderXrays(); renderDocuments(); renderJournal(); }
     if (view === 'learn') renderGlossary();
     if (view === 'data') renderProfile();
   }
@@ -2755,11 +3635,16 @@ const SEED_IMAGES = {
     renderChips('qualityChips', QUALITIES, state.selected.qualities);
     renderTodayEntries();
     renderVitals();
+    renderDoctorCard();
   }
 
   load();
-  // Ensure vitals array exists (backward compat)
+  // Ensure arrays exist (backward compat)
   if (!Array.isArray(state.vitals)) state.vitals = [];
+  if (!Array.isArray(state.medications)) state.medications = [];
+  if (!Array.isArray(state.documents)) state.documents = [];
+  if (!Array.isArray(state.xrays)) state.xrays = [];
+  if (!state.profile.doctor) state.profile.doctor = { name: '', dept: '', phone: '', email: '', note: '' };
   seedFirstRun();
   renderAll();
 
