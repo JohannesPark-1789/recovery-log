@@ -305,14 +305,15 @@
   }
 
   /* ─── Input ─── */
-  textarea, input[type="text"], input[type="date"], input[type="time"] {
+  /* font-size MUST be 16px to prevent iOS Safari auto-zoom on focus */
+  textarea, input[type="text"], input[type="date"], input[type="time"], input[type="number"], input[type="email"], input[type="tel"] {
     width: 100%;
     border: none;
     border-bottom: 1px solid var(--line);
     background: transparent;
-    padding: 8px 0;
+    padding: 7px 0;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--ink);
     outline: none;
     transition: border-color 0.15s;
@@ -427,13 +428,13 @@
     text-align: right;
   }
   .rom-input {
-    width: 50px;
+    width: 56px;
     text-align: right;
     border: none;
     border-bottom: 1px solid var(--line);
     background: transparent;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 16px;
     padding: 2px 0;
     outline: none;
   }
@@ -913,9 +914,9 @@
     width: 100%;
     border: 1px solid var(--line);
     background: var(--paper);
-    padding: 10px 14px;
+    padding: 9px 14px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--ink);
     outline: none;
     margin-top: 8px;
@@ -1331,7 +1332,18 @@
       <textarea id="painNote" placeholder="자세, 시간대, 유발 동작 등"></textarea>
     </div>
 
-    <div style="margin-top: 16px; display: flex; gap: 8px;">
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Date</span>
+        <input type="date" id="painDate" />
+      </div>
+      <div class="field">
+        <span class="field-label">Time</span>
+        <input type="time" id="painTime" />
+      </div>
+    </div>
+
+    <div style="margin-top: 14px; display: flex; gap: 8px;">
       <button class="btn btn-primary" onclick="savePain()">Record</button>
       <button class="btn btn-ghost" onclick="resetPainForm()">Reset</button>
     </div>
@@ -1347,7 +1359,7 @@
 
   <div class="section">
     <div class="section-label">
-      <span>Today's entries</span>
+      <span>Recent entries</span>
       <span class="ord" id="todayEntriesCount">—</span>
     </div>
     <div id="todayEntries"></div>
@@ -1360,14 +1372,18 @@
 
   <div class="section">
     <div class="section-label">
-      <span>Today's protocol</span>
+      <span>Protocol for</span>
       <span class="ord" id="exDateLabel"></span>
     </div>
-    <div class="today-phase" style="font-size:18px; margin-top: 6px;">
+    <div style="margin-top:4px; display:flex; align-items:center; gap:10px;">
+      <input type="date" id="exDate" style="flex: 1; max-width: 180px;" onchange="onExDateChange()" />
+      <button class="btn btn-sm btn-ghost" type="button" onclick="exDateToday()">Today</button>
+    </div>
+    <div class="today-phase" style="font-size:17px; margin-top: 8px;">
       Phase <em id="exPhaseNum">1</em> · <span id="exPhaseDesc">Initial / passive</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="exProgress" style="width:0%"></div></div>
-    <div style="margin-top:8px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em;">
+    <div style="margin-top:6px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em;">
       <span id="exProgressLabel">0 / 0 completed</span>
     </div>
   </div>
@@ -1449,7 +1465,7 @@
     <div class="photo-grid" id="photoGrid">
       <label class="photo-add">
         +
-        <input type="file" accept="image/*" capture="environment" id="photoInput" style="display:none;" />
+        <input type="file" accept="image/*" id="photoInput" style="display:none;" />
       </label>
     </div>
     <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
@@ -1494,6 +1510,16 @@
     <div class="section-label"><span>Journal</span><span class="ord" id="journalCount">0 entries</span></div>
     <div class="field">
       <textarea id="journalText" placeholder="오늘의 감각, 관찰, 회복에 대한 메모..." style="min-height: 100px;"></textarea>
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Date</span>
+        <input type="date" id="journalDate" />
+      </div>
+      <div class="field">
+        <span class="field-label">Time</span>
+        <input type="time" id="journalTime" />
+      </div>
     </div>
     <div style="margin-top:10px;">
       <button class="btn btn-primary btn-sm" onclick="saveJournal()">Save entry</button>
@@ -1747,6 +1773,16 @@
       <span class="field-label">Note</span>
       <input type="text" id="vNote" placeholder="기상 직후 / mobiCARE 측정 등" />
     </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Date</span>
+        <input type="date" id="vDate" />
+      </div>
+      <div class="field">
+        <span class="field-label">Time</span>
+        <input type="time" id="vTime" />
+      </div>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="saveVitals()">Save</button>
       <button class="btn btn-ghost" onclick="closeVitalsModal()">Cancel</button>
@@ -1768,7 +1804,7 @@
         <div class="med-photo" id="mfPhotoPreview" style="width:80px; height:80px;">
           <span class="placeholder">no photo</span>
         </div>
-        <input type="file" accept="image/*" capture="environment" id="mfPhotoInput" style="display:none;" onchange="onMedPhotoSelected(this)" />
+        <input type="file" accept="image/*" id="mfPhotoInput" style="display:none;" onchange="onMedPhotoSelected(this)" />
         <div style="margin-top: 6px; display:flex; flex-direction:column; gap: 4px;">
           <button class="btn btn-sm btn-ghost" type="button" onclick="document.getElementById('mfPhotoInput').click()">Add photo</button>
           <button class="btn btn-sm btn-ghost" type="button" onclick="clearMedPhoto()">Clear</button>
@@ -1803,6 +1839,51 @@
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="saveMed()">Save</button>
       <button class="btn btn-ghost" onclick="closeMedModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Photo/Xray modal ═══ -->
+<div class="modal-bg" id="pxModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="pxModalTitle">New <em>photo</em></span>
+      <span class="modal-close" onclick="closePxModal()">CLOSE ✕</span>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Preview</span>
+      <div style="margin-top:6px; padding:8px; border:1px solid var(--line); background:#0a0a0a; min-height: 140px; display:flex; align-items:center; justify-content:center;">
+        <img id="pxPreview" src="" alt="" style="max-width:100%; max-height:200px; object-fit:contain;" />
+      </div>
+      <input type="hidden" id="pxData" value="" />
+      <input type="hidden" id="pxType" value="photo" />
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Date</span>
+        <input type="date" id="pxDate" />
+      </div>
+      <div class="field">
+        <span class="field-label">Time</span>
+        <input type="time" id="pxTime" />
+      </div>
+    </div>
+
+    <div class="field" id="pxLabelField" style="display:none;">
+      <span class="field-label">Label</span>
+      <input type="text" id="pxLabel" placeholder="술전 AP / 술후 AP / 6주 follow-up" />
+    </div>
+
+    <div class="field">
+      <span class="field-label">Note <span style="color:var(--line-2); text-transform:none; letter-spacing:0;">(optional)</span></span>
+      <input type="text" id="pxNote" placeholder="촬영 메모, 비고 등" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="savePx()">Save</button>
+      <button class="btn btn-ghost" onclick="closePxModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -2194,7 +2275,8 @@ const SEED_IMAGES = {
     schedSelected: { type: 'med' },
     docSelected: { category: 'diagnosis' },
     editingMedId: null,
-    editingDocId: null
+    editingDocId: null,
+    selectedExDate: null
   };
 
   const DOC_CATEGORIES = ['diagnosis', 'opinion', 'prescription', 'admission', 'discharge', 'receipt', 'lab', 'other'];
@@ -2293,8 +2375,8 @@ const SEED_IMAGES = {
     return PHASES.findIndex(p => d >= p.startDay && d <= p.endDay);
   }
 
-  function exercisePhase() {
-    const d = dayCount();
+  function exercisePhase(d) {
+    if (d == null) d = dayCount();
     if (d <= 14) return 1;
     if (d <= 28) return 2;
     if (d <= 42) return 3;
@@ -2346,8 +2428,13 @@ const SEED_IMAGES = {
     const sleep = state.sleep[today];
     document.getElementById('metricSleep').innerHTML = sleep ? `${sleep}<small>h</small>` : `—<small>h</small>`;
 
-    document.getElementById('logCountToday').textContent = `${todayLogs.length} entries`;
-    document.getElementById('todayEntriesCount').textContent = `${todayLogs.length}`;
+    document.getElementById('logCountToday').textContent = `${todayLogs.length} today`;
+    // Count recent 7-day entries for the label
+    const cutoff = new Date(today);
+    cutoff.setDate(cutoff.getDate() - 6);
+    const cutoffISO = cutoff.toISOString().split('T')[0];
+    const recent = state.pain.filter(p => p.date >= cutoffISO);
+    document.getElementById('todayEntriesCount').textContent = `${recent.length}`;
   }
 
   function renderSparkline() {
@@ -2426,56 +2513,91 @@ const SEED_IMAGES = {
       toast('Select NRS value');
       return;
     }
+    const date = document.getElementById('painDate').value || todayISO();
+    const time = document.getElementById('painTime').value || new Date().toTimeString().slice(0, 5);
     const entry = {
       id: Date.now(),
-      date: todayISO(),
-      time: new Date().toTimeString().slice(0, 5),
+      date,
+      time,
       nrs: state.selected.nrs,
       locations: [...state.selected.locations],
       qualities: [...state.selected.qualities],
       note: document.getElementById('painNote').value.trim()
     };
     state.pain.unshift(entry);
+    // Keep sorted by date+time descending for stable display
+    state.pain.sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
     save();
     resetPainForm();
     renderTodayMetrics();
     renderTodayEntries();
     renderSparkline();
-    toast(`Recorded · NRS ${entry.nrs}`);
+    const dayN = dayFromDate(date);
+    toast(`Recorded · NRS ${entry.nrs} · D${dayN}`);
   }
 
   function resetPainForm() {
     state.selected = { nrs: null, locations: [], qualities: [] };
     document.getElementById('painNote').value = '';
+    document.getElementById('painDate').value = todayISO();
+    document.getElementById('painTime').value = new Date().toTimeString().slice(0, 5);
     renderNRS();
     renderChips('locChips', LOCATIONS, state.selected.locations);
     renderChips('qualityChips', QUALITIES, state.selected.qualities);
   }
 
+  function dayFromDate(iso) {
+    const surgery = new Date(state.profile.date);
+    const d = new Date(iso);
+    return Math.floor((d - surgery) / (1000 * 60 * 60 * 24));
+  }
+
   function renderTodayEntries() {
     const today = todayISO();
-    const logs = state.pain.filter(p => p.date === today);
+    // Show recent 7 days of entries (including today and any backdated entries)
+    const cutoff = new Date(today);
+    cutoff.setDate(cutoff.getDate() - 6);
+    const cutoffISO = cutoff.toISOString().split('T')[0];
+    const logs = state.pain
+      .filter(p => p.date >= cutoffISO)
+      .slice()
+      .sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
     const wrap = document.getElementById('todayEntries');
 
     if (!logs.length) {
-      wrap.innerHTML = '<div class="empty">no entries yet today</div>';
+      wrap.innerHTML = '<div class="empty">no entries yet</div>';
       return;
     }
 
-    wrap.innerHTML = logs.map(p => `
-      <div class="log-entry">
-        <div class="log-time">${p.time}</div>
-        <div>
-          <div class="log-body">
-            <span class="nrs-tag mono">${p.nrs}</span>
-            ${p.locations.map(l => `<span class="tag">${l}</span>`).join('')}
-            ${p.qualities.length ? '· ' + p.qualities.map(q => `<span class="tag">${q}</span>`).join('') : ''}
+    // Group entries by date for visual clarity
+    let lastDate = null;
+    const html = [];
+    logs.forEach(p => {
+      if (p.date !== lastDate) {
+        const isToday = p.date === today;
+        const dayN = dayFromDate(p.date);
+        const label = isToday
+          ? `TODAY · D${dayN}`
+          : `${fmtDate(p.date)} ${fmtDay(p.date)} · D${dayN}`;
+        html.push(`<div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:${isToday ? 'var(--ink)' : 'var(--mute)'}; margin: 10px 0 4px; padding-top: 4px;">${label}</div>`);
+        lastDate = p.date;
+      }
+      html.push(`
+        <div class="log-entry">
+          <div class="log-time">${p.time}</div>
+          <div>
+            <div class="log-body">
+              <span class="nrs-tag mono">${p.nrs}</span>
+              ${p.locations.map(l => `<span class="tag">${escapeHtml(l)}</span>`).join('')}
+              ${p.qualities.length ? '· ' + p.qualities.map(q => `<span class="tag">${escapeHtml(q)}</span>`).join('') : ''}
+            </div>
+            ${p.note ? `<div class="log-note">${escapeHtml(p.note)}</div>` : ''}
           </div>
-          ${p.note ? `<div class="log-note">${escapeHtml(p.note)}</div>` : ''}
+          <button class="log-del" onclick="deletePain(${p.id})">✕</button>
         </div>
-        <button class="log-del" onclick="deletePain(${p.id})">✕</button>
-      </div>
-    `).join('');
+      `);
+    });
+    wrap.innerHTML = html.join('');
   }
 
   function deletePain(id) {
@@ -2490,13 +2612,30 @@ const SEED_IMAGES = {
   // EXERCISES
   // ════════════════════════════════════════════════════════════════
 
-  function renderExercises() {
-    const today = todayISO();
-    const phase = exercisePhase();
-    const list = EXERCISES_BY_PHASE[phase] || [];
-    if (!state.exercises[today]) state.exercises[today] = {};
-    const todayEx = state.exercises[today];
+  function getExDate() {
+    return state.selectedExDate || todayISO();
+  }
 
+  function onExDateChange() {
+    state.selectedExDate = document.getElementById('exDate').value || todayISO();
+    renderExercises();
+  }
+
+  function exDateToday() {
+    state.selectedExDate = todayISO();
+    document.getElementById('exDate').value = state.selectedExDate;
+    renderExercises();
+  }
+
+  function renderExercises() {
+    const exDate = getExDate();
+    const day = dayFromDate(exDate);
+    const phase = exercisePhase(day);
+    const list = EXERCISES_BY_PHASE[phase] || [];
+    if (!state.exercises[exDate]) state.exercises[exDate] = {};
+    const dayEx = state.exercises[exDate];
+
+    document.getElementById('exDate').value = exDate;
     document.getElementById('exPhaseNum').textContent = phase;
     const phaseLabels = {
       1: 'Initial / passive',
@@ -2505,11 +2644,13 @@ const SEED_IMAGES = {
       4: 'Active + light resistance'
     };
     document.getElementById('exPhaseDesc').textContent = phaseLabels[phase];
-    document.getElementById('exDateLabel').textContent = `Day ${dayCount()}`;
+    document.getElementById('exDateLabel').textContent = exDate === todayISO()
+      ? `Today · D${day}`
+      : `${fmtDate(exDate)} ${fmtDay(exDate)} · D${day}`;
 
     const wrap = document.getElementById('exerciseList');
     wrap.innerHTML = list.map(ex => {
-      const data = todayEx[ex.id] || { done: false, rom: {} };
+      const data = dayEx[ex.id] || { done: false, rom: {} };
       const romFields = ex.target ? `
         <input type="number" class="rom-input"
           value="${data.rom?.[ex.target] || ''}"
@@ -2533,7 +2674,7 @@ const SEED_IMAGES = {
       `;
     }).join('');
 
-    const done = list.filter(e => todayEx[e.id]?.done).length;
+    const done = list.filter(e => dayEx[e.id]?.done).length;
     const pct = list.length ? (done / list.length) * 100 : 0;
     document.getElementById('exProgress').style.width = pct + '%';
     document.getElementById('exProgressLabel').textContent = `${done} / ${list.length} completed`;
@@ -2542,21 +2683,21 @@ const SEED_IMAGES = {
   }
 
   function toggleEx(id) {
-    const today = todayISO();
-    if (!state.exercises[today]) state.exercises[today] = {};
-    if (!state.exercises[today][id]) state.exercises[today][id] = { done: false, rom: {} };
-    state.exercises[today][id].done = !state.exercises[today][id].done;
+    const exDate = getExDate();
+    if (!state.exercises[exDate]) state.exercises[exDate] = {};
+    if (!state.exercises[exDate][id]) state.exercises[exDate][id] = { done: false, rom: {} };
+    state.exercises[exDate][id].done = !state.exercises[exDate][id].done;
     save();
     renderExercises();
     renderTodayMetrics();
   }
 
   function setRom(exId, target, val) {
-    const today = todayISO();
-    if (!state.exercises[today]) state.exercises[today] = {};
-    if (!state.exercises[today][exId]) state.exercises[today][exId] = { done: false, rom: {} };
-    if (!state.exercises[today][exId].rom) state.exercises[today][exId].rom = {};
-    state.exercises[today][exId].rom[target] = val ? parseInt(val, 10) : null;
+    const exDate = getExDate();
+    if (!state.exercises[exDate]) state.exercises[exDate] = {};
+    if (!state.exercises[exDate][exId]) state.exercises[exDate][exId] = { done: false, rom: {} };
+    if (!state.exercises[exDate][exId].rom) state.exercises[exDate][exId].rom = {};
+    state.exercises[exDate][exId].rom[target] = val ? parseInt(val, 10) : null;
     save();
     renderRomTrend();
   }
@@ -2749,15 +2890,7 @@ const SEED_IMAGES = {
     const file = e.target.files[0];
     if (!file) return;
     const compressed = await compressImage(file);
-    state.photos.push({
-      id: Date.now(),
-      date: todayISO(),
-      day: dayCount(),
-      data: compressed
-    });
-    save();
-    renderPhotos();
-    toast(`Photo added · day ${dayCount()}`);
+    openPxModal('photo', compressed);
     e.target.value = '';
   });
 
@@ -2809,22 +2942,71 @@ const SEED_IMAGES = {
   document.getElementById('xrayInput').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const label = prompt('X-ray label (예: 술전 / 술후 / 6주 follow-up)', '');
-    if (label === null) { e.target.value = ''; return; }
     const compressed = await compressImage(file, 1600, 0.85); // Higher quality for X-rays
-    state.xrays.push({
-      id: Date.now(),
-      date: todayISO(),
-      day: dayCount(),
-      data: compressed,
-      label: label.trim() || 'X-ray',
-      note: ''
-    });
-    save();
-    renderXrays();
-    toast(`X-ray added`);
+    openPxModal('xray', compressed);
     e.target.value = '';
   });
+
+  // ── Photo/Xray modal ─────────────────────────────────────
+  function openPxModal(type, data) {
+    document.getElementById('pxType').value = type;
+    document.getElementById('pxData').value = data;
+    document.getElementById('pxPreview').src = data;
+    document.getElementById('pxModalTitle').innerHTML = type === 'xray'
+      ? 'New <em>X-ray</em>'
+      : 'New <em>photo</em>';
+    document.getElementById('pxLabelField').style.display = type === 'xray' ? 'block' : 'none';
+    document.getElementById('pxDate').value = todayISO();
+    document.getElementById('pxTime').value = new Date().toTimeString().slice(0, 5);
+    document.getElementById('pxLabel').value = '';
+    document.getElementById('pxNote').value = '';
+    document.getElementById('pxModal').classList.add('show');
+  }
+
+  function closePxModal() {
+    document.getElementById('pxModal').classList.remove('show');
+    document.getElementById('pxData').value = '';
+    document.getElementById('pxPreview').src = '';
+  }
+
+  function savePx() {
+    const type = document.getElementById('pxType').value;
+    const data = document.getElementById('pxData').value;
+    if (!data) { closePxModal(); return; }
+    const date = document.getElementById('pxDate').value || todayISO();
+    const note = document.getElementById('pxNote').value.trim();
+    const day = dayFromDate(date);
+
+    if (type === 'xray') {
+      const label = document.getElementById('pxLabel').value.trim() || 'X-ray';
+      state.xrays.push({
+        id: Date.now(),
+        date,
+        day,
+        data,
+        label,
+        note
+      });
+      // Sort by date asc so older xrays appear first chronologically in grid (after reverse below)
+      state.xrays.sort((a, b) => a.date.localeCompare(b.date));
+      save();
+      renderXrays();
+      toast(`X-ray added · D${day}`);
+    } else {
+      state.photos.push({
+        id: Date.now(),
+        date,
+        day,
+        data,
+        note
+      });
+      state.photos.sort((a, b) => a.date.localeCompare(b.date));
+      save();
+      renderPhotos();
+      toast(`Photo added · D${day}`);
+    }
+    closePxModal();
+  }
 
   // ════════════════════════════════════════════════════════════════
   // DOCUMENTS
@@ -3098,17 +3280,23 @@ const SEED_IMAGES = {
   function saveJournal() {
     const text = document.getElementById('journalText').value.trim();
     if (!text) return;
-    state.journal.unshift({
+    const date = document.getElementById('journalDate').value || todayISO();
+    const time = document.getElementById('journalTime').value || new Date().toTimeString().slice(0, 5);
+    state.journal.push({
       id: Date.now(),
-      date: todayISO(),
-      day: dayCount(),
-      time: new Date().toTimeString().slice(0, 5),
+      date,
+      day: dayFromDate(date),
+      time,
       text
     });
+    // Sort by date+time descending
+    state.journal.sort((a, b) => (b.date + (b.time || '00:00')).localeCompare(a.date + (a.time || '00:00')));
     save();
     document.getElementById('journalText').value = '';
+    document.getElementById('journalDate').value = todayISO();
+    document.getElementById('journalTime').value = new Date().toTimeString().slice(0, 5);
     renderJournal();
-    toast('Journal saved');
+    toast(`Journal saved · D${dayFromDate(date)}`);
   }
 
   function renderJournal() {
@@ -3121,7 +3309,7 @@ const SEED_IMAGES = {
     wrap.innerHTML = state.journal.slice(0, 20).map(j => `
       <div class="journal-entry">
         <div class="journal-meta">
-          <span>${fmtDateLong(j.date)} · ${j.time}</span>
+          <span>${fmtDateLong(j.date)} · ${j.time || ''}</span>
           <span>DAY ${j.day} · <button class="log-del" onclick="deleteJournal(${j.id})">✕</button></span>
         </div>
         <div class="journal-text">${escapeHtml(j.text)}</div>
@@ -3232,20 +3420,24 @@ const SEED_IMAGES = {
 
   function openVitalsModal() {
     document.getElementById('vitalsModal').classList.add('show');
+    document.getElementById('vDate').value = todayISO();
+    document.getElementById('vTime').value = new Date().toTimeString().slice(0, 5);
   }
 
   function closeVitalsModal() {
     document.getElementById('vitalsModal').classList.remove('show');
-    ['vSpo2','vPr','vRr','vBp','vTemp','vSleep','vNote'].forEach(id => {
+    ['vSpo2','vPr','vRr','vBp','vTemp','vSleep','vNote','vDate','vTime'].forEach(id => {
       document.getElementById(id).value = '';
     });
   }
 
   function saveVitals() {
+    const date = document.getElementById('vDate').value || todayISO();
+    const time = document.getElementById('vTime').value || new Date().toTimeString().slice(0, 5);
     const v = {
       id: Date.now(),
-      date: todayISO(),
-      time: new Date().toTimeString().slice(0,5),
+      date,
+      time,
       spo2: numOrNull('vSpo2'),
       pr: numOrNull('vPr'),
       rr: numOrNull('vRr'),
@@ -3258,12 +3450,14 @@ const SEED_IMAGES = {
     if (!anyVal) { toast('Enter at least one value'); return; }
 
     state.vitals.unshift(v);
+    // Sort newest-first for stable display
+    state.vitals.sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
     if (v.sleep != null) state.sleep[v.date] = v.sleep;
     save();
     closeVitalsModal();
     renderVitals();
     renderTodayMetrics();
-    toast('Vitals logged');
+    toast(`Vitals logged · D${dayFromDate(date)}`);
   }
 
   function deleteVital(id) {
@@ -3605,7 +3799,18 @@ const SEED_IMAGES = {
     if (view === 'today') { renderVitals(); renderDoctorCard(); }
     if (view === 'exercise') renderExercises();
     if (view === 'schedule') { renderSchedule(); renderMedications(); }
-    if (view === 'timeline') { renderTimeline(); renderPhotos(); renderXrays(); renderDocuments(); renderJournal(); }
+    if (view === 'timeline') {
+      renderTimeline();
+      renderPhotos();
+      renderXrays();
+      renderDocuments();
+      renderJournal();
+      // Default journal date/time to today/now
+      const jd = document.getElementById('journalDate');
+      const jt = document.getElementById('journalTime');
+      if (jd && !jd.value) jd.value = todayISO();
+      if (jt && !jt.value) jt.value = new Date().toTimeString().slice(0, 5);
+    }
     if (view === 'learn') renderGlossary();
     if (view === 'data') renderProfile();
   }
