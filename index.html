@@ -3865,10 +3865,36 @@ const SEED_IMAGES = {
     _lastTouch = now;
   }, { passive: false });
 
-  // Service worker
+  // Service worker — auto-update on new version detected
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      navigator.serviceWorker.register('./sw.js').then((registration) => {
+        // Check for updates every time the page loads
+        registration.update().catch(() => {});
+
+        // When a new SW is found installing, listen for it to be ready
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // New version available — tell user, then reload after their next interaction
+              // (Avoid reloading mid-typing or mid-input)
+              console.log('[SW] New version available');
+              // Auto-activate the new SW
+              newWorker.postMessage({ type: 'SKIP_WAITING' });
+            }
+          });
+        });
+      }).catch(() => {});
+
+      // When the SW takes control of the page (after skipWaiting), reload to get fresh code
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
     });
   }
 </script>
