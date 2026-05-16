@@ -1073,6 +1073,32 @@
     color: var(--mute);
     line-height: 1.5;
   }
+  .cost-row-breakdown {
+    margin-top: 7px;
+    padding: 7px 8px;
+    border: 1px dashed var(--line-2);
+    background: var(--paper-2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  .cost-row-breakdown .cb-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .cost-row-breakdown .cb-cat {
+    color: var(--mute);
+    letter-spacing: 0.04em;
+  }
+  .cost-row-breakdown .cb-amt {
+    color: var(--ink-2);
+    font-weight: 500;
+    font-size: 10px;
+  }
   .cost-row-receipt {
     margin-top: 8px;
     width: 60px;
@@ -3241,24 +3267,46 @@ const SEED_IMAGES = {
     ]
   };
 
-  const COST_CATEGORIES = ['treatment', 'medication', 'equipment', 'transport', 'supplies', 'admission', 'other'];
+  const COST_CATEGORIES = ['treatment', 'surgery', 'anesthesia', 'exam', 'medication', 'equipment', 'transport', 'supplies', 'admission', 'other'];
   const COST_CAT_LABELS = {
     treatment: '진료비',
+    surgery: '수술',
+    anesthesia: '마취',
+    exam: '검사',
     medication: '약값',
     equipment: '보조용품',
     transport: '교통/주차',
     supplies: '소모품',
-    admission: '입원비',
+    admission: '입원',
     other: '기타'
   };
   const COST_CAT_EN = {
     treatment: 'Treatment',
+    surgery: 'Surgery',
+    anesthesia: 'Anesthesia',
+    exam: 'Lab / Exam',
     medication: 'Medication',
     equipment: 'Equipment',
     transport: 'Transport',
     supplies: 'Supplies',
     admission: 'Admission',
     other: 'Other'
+  };
+
+  // Per-category out-of-pocket from the inpatient receipt's itemized subtotals
+  // (입원_퇴원_진료비계산서영수증.pdf — 본인부담금 + 전액본인부담 + 선택진료료 + 비급여).
+  // Sum = ₩2,754,134; the card-paid amount is ₩2,754,090 (44원 rounding by the
+  // hospital). costBreakdownAllocation scales these proportionally to the
+  // entry's actual paid amount so the parts sum exactly to the whole.
+  // Source: '입원_퇴원_진료비계산서영수증.pdf' (2026-05-15 발급).
+  const SURGERY_OOP_BY_CATEGORY = {
+    treatment:  10730,                                       // 진찰료
+    admission:  107238 + 37950,                              // 입원료(4인실) + 식대
+    medication: 2649 + 1425 + 630 + 37000                    // 투약 행위료/약품비/전액본인/비급여
+              + 10483 + 28841 + 19908 + 639000,              //  + 주사 행위료/약품비/전액본인/비급여
+    anesthesia: 110958 + 100000,                             // 마취료 (본인 + 비급여)
+    surgery:    90017 + 288035 + 678000,                     // 처치및수술료 + 치료재료대 (본인 + 비급여)
+    exam:       257404 + 66759 + 179900 + 5892 + 81315       // 검사료(본인+전액+비급) + 영상 + CT
   };
   const COST_PAYERS = ['self', 'insurance', 'workersComp', 'family', 'other'];
   const COST_PAYER_LABELS = {
@@ -4475,11 +4523,47 @@ const SEED_IMAGES = {
     return { expense, refund, net: expense - refund };
   }
 
+  // For an entry tagged `breakdown: 'surgery_details'`, allocate its amount
+  // across cost categories using the inpatient receipt's per-category
+  // out-of-pocket subtotals (SURGERY_OOP_BY_CATEGORY). We scale them to the
+  // entry's actual paid amount so the parts always sum to the whole (handles
+  // the receipt's own 44원 rounding plus any future edits to the entry).
+  // Largest-remainder rounding keeps the sum exact (no ±1원 drift).
+  function costBreakdownAllocation(entry) {
+    if (entry?.breakdown !== 'surgery_details') return null;
+    const amount = Number(entry.amount) || 0;
+    if (!amount) return {};
+    const total = Object.values(SURGERY_OOP_BY_CATEGORY).reduce((s, v) => s + v, 0);
+    if (!total) return null;
+
+    const raw = Object.entries(SURGERY_OOP_BY_CATEGORY).map(([cat, v]) => ({
+      cat,
+      exact: (v / total) * amount
+    }));
+    const floored = raw.map(r => ({ ...r, floor: Math.floor(r.exact), frac: r.exact - Math.floor(r.exact) }));
+    let assigned = floored.reduce((s, r) => s + r.floor, 0);
+    const leftover = amount - assigned;
+    floored.sort((a, b) => b.frac - a.frac);
+    for (let i = 0; i < leftover; i++) floored[i % floored.length].floor++;
+
+    const buckets = {};
+    floored.forEach(r => { buckets[r.cat] = (buckets[r.cat] || 0) + r.floor; });
+    return buckets;
+  }
+
   function costByCategory() {
     const buckets = {};
     COST_CATEGORIES.forEach(k => buckets[k] = 0);
     state.costs.forEach(c => {
       if (c.type === 'refund') return; // only count expenses in category breakdown
+      const allocation = costBreakdownAllocation(c);
+      if (allocation) {
+        Object.entries(allocation).forEach(([cat, v]) => {
+          const k = COST_CATEGORIES.includes(cat) ? cat : 'other';
+          buckets[k] += v;
+        });
+        return;
+      }
       const cat = COST_CATEGORIES.includes(c.category) ? c.category : 'other';
       buckets[cat] += Number(c.amount) || 0;
     });
@@ -4725,7 +4809,11 @@ const SEED_IMAGES = {
     if (state.costFilter === 'refund') {
       list = list.filter(c => c.type === 'refund');
     } else if (state.costFilter !== 'all') {
-      list = list.filter(c => (c.category || 'other') === state.costFilter);
+      list = list.filter(c => {
+        if ((c.category || 'other') === state.costFilter) return true;
+        const alloc = costBreakdownAllocation(c);
+        return !!(alloc && alloc[state.costFilter]);
+      });
     }
     list.sort((a, b) => (b.date + String(b.id)).localeCompare(a.date + String(a.id)));
 
@@ -4746,6 +4834,16 @@ const SEED_IMAGES = {
       const receiptHtml = c.receipt
         ? `<div class="cost-row-receipt" onclick="event.stopPropagation(); openCostReceipt(${c.id})"><img src="${c.receipt}" alt="receipt" /></div>`
         : '';
+      const alloc = costBreakdownAllocation(c);
+      const breakdownHtml = alloc
+        ? `<div class="cost-row-breakdown">${
+            Object.entries(alloc)
+              .filter(([, v]) => v > 0)
+              .sort((a, b) => b[1] - a[1])
+              .map(([k, v]) => `<span class="cb-item"><span class="cb-cat">${COST_CAT_LABELS[k] || k}</span><span class="cb-amt mono">${fmtKRW(v)}</span></span>`)
+              .join('')
+          }</div>`
+        : '';
       return `
         <div class="cost-row" onclick="openCostModal(${c.id})">
           <div class="cost-row-date">
@@ -4759,6 +4857,7 @@ const SEED_IMAGES = {
               ${payer ? `<span class="tag">${payer}</span>` : ''}
               ${c.vendor ? ` · ${escapeHtml(c.vendor)}` : ''}
             </div>
+            ${breakdownHtml}
             ${c.note ? `<div class="cost-row-note">${escapeHtml(c.note)}</div>` : ''}
             ${receiptHtml}
           </div>
