@@ -1800,17 +1800,28 @@
     background: #0a0a0a;
     z-index: 500;
     display: none;
-    flex-direction: column;
   }
-  .pdf-viewer.show { display: flex; }
+  .pdf-viewer.show { display: block; }
+  /* iOS standalone PWA renders PDFs in iframes via a native overlay that
+     ignores z-index and flex sizing of any sibling. We avoid the fight by
+     giving the header its own non-overlapping row at the top: header
+     occupies the first (57 + safe-top)px, body sits below. The two regions
+     never share screen space, so the CLOSE button is always reachable
+     regardless of how the PDF is rendered. */
   .pdf-viewer-header {
-    flex: 0 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(57px + var(--safe-top));
+    z-index: 502;
     padding: calc(12px + var(--safe-top)) 16px 12px 16px;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.95);
     color: var(--paper);
     display: flex;
     align-items: center;
     gap: 12px;
+    box-sizing: border-box;
   }
   .pdf-viewer-title {
     flex: 1 1 auto;
@@ -1834,11 +1845,27 @@
     border: none;
   }
   .pdf-viewer-close:hover { background: rgba(255,255,255,0.2); }
-  .pdf-viewer iframe {
+  /* Body sits below the header row using absolute positioning rather than
+     flex — this guarantees the iframe never bleeds into the header strip,
+     even if the iOS native PDF overlay tries to claim the parent's full
+     size. */
+  .pdf-viewer-body {
+    position: absolute;
+    top: calc(57px + var(--safe-top));
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .pdf-viewer-body iframe {
     flex: 1 1 auto;
     width: 100%;
+    height: 100%;
     border: 0;
     background: #0a0a0a;
+    display: block;
   }
   .pdf-viewer-fallback {
     flex: 1 1 auto;
@@ -2877,7 +2904,7 @@
     <div class="pdf-viewer-title" id="pdfViewerTitle"></div>
     <button class="pdf-viewer-close" onclick="closePdfViewer()">CLOSE ✕</button>
   </div>
-  <div id="pdfViewerBody"></div>
+  <div class="pdf-viewer-body" id="pdfViewerBody"></div>
 </div>
 
 <!-- ═══ Image lightbox ═══ -->
