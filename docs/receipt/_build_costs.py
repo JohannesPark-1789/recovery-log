@@ -1,8 +1,13 @@
 """
-Convert the 4 actual receipt PDFs into JPEG dataURLs and emit a JS snippet
-that the user can paste into the app's DevTools console to add the cost
-entries (with attached receipts) to existing localStorage data without
-overwriting anything else.
+Build two artifacts from the receipt PDFs:
+
+1. ../../costs.json — served by GitHub Pages alongside index.html. The PWA
+   fetches this at startup and merges into state.costs (dedup by date+
+   label+amount+vendor). Idempotent — re-running the import only adds
+   new entries.
+
+2. _import_costs.console.js — legacy DevTools console snippet for the
+   PC-paste workflow. Kept for users who don't want to redeploy.
 """
 import os, io, json, base64, sys
 import pypdfium2 as pdfium
@@ -11,7 +16,6 @@ from PIL import Image
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 os.chdir(r'C:\Dev\recovery-log\docs\receipt')
 
-# (filename, target_width_px) — wider for the dense incoming bill so amounts stay legible
 sources = [
     {
         'pdf': '외래_진료비계산서영수증.pdf',
@@ -72,14 +76,10 @@ JPEG_QUALITY = 78
 
 
 def pdf_first_page_to_jpeg_dataurl(pdf_path: str) -> tuple[str, int]:
-    """Render page 1 of a PDF to a JPEG dataURL, capped at TARGET_WIDTH px wide."""
     pdf = pdfium.PdfDocument(pdf_path)
     page = pdf[0]
-    # Determine scale so width hits TARGET_WIDTH px
-    base_w_pt = page.get_width()
-    scale = TARGET_WIDTH / base_w_pt
+    scale = TARGET_WIDTH / page.get_width()
     pil = page.render(scale=scale).to_pil()
-    # White background to avoid transparent JPEG quirks
     if pil.mode != 'RGB':
         bg = Image.new('RGB', pil.size, (255, 255, 255))
         bg.paste(pil, mask=pil.split()[-1] if pil.mode == 'RGBA' else None)
@@ -87,27 +87,33 @@ def pdf_first_page_to_jpeg_dataurl(pdf_path: str) -> tuple[str, int]:
     buf = io.BytesIO()
     pil.save(buf, format='JPEG', quality=JPEG_QUALITY, optimize=True)
     raw = buf.getvalue()
-    b64 = base64.b64encode(raw).decode('ascii')
-    return f'data:image/jpeg;base64,{b64}', len(raw)
+    return f'data:image/jpeg;base64,{base64.b64encode(raw).decode("ascii")}', len(raw)
 
 
-# Build entries
 entries = []
 total_bytes = 0
 for src in sources:
-    pdf_path = src['pdf']
-    print(f'Rendering: {pdf_path}')
-    data_url, sz = pdf_first_page_to_jpeg_dataurl(pdf_path)
+    print(f'Rendering: {src["pdf"]}')
+    data_url, sz = pdf_first_page_to_jpeg_dataurl(src['pdf'])
     total_bytes += sz
     print(f'  jpeg size: {sz:,} bytes')
-    entry = dict(src['cost'])
-    entry['receipt'] = data_url
-    entries.append(entry)
+    entries.append({**src['cost'], 'receipt': data_url})
 
-print()
-print(f'Total receipt-jpeg payload: {total_bytes:,} bytes (~{total_bytes/1024:.0f} KB)')
+print(f'\nTotal receipt-jpeg payload: {total_bytes:,} bytes (~{total_bytes/1024:.0f} KB)')
 
-# Emit the JS snippet
+# 1) costs.json at repo root (served by GitHub Pages next to index.html)
+costs_json_path = os.path.join('..', '..', 'costs.json')
+payload = {
+    'schemaVersion': 1,
+    'generatedAt': None,  # intentionally null — let the PWA show "imported D{N}"
+    'sourceNote': 'Auto-generated from docs/receipt/*.pdf by docs/receipt/_build_costs.py',
+    'costs': entries
+}
+with open(costs_json_path, 'w', encoding='utf-8') as fh:
+    json.dump(payload, fh, ensure_ascii=False, indent=2)
+print(f'Wrote {costs_json_path} ({os.path.getsize(costs_json_path):,} bytes)')
+
+# 2) Console snippet (kept for backwards-compat)
 js = f'''(() => {{
   const KEY = 'recovery_log_v1';
   let state;
@@ -117,7 +123,6 @@ js = f'''(() => {{
 
   const incoming = {json.dumps(entries, ensure_ascii=False, indent=2)};
 
-  // Dedupe by (date+label+amount+vendor) — re-running the snippet is safe.
   const key = c => `${{c.date}}|${{c.label}}|${{c.amount}}|${{c.vendor || ''}}`;
   const existing = new Set(state.costs.map(key));
   let added = 0, skipped = 0;
@@ -134,12 +139,11 @@ js = f'''(() => {{
   state.costs.sort((a, b) => (b.date + String(b.id)).localeCompare(a.date + String(a.id)));
   localStorage.setItem(KEY, JSON.stringify(state));
   console.log(`Cost import done: ${{added}} added, ${{skipped}} skipped (duplicates).`);
-  console.log('Reloading page in 1s so the Cost tab picks up the new entries...');
+  console.log('Reloading page in 1s...');
   setTimeout(() => location.reload(), 1000);
 }})();
 '''
 
-out_path = r'C:\Dev\recovery-log\docs\receipt\_import_costs.console.js'
-with open(out_path, 'w', encoding='utf-8') as fh:
+with open('_import_costs.console.js', 'w', encoding='utf-8') as fh:
     fh.write(js)
-print(f'Wrote {out_path} ({len(js):,} bytes)')
+print(f'Wrote _import_costs.console.js ({len(js):,} bytes)')

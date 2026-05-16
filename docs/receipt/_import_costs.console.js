@@ -52,7 +52,6 @@
   }
 ];
 
-  // Dedupe by (date+label+amount+vendor) — re-running the snippet is safe.
   const key = c => `${c.date}|${c.label}|${c.amount}|${c.vendor || ''}`;
   const existing = new Set(state.costs.map(key));
   let added = 0, skipped = 0;
@@ -69,6 +68,6 @@
   state.costs.sort((a, b) => (b.date + String(b.id)).localeCompare(a.date + String(a.id)));
   localStorage.setItem(KEY, JSON.stringify(state));
   console.log(`Cost import done: ${added} added, ${skipped} skipped (duplicates).`);
-  console.log('Reloading page in 1s so the Cost tab picks up the new entries...');
+  console.log('Reloading page in 1s...');
   setTimeout(() => location.reload(), 1000);
 })();

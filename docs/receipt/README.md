@@ -1,6 +1,7 @@
 # Receipts · 영수증 원본
 
 이 폴더는 사고 관련 영수증 PDF 원본을 보관합니다.
+영수증을 PWA의 Cost 탭에 자동으로 표시되도록 만드는 `costs.json` 빌드 파이프라인도 함께 들어있습니다.
 
 ## 파일 목록
 
@@ -10,44 +11,45 @@
 | `조제약복약안내.pdf` | 2026-05-09 | 약값 (가온약국) | ₩3,000 |
 | `입원_퇴원_진료비계산서영수증.pdf` | 2026-05-15 | 입원 4박5일 (병실 312) | ₩2,754,090 |
 | `입원_중간_진료비계산서영수증.pdf` | 2026-05-15 | 입원 중간정산 (비급여) | ₩23,000 |
-| `진료비세부산정내역.pdf` | 2026-05-15 | 입원 진료 세부 명세서 (부속자료, 결제 아님) | — |
+| `진료비세부산정내역.pdf` | 2026-05-15 | 입원 진료 세부 명세서 (참고용, 결제 아님) | — |
 | **합계 본인부담** | | | **₩2,839,980** |
 
-## Cost 탭에 한 번에 등록하는 방법
+## Cost 탭에 자동 등록 (현재 권장)
 
-위 4건의 영수증(세부명세서 제외)을 **이미지 첨부까지 포함해** PWA의 Cost 탭에 자동 추가합니다.
+`costs.json` 이 GitHub Pages 루트에 같이 배포되어 있어, **앱을 열기만 하면 자동**으로 머지됩니다. 별도 작업 불필요.
 
-### A) PC 크롬 (가장 빠름 · 즉시 반영)
+- 앱 시작 시 백그라운드에서 `./costs.json` 을 fetch → 새 항목만 머지 (중복 방지)
+- 수동으로 다시 가져오려면 Cost 탭의 **⤓ Sync receipts** 버튼
 
-1. PC 크롬에서 PWA 접속: <https://johannespark-1789.github.io/recovery-log/>
-2. `F12` → **Console** 탭
-3. `_import_costs.console.js` 파일을 메모장으로 열어 **전체 복사** (Ctrl+A → Ctrl+C)
-4. 콘솔에 붙여넣고 Enter
-5. 1초 후 자동 새로고침 → Cost 탭에 4건이 영수증 사진과 함께 추가됨
+PC / 모바일 어디서나 동일하게 동작하며, 기존 데이터(통증·저널·운동 등)는 보존됩니다.
 
-스니펫은 **중복 방지**가 들어있어 여러 번 실행해도 안전합니다.
+## costs.json 빌드
 
-### B) 모바일 PWA로 옮기기
-
-PC 크롬에서 위 A) 를 실행한 뒤:
-
-1. PC PWA의 Data 탭 → **Export JSON** 다운로드
-2. 그 JSON 파일을 모바일로 전송 (AirDrop / 카톡 등)
-3. 모바일 PWA의 Data 탭 → **Import JSON** 으로 불러오기
-
-⚠️ Import 는 **전체 덮어쓰기**입니다. 모바일에 이미 따로 입력한 통증/저널/운동 기록이 있다면, **모바일에서 먼저 export 받아둔 뒤** 그 JSON에 PC의 cost 데이터를 머지하는 추가 작업이 필요합니다.
-
-## 스니펫 재생성
-
-영수증을 추가하거나 메타데이터를 고친 뒤 `_build_costs.py` 를 실행하면 `_import_costs.console.js` 가 다시 생성됩니다.
+영수증을 추가/수정한 뒤 다시 만들려면:
 
 ```powershell
-python _build_costs.py
+python docs/receipt/_build_costs.py
 ```
+
+이 스크립트는:
+- 4개의 영수증 PDF를 1400px / JPEG 78% 로 렌더링
+- 메타데이터(날짜·카테고리·금액·메모 등)와 함께 `../../costs.json` 생성
+- 같이 `_import_costs.console.js` (레거시 콘솔 paste용) 도 생성
 
 필요 패키지: `pypdfium2`, `pillow`.
 
+생성된 `costs.json` 을 커밋·push 하면 다음 PWA 진입 시 자동 반영됩니다.
+
+## 레거시: 콘솔 스니펫
+
+`costs.json` 자동 fetch 가 도입되기 전에 쓰던 방식입니다. 더 이상 권장하지 않지만, 특정 기기에서만 즉시 주입하고 싶을 때 사용 가능:
+
+1. PC 크롬에서 PWA 열기
+2. `F12` → Console
+3. `_import_costs.console.js` 내용 전체 paste → Enter
+
 ## 파일 설명
 
-- `_build_costs.py` — PDF → JPEG 변환 + 콘솔 스니펫 생성 스크립트
-- `_import_costs.console.js` — 생성된 콘솔용 import 스니펫 (PDF 미리보기 base64 인라인, 약 1.3MB)
+- `_build_costs.py` — PDF → JPEG 변환 + `costs.json` & 콘솔 스니펫 생성
+- `_import_costs.console.js` — 레거시 콘솔 스니펫 (PDF 미리보기 base64 인라인)
+- `../../costs.json` — 앱이 자동으로 fetch 하는 영수증 데이터 (1.3MB)
