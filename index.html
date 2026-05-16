@@ -2396,11 +2396,20 @@
 
     <div class="settings-item" onclick="document.getElementById('importInput').click()">
       <div>
-        <div class="settings-label">Import JSON</div>
-        <div class="settings-desc">백업한 JSON 파일에서 복원</div>
+        <div class="settings-label">Import JSON · Replace</div>
+        <div class="settings-desc">백업으로 전체 덮어쓰기 (현재 데이터 모두 삭제)</div>
       </div>
       <span class="settings-arrow">↑</span>
       <input type="file" id="importInput" accept="application/json" style="display:none;" />
+    </div>
+
+    <div class="settings-item" onclick="document.getElementById('mergeInput').click()">
+      <div>
+        <div class="settings-label">Merge from JSON · Restore missing</div>
+        <div class="settings-desc">현재 데이터는 보존하고 백업의 비어있는 항목만 채움</div>
+      </div>
+      <span class="settings-arrow">↺</span>
+      <input type="file" id="mergeInput" accept="application/json" style="display:none;" />
     </div>
 
     <div class="settings-item" onclick="copyMarkdown()">
@@ -5791,6 +5800,60 @@ const SEED_IMAGES = {
         save();
         renderAll();
         toast('Imported successfully');
+      } catch (err) {
+        toast('Invalid JSON file');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  // Merge import — restore missing data from a backup without destroying
+  // anything the user has built up since. For each array field, if the
+  // current state is empty we adopt the backup's contents; otherwise we
+  // keep the live data untouched. Object fields (exercises, sleep) follow
+  // the same "fill only when empty" rule.
+  document.getElementById('mergeInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!confirm('Merge: 백업의 비어 있는 항목만 채웁니다. 현재 데이터는 보존됩니다. 진행할까요?')) {
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        const restored = [];
+        const arrayFields = ['pain', 'schedule', 'photos', 'journal',
+                             'vitals', 'medications', 'documents', 'xrays', 'costs'];
+        for (const f of arrayFields) {
+          if (!Array.isArray(data[f]) || data[f].length === 0) continue;
+          if (!Array.isArray(state[f])) state[f] = [];
+          if (state[f].length === 0) {
+            state[f] = data[f];
+            restored.push(`${f}:${data[f].length}`);
+          }
+        }
+        for (const f of ['exercises', 'sleep']) {
+          if (!data[f]) continue;
+          const cur = state[f];
+          const isEmpty = !cur || (typeof cur === 'object' && Object.keys(cur).length === 0);
+          if (isEmpty) {
+            state[f] = data[f];
+            restored.push(f);
+          }
+        }
+        // Profile: live values win, backup fills any missing keys
+        if (data.profile) {
+          state.profile = { ...data.profile, ...state.profile };
+        }
+        state.seeded = true;
+        save();
+        renderAll();
+        toast(restored.length
+          ? `Merged · 복원 ${restored.join(', ')}`
+          : 'Nothing to merge · 현재 데이터가 이미 모두 채워져 있음');
       } catch (err) {
         toast('Invalid JSON file');
       }
