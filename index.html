@@ -603,6 +603,241 @@
     font-weight: 200;
   }
 
+  /* ─── Search ─── */
+  .header-search-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    padding: 5px 8px;
+    line-height: 0;
+    cursor: pointer;
+    border-radius: 0;
+  }
+  .header-search-btn:hover { background: var(--paper-2); }
+
+  .search-modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.45);
+    display: none;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: calc(40px + var(--safe-top));
+    z-index: 200;
+  }
+  .search-modal-bg.show { display: flex; }
+  .search-modal {
+    background: var(--paper);
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100vh - 80px - var(--safe-top) - var(--safe-bottom));
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    margin: 0 16px;
+  }
+  .search-input-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    gap: 8px;
+  }
+  .search-input-row svg {
+    flex-shrink: 0;
+    color: var(--mute);
+  }
+  .search-input {
+    flex: 1;
+    border: none !important;
+    border-bottom: none !important;
+    padding: 4px 0 !important;
+    font-size: 16px !important;
+    background: transparent;
+    color: var(--ink);
+  }
+  .search-input:focus { outline: none; }
+  .search-close {
+    color: var(--mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+  .search-results {
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .search-group-head {
+    padding: 12px 14px 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--mute);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+  }
+  .search-result {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .search-result:hover { background: var(--paper-2); }
+  .search-result-title {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .search-result-meta {
+    margin-top: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+  }
+  .search-result-snippet {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--mute);
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .search-result mark {
+    background: rgba(196, 30, 30, 0.15);
+    color: var(--ink);
+    padding: 0 1px;
+  }
+  .search-empty {
+    padding: 36px 14px;
+    text-align: center;
+    color: var(--mute-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── Surgery itemization ─── */
+  .sx-group-summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+  }
+  .sx-group-summary strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .sx-item {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sx-item:last-child { border-bottom: none; }
+  .sx-item-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .sx-item-name {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+  .sx-item-amt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .sx-item-meta {
+    margin-top: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+  }
+  .sx-item-meta .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid var(--line-2);
+    background: var(--paper);
+    margin-right: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 9px;
+  }
+  .sx-item-meta .tag.core {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .sx-item-meta .tag.implant {
+    background: var(--accent);
+    color: var(--paper);
+    border-color: var(--accent);
+  }
+  .sx-item-meta .tag.controlled,
+  .sx-item-meta .tag.nonpay,
+  .sx-item-meta .tag.selfpay {
+    background: var(--paper-3);
+    color: var(--ink-2);
+    border-color: var(--line-2);
+  }
+  .sx-item-note {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--mute);
+    line-height: 1.45;
+  }
+  .sx-group-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 0 4px;
+    border-top: 2px solid var(--ink);
+    margin-top: 18px;
+  }
+  .sx-group-head:first-child { margin-top: 0; }
+  .sx-group-head-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .sx-group-head-name em {
+    color: var(--mute);
+    font-style: normal;
+    margin-left: 6px;
+    font-size: 9px;
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+  .sx-group-head-amt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+
   /* ─── Journal entry ─── */
   .journal-entry {
     padding: 18px 0;
@@ -1421,7 +1656,12 @@
 <header class="header">
   <div class="header-row">
     <div class="header-title">Recovery <em>Log</em></div>
-    <div class="header-meta" id="dayCounter">DAY 0</div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="header-search-btn" onclick="openSearchModal()" aria-label="Search">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <div class="header-meta" id="dayCounter">DAY 0</div>
+    </div>
   </div>
   <div class="header-sub">
     <span>Clavicle ORIF</span>
@@ -1646,6 +1886,21 @@
   <div class="section">
     <div class="section-label"><span>Healing phases</span><span class="ord">8 stages</span></div>
     <div class="timeline" id="phaseTimeline"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">
+      <span>Surgery itemization</span>
+      <span class="ord" id="sxHeadCount">— items</span>
+    </div>
+    <div id="sxHead" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em; margin: 4px 0 10px;"></div>
+    <div class="chip-row" id="sxGroupChips" style="margin-bottom: 6px;"></div>
+    <input type="text" id="sxSearch" placeholder="검색 · 항목명 / 메모" oninput="renderSxItems()" style="margin-top: 8px;" />
+    <div id="sxBody" style="margin-top:10px;"></div>
+    <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
+      출처: 청구성심병원 진료비 세부산정내역 (2026-05-15 발급, 11페이지).
+      Cost 탭에 등록된 입원 영수증의 항목별 내역입니다.
+    </div>
   </div>
 
   <div class="section">
@@ -1916,7 +2171,7 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>About</span><span class="ord">v3.1</span></div>
+    <div class="section-label"><span>About</span><span class="ord">v3.2</span></div>
     <div style="font-size:11px; color:var(--mute); line-height:1.55;">
       로컬 저장소에만 데이터를 보관합니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 반드시 JSON으로 백업하세요.
       <div style="margin-top:8px;" class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
@@ -2273,6 +2528,20 @@
   </div>
 </div>
 
+<!-- ═══ Global search modal ═══ -->
+<div class="search-modal-bg" id="searchModal" onclick="if(event.target===this)closeSearchModal()">
+  <div class="search-modal">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="검색 · 저널·통증·약·비용·수술항목·용어집·문서…" oninput="runGlobalSearch()" />
+      <button class="search-close" onclick="closeSearchModal()">CLOSE ✕</button>
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-empty">검색어를 입력하세요</div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ Image lightbox ═══ -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <span class="lightbox-close">CLOSE ✕</span>
@@ -2622,6 +2891,196 @@ const SEED_IMAGES = {
     receipt: '영수증',
     lab: '검사결과',
     other: '기타'
+  };
+
+  // ════════════════════════════════════════════════════════════════
+  // SURGERY ITEMIZATION
+  // Extracted from 진료비 세부산정내역.pdf (2026-05-15, 11 pages).
+  // ════════════════════════════════════════════════════════════════
+  const SURGERY_DETAILS = {
+    title: '쇄골 ORIF (사지골절관혈적정복술)',
+    subtitle: '청구성심병원 정형외과 · OS 금세진 (면허 29024)',
+    period: '2026-05-11 ~ 2026-05-15 (4박5일, 병실 312)',
+    total: 5484254,
+    outOfPocket: 2754090,
+    source: '진료비 세부산정내역 (2026-05-15 발급, 11p)',
+    groups: [
+      {
+        key: 'surgery',
+        label: '수술 본체',
+        sub: '술기 + 임플란트 + 봉합',
+        items: [
+          { name: '사지골절관혈적정복술 (쇄골/슬개골/수근골/족근골)', amount: 426371, count: 1, note: '핵심 수술료 — 술기 자체 비용', tag: 'CORE' },
+          { name: 'Locking Clavicle S Plate TitaniumAlloy', amount: 336200, count: 1, note: '쇄골 티타늄 금속판 (MRI 호환)', tag: 'IMPLANT' },
+          { name: '3.5 Locking Cortex Screw TitaniumAlloy', amount: 131280, count: 6, note: '티타늄 나사 6개', tag: 'IMPLANT' },
+          { name: 'K-Wire Stainless Steel', amount: 8960, count: 2, note: '키르쉬너 와이어 (수술 중 임시 고정)' },
+          { name: '수술팩 II (마취 1~3시간)', amount: 45390, count: 1, note: '수술실 준비 패키지' },
+          { name: 'Skin Stapler 35 (Visistat)', amount: 11540, count: 1, note: '피부 봉합 스테이플' },
+          { name: 'Rexlon Nylon 4/0 봉합사', amount: 1500, count: 1, note: '피부 봉합용' },
+          { name: 'Crylrex 2/0 봉합사', amount: 4100, count: 1 },
+          { name: 'Crylrex 1/0 봉합사', amount: 12300, count: 3 },
+          { name: 'OR용 솔박 흡수 드레싱 10×20cm 습윤', amount: 13300, count: 1, note: '수술부 드레싱' },
+          { name: 'ROLL WIRE #200 (21G×7.9M)', amount: 1890, count: 90 },
+          { name: '일회용 전기수술기용 전극 bovie pencil', amount: 9230, count: 1, note: '전기 메스' },
+          { name: 'KODE Plate with Cable (전기소작기 패드)', amount: 8410, count: 1 },
+          { name: 'Endotracheal Tube Cuffed Pvc', amount: 3230, count: 1, note: '기관내 삽관 튜브' },
+          { name: 'Uescope Disposable Blade', amount: 15750, count: 1, note: '후두경 블레이드' },
+          { name: 'PVI Sensor', amount: 23970, count: 1, note: '환자감시 센서' },
+          { name: 'Closed Suction Catheter', amount: 32190, count: 1, note: '폐쇄식 흡인 카테터' },
+          { name: '승원탄력붕대 6"', amount: 675, count: 1 }
+        ]
+      },
+      {
+        key: 'anesthesia',
+        label: '마취 · 모니터링',
+        sub: '전신마취 + 통증감시',
+        items: [
+          { name: '기관내삽관 전신마취 (1시간 기준)', amount: 140217, count: 1, note: '주 마취료' },
+          { name: '기관내삽관 마취유지 (15분당)', amount: 53944, count: 2 },
+          { name: '슈프레인소 [desflurane 1ml/ml]', amount: 21441, count: 68.5, note: '흡입마취제 (1ml × 68.5ml)' },
+          { name: '아산화질소 45L/15분', amount: 3900, count: 6 },
+          { name: '산소 45L/15min당', amount: 300, count: 6 },
+          { name: '탄산가스흡수제 (소다라임) 450g/90분', amount: 1833, count: 1 },
+          { name: '마취중 감시료 - 파형변이지수감시 (BIS)', amount: 3300, count: 1 },
+          { name: 'PCA-side IV 첫날', amount: 13981, count: 1, note: '자가통증조절 시작' },
+          { name: 'PCA (지속적) 삽입 익일 이후', amount: 24750, count: 2 },
+          { name: 'PCA Neofuser Plus (Bolus Type)', amount: 55230, count: 1, note: 'PCA 자동주입 펌프' },
+          { name: 'Ez-Plus Heated Circuit (OR용)', amount: 58210, count: 1, note: '수술용 가온 회로' },
+          { name: 'Sedline EEG Sensor', amount: 43730, count: 1, note: '마취 깊이 모니터' },
+          { name: '리버디온 주 2ml/vial (sugammadex)', amount: 160000, count: 1, note: '마취 역전제', tag: '비급여' },
+          { name: '전신마취 중 Ani 감시', amount: 100000, count: 1, note: '통증 자율신경 모니터링', tag: '비급여' },
+          { name: 'Ani Sensor V2', amount: 185000, count: 1, note: '통증감시 센서', tag: '비급여' }
+        ]
+      },
+      {
+        key: 'admission',
+        label: '입원 · 간호 · 진찰',
+        sub: '병실료 · 간호관리료 · 진찰',
+        items: [
+          { name: '종합병원A등급간호관리료 4인실 입원료', amount: 506240, count: 4, note: '4일 (5/11~14)', tag: 'CORE' },
+          { name: '야간간호료 - 종합병원', amount: 24050, count: 5 },
+          { name: '야간전담간호사 관리료 - 종합병원', amount: 5900, count: 5 },
+          { name: '재진진찰료', amount: 14650, count: 1 },
+          { name: '입원환자 안전관리료 - 종합병원 500병상 미만', amount: 14350, count: 5 },
+          { name: '협의진찰료 - 종합병원 의과·치과', amount: 16040, count: 1 },
+          { name: '마약류 관리료 - 입원환자', amount: 240, count: 1 },
+          { name: '외래환자 의약품관리료 (방문당)', amount: 60, count: 1 },
+          { name: '입원환자 의약품관리료 - 5일분', amount: 6230, count: 1 },
+          { name: '의료질평가지원금 (환자안전·의료질·공공성)', amount: 2080, count: 1 }
+        ]
+      },
+      {
+        key: 'medication',
+        label: '약물 · 주사',
+        sub: '항생제 · 진통제 · 수액',
+        items: [
+          { name: '파지돈주 1g [Cefazedone] (AST)', amount: 72888, count: 6, note: '예방 항생제', tag: 'CORE' },
+          { name: '한미세프라딘캡슐 500mg', amount: 2460, count: '3정×4일', note: '경구 항생제' },
+          { name: '온단트론 4mg (ondansetron)', amount: 20060, count: 3, note: '항구토제' },
+          { name: '맥페란정 (metoclopramide 3.84mg)', amount: 245, count: 3, note: '소화제·항구토' },
+          { name: '뉴트라셋 세미정 (acetaminophen 162.5mg)', amount: 321, count: '3정', note: '해열진통제' },
+          { name: '건일로딘정 200mg [etodolac micronized]', amount: 1836, count: '3정×4일', note: '소염진통제' },
+          { name: '스테렌정 60mg [Artemisia Herb]', amount: 2250, count: '5일분', note: '위점막 보호' },
+          { name: '칼디플러스정 [Calcium Citrate 750mg]', amount: 630, count: '2정×4일', note: '칼슘 보충' },
+          { name: '펜타닐 시트르산염 주사 10mL [50μg fentanyl]', amount: 19908, count: 2, note: '마약성 진통제 (PCA용)', tag: 'CONTROLLED' },
+          { name: '보트로파제 주 2mL [hemocoagulase]', amount: 7715, count: 3, note: '지혈제' },
+          { name: '디크놀 주사 2ml [diclofenac]', amount: 3680, count: 3, note: 'NSAID 주사' },
+          { name: '에피네프린 주사액 1ml', amount: 330, count: 1 },
+          { name: '에토미데이트-리푸로 주 20mg/10ml', amount: 4151, count: 1, note: '마취 유도제' },
+          { name: '로메론주사 [로쿠로늄브롬화물] 50mg/5ml', amount: 4569, count: 1, note: '근이완제' },
+          { name: '글리코피로레이트 주 1ml', amount: 651, count: 1, note: '분비물 억제' },
+          { name: '푸락스주 [프리디놀메실산염]', amount: 1500, count: 5, note: '진경제' },
+          { name: '트라넥삼산 주 500mg/5ml [신풍]', amount: 2400, count: 3, note: '항섬유소용해제' },
+          { name: '아록솔 주 [ambroxol] 15mg/2ml', amount: 3000, count: 4, note: '거담제' },
+          { name: '5% 포도당 생리식염액 500ml', amount: 6725, count: 5, note: '수액' },
+          { name: '플라스콘주 1000ml [sodium chloride]', amount: 5140, count: 1, note: '수액' },
+          { name: '멸균 생리식염수 50ml/bag', amount: 4920, count: 3 },
+          { name: '리도카인염산염수화물 1% 20ml/V', amount: 507, count: 1, note: '국소마취제' },
+          { name: 'Jelco Needle (정맥내유지침)', amount: 1350, count: 3 },
+          { name: '점적주사 100~500ml', amount: 18040, count: 5 },
+          { name: '점적주사 501~1000ml', amount: 4400, count: 1 },
+          { name: '수액제 주입로를 통한 주사', amount: 12848, count: 4 },
+          { name: '피하 또는 근육내주사', amount: 6644, count: 5 },
+          { name: '입원환자 조제·복약지도료 (1일당)', amount: 12540, count: 5 },
+          { name: '메리트씨 주사 20ml [ascorbic acid 500mg/ml]', amount: 75000, count: 5, note: '비타민C 메가도즈', tag: '비급여' },
+          { name: '판비콤프주 4ML [vitamin B complex]', amount: 50000, count: 5, note: '비타민B 보충', tag: '비급여' },
+          { name: '타우로린 2% 250ml/병 [taurolidine]', amount: 160000, count: 1, note: '도관 락 용액', tag: '비급여' },
+          { name: '프로제아 프리필드 주 [ramosetron 0.3mg]', amount: 70000, count: 1, note: '항구토제', tag: '비급여' },
+          { name: '네프콤 주사액 5ml [Nefopam HCL] 수술용 PCA', amount: 25000, count: 1, note: '비마약성 진통제', tag: '비급여' }
+        ]
+      },
+      {
+        key: 'lab',
+        label: '검사 (수술 전 정밀)',
+        sub: 'CBC · 응고 · 심장마커 · 간/신/내분비 · 감염',
+        items: [
+          { name: 'CBC 풀세트 (백혈구·적혈구·헤마토크리트·혈색소·혈소판)', amount: 16200, count: '×3회', note: '일반 혈액검사' },
+          { name: '백혈구 백분율', amount: 7110, count: 3 },
+          { name: '적혈구침강속도 (ESR)', amount: 2140, count: 2 },
+          { name: '응고기능 패널 (PT + aPTT + 출혈시간)', amount: 17510, count: '×3회', note: '수술 전 출혈 위험 평가' },
+          { name: 'D-dimer (정밀면역, 정량)', amount: 38880, count: 3, note: '혈전 위험 지표' },
+          { name: '혈소판 복합기능검사 (ADP)', amount: 17720, count: 1 },
+          { name: 'ABO 혈액형 + Rh-Hr', amount: 5700, count: 1, note: '수혈 대비' },
+          { name: '심장 마커 — Troponin I 정량', amount: 21520, count: 2 },
+          { name: '심장 마커 — CK-MB (혈청)', amount: 16540, count: 2 },
+          { name: '심장 마커 — 마이오글로빈 (정량)', amount: 49350, count: 3 },
+          { name: '심장 마커 — Pro-BNP', amount: 150030, count: 3, note: '심부전 지표' },
+          { name: '심장 마커 — CPK (Creatine Phosphokinase)', amount: 8820, count: 3 },
+          { name: '심장 마커 — LDH', amount: 8820, count: 3 },
+          { name: 'C-반응성 단백 (CRP, 정량)', amount: 21990, count: 3, note: '염증 지표' },
+          { name: '프로칼시토닌 (정밀면역, 정량)', amount: 31400, count: 1, note: '패혈증 마커' },
+          { name: '암모니아', amount: 4510, count: 1 },
+          { name: 'BGA용 Lactic acid (whole blood)', amount: 5330, count: 1 },
+          { name: '혈액 총 탄산가스 함량', amount: 12450, count: 3 },
+          { name: '전해질 풀패널 (Na, K, Cl, Ca, P, Mg)', amount: 25650, count: '복수회' },
+          { name: '간 패널 (AST/ALT/ALP/γ-GTP/Bil/Total Protein/Albumin)', amount: 27220, count: '복수회' },
+          { name: '신장 패널 (Creatinine/BUN/Uric Acid/GFR)', amount: 18470, count: '복수회' },
+          { name: '콜레스테롤 패널 (Total/HDL/LDL/TG/ApoA1/ApoB/Lipoprotein(a))', amount: 44310, count: 1 },
+          { name: '당검사 + HbA1c (당화혈색소)', amount: 9930, count: 1 },
+          { name: '내분비 — TSH + T3 + Free T4 + ACTH + 코티솔 (ECLIA)', amount: 71550, count: 1, note: '갑상선·부신' },
+          { name: '리파아제 + 총아밀라아제', amount: 5780, count: 1, note: '췌장 효소' },
+          { name: '감염 스크리닝 — HBs Ag + HBs Ab', amount: 26420, count: 1, note: 'B형 간염' },
+          { name: '감염 스크리닝 — HIV Ab (정밀)', amount: 10630, count: 1 },
+          { name: '감염 스크리닝 — 매독반응검사', amount: 1620, count: 1 },
+          { name: 'Aso (정량) + Ra Factor (정량)', amount: 17990, count: 1, note: '류마티스 인자' },
+          { name: 'C형간염 항체 (간이검사) RAT', amount: 28830, count: 1 },
+          { name: '★Sars-Cov-2 PCR (코로나19)', amount: 66759, count: 1, note: '입원 전 필수', tag: '전액본인' },
+          { name: '★Sars-Cov-2 항원검사 (RAT)', amount: 31000, count: 1, tag: '비급여' },
+          { name: '혈소판 응집능 검사 TRAP', amount: 70000, count: 1, note: '출혈·혈전 위험 평가', tag: '비급여' },
+          { name: '허혈성 변형 알부민 (IMA)', amount: 69600, count: 1, note: '심근허혈 마커', tag: '비급여' },
+          { name: 'AI 기반 12유도 심전도 좌심실수축 분석 (에티아 LVSD)', amount: 9300, count: 1, note: '신기술 평가', tag: '비급여' },
+          { name: '요 일반검사 (화학반응, 10종)', amount: 2030, count: 1 },
+          { name: '요침사검사 (관찰판정-현미경)', amount: 1180, count: 1 }
+        ]
+      },
+      {
+        key: 'support',
+        label: '보조기 · 부목 · 드레싱',
+        sub: '수술 후 외부 고정 + 기타 비급여 재료',
+        items: [
+          { name: 'Ez Rap Brace (shoulder)', amount: 80000, count: 1, note: '어깨 보조기', tag: '비급여' },
+          { name: 'ICG with EST splint', amount: 90000, count: 1, note: '부목', tag: '비급여' },
+          { name: 'Care Board 손목형', amount: 39000, count: 1, tag: '비급여' },
+          { name: 'Care Board 하체형', amount: 55000, count: 1, tag: '비급여' },
+          { name: 'Redclot Tap Seal 10×40cm (1팩)', amount: 70000, count: 2, note: '지혈 드레싱', tag: '비급여' },
+          { name: 'Neo-Temp Probe Polyurethane Foams (체온 프로브)', amount: 13590, count: 1 },
+          { name: '대한 멸균 생리식염수 110ml/KIT', amount: 99000, count: '5일', note: '드레싱용 세척', tag: '비급여' },
+          { name: 'Eco Iv Filter Line Pvc (Non-Dehp)', amount: 12360, count: 4, note: '정맥주사 필터' },
+          { name: 'Bandgold Filter Syringe (고밀도 폴리에틸렌)', amount: 2284, count: 4 },
+          { name: 'Micro Filter Syringe II', amount: 4568, count: 4 },
+          { name: 'Skin Stapler 후속 드레싱 큐앤큐메딕스밴드 6호 10×25cm', amount: 9680, count: 4 },
+          { name: '비전헬스케어 부직반창고 (5M)', amount: 25000, count: 1, tag: '비급여' },
+          { name: 'Surgi Fxs 부직포 (폴리프로필렌)', amount: 33000, count: 1, tag: '비급여' },
+          { name: 'OXIPROBE SENSOR (포르타픽스 부직 반창고)', amount: 25000, count: 1, tag: '비급여' },
+          { name: '세이프셋', amount: 46000, count: 2, tag: '비급여' },
+          { name: '비전엠엑스에스밴드 pen', amount: 8000, count: 1, tag: '비급여' },
+          { name: 'N-Fix 실리콘등', amount: 18000, count: 1, tag: '비급여' },
+          { name: '산소흡입 (1일당)', amount: 9779, count: 1 },
+          { name: '단순처치 (1일당)', amount: 13926, count: 2 },
+          { name: '퇴원환자 조제료 + 내복약 4일분', amount: 693, count: 1, note: '퇴원약 처방' }
+        ]
+      }
+    ]
   };
 
   const COST_CATEGORIES = ['treatment', 'medication', 'equipment', 'transport', 'supplies', 'admission', 'other'];
@@ -3850,6 +4309,125 @@ const SEED_IMAGES = {
     }
   }
 
+  // ════════════════════════════════════════════════════════════════
+  // SURGERY ITEMIZATION RENDER
+  // ════════════════════════════════════════════════════════════════
+
+  function sxItemTotal(it) {
+    // amount field is already the line total (count is informational/text)
+    return Number(it.amount) || 0;
+  }
+
+  function sxGroupTotal(group) {
+    return group.items.reduce((s, it) => s + sxItemTotal(it), 0);
+  }
+
+  function sxItemCount() {
+    return SURGERY_DETAILS.groups.reduce((s, g) => s + g.items.length, 0);
+  }
+
+  // Selected group filter ('' = all groups). Lives outside state so it
+  // doesn't leak into localStorage (it's a transient UI choice).
+  let _sxFilter = '';
+
+  function setSxFilter(key) {
+    _sxFilter = (_sxFilter === key) ? '' : key;
+    renderSxGroupChips();
+    renderSxItems();
+  }
+
+  function renderSxGroupChips() {
+    const wrap = document.getElementById('sxGroupChips');
+    if (!wrap) return;
+    const chips = [
+      { key: '', label: '전체' },
+      ...SURGERY_DETAILS.groups.map(g => ({ key: g.key, label: g.label }))
+    ];
+    wrap.innerHTML = chips.map(c => {
+      const active = _sxFilter === c.key ? ' active' : '';
+      return `<button class="chip${active}" onclick="setSxFilter('${c.key}')">${c.label}</button>`;
+    }).join('');
+  }
+
+  function renderSxHead() {
+    const head = document.getElementById('sxHead');
+    const countEl = document.getElementById('sxHeadCount');
+    if (countEl) countEl.textContent = `${sxItemCount()} items · ${SURGERY_DETAILS.source.split(' (')[0]}`;
+    if (head) {
+      head.innerHTML = `
+        <div style="color:var(--ink); font-family:'Fraunces',serif; font-size:14px; font-weight:400; letter-spacing:-0.01em; margin-bottom:4px;">
+          ${escapeHtml(SURGERY_DETAILS.title)}
+        </div>
+        <div>${escapeHtml(SURGERY_DETAILS.subtitle)}</div>
+        <div>${escapeHtml(SURGERY_DETAILS.period)}</div>
+        <div style="margin-top:4px;">총진료비 ${fmtKRW(SURGERY_DETAILS.total)} · 본인부담 ${fmtKRW(SURGERY_DETAILS.outOfPocket)}</div>
+      `;
+    }
+  }
+
+  function renderSxItems() {
+    const wrap = document.getElementById('sxBody');
+    if (!wrap) return;
+    const q = (document.getElementById('sxSearch')?.value || '').toLowerCase().trim();
+
+    const html = [];
+    let shownItems = 0;
+    SURGERY_DETAILS.groups.forEach(g => {
+      if (_sxFilter && _sxFilter !== g.key) return;
+      const items = g.items.filter(it => {
+        if (!q) return true;
+        const hay = `${it.name} ${it.note || ''} ${it.tag || ''}`.toLowerCase();
+        return hay.includes(q);
+      });
+      if (!items.length) return;
+      html.push(`
+        <div class="sx-group-head">
+          <div class="sx-group-head-name">${escapeHtml(g.label)}<em>${escapeHtml(g.sub || '')}</em></div>
+          <div class="sx-group-head-amt">${fmtKRW(sxGroupTotal(g))}</div>
+        </div>
+      `);
+      items.forEach(it => {
+        const tag = it.tag ? `<span class="tag ${tagClassFor(it.tag)}">${escapeHtml(it.tag)}</span>` : '';
+        const countTxt = it.count != null && it.count !== 1
+          ? `× ${typeof it.count === 'number' ? it.count : escapeHtml(String(it.count))}`
+          : '';
+        html.push(`
+          <div class="sx-item">
+            <div class="sx-item-row">
+              <div class="sx-item-name">${escapeHtml(it.name)}</div>
+              <div class="sx-item-amt">${fmtKRW(it.amount)}</div>
+            </div>
+            ${(tag || countTxt) ? `<div class="sx-item-meta">${tag}${countTxt}</div>` : ''}
+            ${it.note ? `<div class="sx-item-note">${escapeHtml(it.note)}</div>` : ''}
+          </div>
+        `);
+        shownItems++;
+      });
+    });
+
+    if (!shownItems) {
+      wrap.innerHTML = '<div class="empty">no items match</div>';
+    } else {
+      wrap.innerHTML = html.join('');
+    }
+  }
+
+  function tagClassFor(tag) {
+    const t = String(tag).toLowerCase();
+    if (t === 'core') return 'core';
+    if (t === 'implant') return 'implant';
+    if (t === 'controlled') return 'controlled';
+    if (t === '비급여') return 'nonpay';
+    if (t === '전액본인') return 'selfpay';
+    return '';
+  }
+
+  function renderSurgeryDetails() {
+    renderSxHead();
+    renderSxGroupChips();
+    renderSxItems();
+  }
+
   function renderCost() {
     const totals = costTotals();
     document.getElementById('costEntryCount').textContent = `${state.costs.length} ${state.costs.length === 1 ? 'entry' : 'entries'}`;
@@ -4594,6 +5172,292 @@ const SEED_IMAGES = {
   }
 
   // ════════════════════════════════════════════════════════════════
+  // GLOBAL SEARCH
+  // Searches across all user data + reference content. Result click
+  // navigates to the relevant tab; we then scroll/highlight where
+  // possible (best-effort — not every result has a stable anchor).
+  // ════════════════════════════════════════════════════════════════
+
+  function openSearchModal() {
+    document.getElementById('searchModal').classList.add('show');
+    const input = document.getElementById('searchInput');
+    setTimeout(() => input.focus(), 50);
+  }
+
+  function closeSearchModal() {
+    document.getElementById('searchModal').classList.remove('show');
+  }
+
+  // Highlight matching substring (case-insensitive). Escapes HTML around match.
+  function hlMatch(text, q) {
+    if (!text) return '';
+    const safe = escapeHtml(String(text));
+    if (!q) return safe;
+    const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return safe.replace(re, '<mark>$1</mark>');
+  }
+
+  function _matches(q, ...fields) {
+    const hay = fields.filter(Boolean).map(String).join(' ').toLowerCase();
+    return hay.includes(q);
+  }
+
+  function runGlobalSearch() {
+    const raw = document.getElementById('searchInput').value || '';
+    const q = raw.toLowerCase().trim();
+    const wrap = document.getElementById('searchResults');
+    if (!q) {
+      wrap.innerHTML = '<div class="search-empty">검색어를 입력하세요</div>';
+      return;
+    }
+
+    const groups = [];
+
+    // 1) Journal
+    const journalHits = state.journal.filter(j => _matches(q, j.text, j.date));
+    if (journalHits.length) {
+      groups.push({
+        label: 'Journal',
+        view: 'timeline',
+        items: journalHits.slice(0, 12).map(j => ({
+          title: `D${j.day} · ${fmtDateLong(j.date)} ${j.time || ''}`,
+          meta: 'PHASE → JOURNAL',
+          snippet: j.text || '(no text)',
+          onClick: () => { closeSearchModal(); switchView('timeline'); setTimeout(() => scrollToText(j.text), 200); }
+        })),
+        total: journalHits.length
+      });
+    }
+
+    // 2) Pain log
+    const painHits = state.pain.filter(p =>
+      _matches(q, p.note, p.date, ...(p.locations || []), ...(p.qualities || []), `nrs ${p.nrs}`)
+    );
+    if (painHits.length) {
+      groups.push({
+        label: 'Pain log',
+        view: 'today',
+        items: painHits.slice(0, 12).map(p => ({
+          title: `NRS ${p.nrs}/10 · D${dayFromDate(p.date)} ${p.time}`,
+          meta: `TODAY · ${(p.locations || []).join(', ')}${p.qualities?.length ? ' · ' + p.qualities.join(', ') : ''}`,
+          snippet: p.note || '',
+          onClick: () => { closeSearchModal(); switchView('today'); }
+        })),
+        total: painHits.length
+      });
+    }
+
+    // 3) Vitals
+    const vitalHits = state.vitals.filter(v =>
+      _matches(q, v.note, v.date, v.bp, `spo2 ${v.spo2}`, `pr ${v.pr}`)
+    );
+    if (vitalHits.length) {
+      groups.push({
+        label: 'Vitals',
+        view: 'today',
+        items: vitalHits.slice(0, 8).map(v => ({
+          title: `D${dayFromDate(v.date)} ${v.time} · ${[v.spo2 != null ? 'SpO₂ ' + v.spo2 + '%' : '', v.pr != null ? 'PR ' + v.pr : '', v.bp ? 'BP ' + v.bp : ''].filter(Boolean).join(' · ')}`,
+          meta: 'TODAY → VITALS',
+          snippet: v.note || '',
+          onClick: () => { closeSearchModal(); switchView('today'); }
+        })),
+        total: vitalHits.length
+      });
+    }
+
+    // 4) Medications
+    const medHits = state.medications.filter(m =>
+      _matches(q, m.name, m.generic, m.purpose, m.schedule, m.caution)
+    );
+    if (medHits.length) {
+      groups.push({
+        label: 'Medications',
+        view: 'schedule',
+        items: medHits.slice(0, 10).map(m => ({
+          title: m.name,
+          meta: `PLAN → MEDICATIONS · ${m.generic || ''}`,
+          snippet: [m.purpose, m.schedule].filter(Boolean).join(' · '),
+          onClick: () => { closeSearchModal(); switchView('schedule'); setTimeout(() => scrollToText(m.name), 200); }
+        })),
+        total: medHits.length
+      });
+    }
+
+    // 5) Documents
+    const docHits = (state.documents || []).filter(d =>
+      _matches(q, d.title, d.from, d.note, DOC_CAT_LABELS[d.category])
+    );
+    if (docHits.length) {
+      groups.push({
+        label: 'Documents',
+        view: 'timeline',
+        items: docHits.slice(0, 10).map(d => ({
+          title: d.title,
+          meta: `PHASE → DOCUMENTS · ${DOC_CAT_LABELS[d.category] || d.category}${d.date ? ' · ' + d.date : ''}${d.from ? ' · ' + d.from : ''}`,
+          snippet: d.note || '',
+          onClick: () => { closeSearchModal(); switchView('timeline'); setTimeout(() => scrollToText(d.title), 200); }
+        })),
+        total: docHits.length
+      });
+    }
+
+    // 6) X-rays
+    const xrayHits = (state.xrays || []).filter(x => _matches(q, x.label, x.note, x.date));
+    if (xrayHits.length) {
+      groups.push({
+        label: 'X-rays',
+        view: 'timeline',
+        items: xrayHits.slice(0, 8).map(x => ({
+          title: x.label || 'X-ray',
+          meta: `PHASE → X-RAY · D${x.day} · ${x.date}`,
+          snippet: x.note || '',
+          onClick: () => { closeSearchModal(); switchView('timeline'); }
+        })),
+        total: xrayHits.length
+      });
+    }
+
+    // 7) Cost entries
+    const costHits = (state.costs || []).filter(c =>
+      _matches(q, c.label, c.vendor, c.note, COST_CAT_LABELS[c.category], COST_PAYER_LABELS[c.payer])
+    );
+    if (costHits.length) {
+      groups.push({
+        label: 'Cost entries',
+        view: 'cost',
+        items: costHits.slice(0, 12).map(c => ({
+          title: `${c.label} · ${fmtKRW(c.amount)}`,
+          meta: `COST · ${COST_CAT_LABELS[c.category] || ''} · ${c.date}${c.vendor ? ' · ' + c.vendor : ''}`,
+          snippet: c.note || '',
+          onClick: () => { closeSearchModal(); switchView('cost'); setTimeout(() => openCostModal(c.id), 250); }
+        })),
+        total: costHits.length
+      });
+    }
+
+    // 8) Surgery itemization
+    const sxHits = [];
+    SURGERY_DETAILS.groups.forEach(g => {
+      g.items.forEach(it => {
+        if (_matches(q, it.name, it.note, it.tag, g.label)) sxHits.push({ g, it });
+      });
+    });
+    if (sxHits.length) {
+      groups.push({
+        label: 'Surgery itemization',
+        view: 'timeline',
+        items: sxHits.slice(0, 12).map(({ g, it }) => ({
+          title: it.name,
+          meta: `PHASE → SURGERY · ${g.label} · ${fmtKRW(it.amount)}${it.tag ? ' · ' + it.tag : ''}`,
+          snippet: it.note || '',
+          onClick: () => {
+            closeSearchModal();
+            switchView('timeline');
+            setTimeout(() => {
+              // Set Surgery itemization search box to the query so the matching item appears
+              const sx = document.getElementById('sxSearch');
+              if (sx) { sx.value = raw; renderSxItems(); }
+              scrollToText(it.name);
+            }, 200);
+          }
+        })),
+        total: sxHits.length
+      });
+    }
+
+    // 9) Glossary
+    const glossHits = GLOSSARY.filter(g =>
+      _matches(q, g.en, g.ko, g.def, g.cat, g.abbr)
+    );
+    if (glossHits.length) {
+      groups.push({
+        label: 'Glossary',
+        view: 'learn',
+        items: glossHits.slice(0, 12).map(g => ({
+          title: `${g.en}${g.ko ? ' · ' + g.ko : ''}${g.abbr ? ' (' + g.abbr + ')' : ''}`,
+          meta: `LEARN · ${g.cat || ''}`,
+          snippet: g.def || '',
+          onClick: () => {
+            closeSearchModal();
+            switchView('learn');
+            setTimeout(() => {
+              const gs = document.getElementById('glossSearch');
+              if (gs) { gs.value = raw; renderGlossary(); }
+              scrollToText(g.en);
+            }, 200);
+          }
+        })),
+        total: glossHits.length
+      });
+    }
+
+    // Render
+    if (!groups.length) {
+      wrap.innerHTML = `<div class="search-empty">검색 결과 없음 · "${escapeHtml(raw)}"</div>`;
+      return;
+    }
+    const html = [];
+    groups.forEach(grp => {
+      html.push(`
+        <div class="search-group-head">
+          <span>${escapeHtml(grp.label)}</span>
+          <span>${grp.items.length}${grp.total > grp.items.length ? ' / ' + grp.total : ''}</span>
+        </div>
+      `);
+      grp.items.forEach((it, i) => {
+        const id = `sr-${grp.label.replace(/\W/g, '')}-${i}`;
+        html.push(`
+          <div class="search-result" id="${id}">
+            <div class="search-result-title">${hlMatch(it.title, q)}</div>
+            <div class="search-result-meta">${hlMatch(it.meta, q)}</div>
+            ${it.snippet ? `<div class="search-result-snippet">${hlMatch(it.snippet, q)}</div>` : ''}
+          </div>
+        `);
+      });
+      // Hook handlers after innerHTML render
+      grp._wireIdx = (grp._wireIdx || 0);
+    });
+    wrap.innerHTML = html.join('');
+    // Re-wire click handlers (innerHTML strips them).
+    let cursor = 0;
+    groups.forEach(grp => {
+      grp.items.forEach((it, i) => {
+        const id = `sr-${grp.label.replace(/\W/g, '')}-${i}`;
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', it.onClick);
+        cursor++;
+      });
+    });
+  }
+
+  // Best-effort scroll to the first DOM element whose textContent contains `needle`.
+  // Briefly highlights it. Used so search result clicks land on the right card.
+  function scrollToText(needle) {
+    if (!needle) return;
+    const wanted = needle.slice(0, 60).toLowerCase();
+    const candidates = document.querySelectorAll('.view.active .section, .view.active .journal-entry, .view.active .cost-row, .view.active .sx-item, .view.active .glossary-term, .view.active .med-card, .view.active .vital-row');
+    for (const el of candidates) {
+      const t = (el.textContent || '').toLowerCase();
+      if (t.includes(wanted)) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const prev = el.style.boxShadow;
+        el.style.boxShadow = '0 0 0 2px var(--accent)';
+        el.style.transition = 'box-shadow 0.6s';
+        setTimeout(() => { el.style.boxShadow = prev; }, 1400);
+        return;
+      }
+    }
+  }
+
+  // Esc closes the modal.
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const m = document.getElementById('searchModal');
+      if (m && m.classList.contains('show')) closeSearchModal();
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════════
   // UI
   // ════════════════════════════════════════════════════════════════
 
@@ -4609,6 +5473,7 @@ const SEED_IMAGES = {
     if (view === 'schedule') { renderSchedule(); renderMedications(); }
     if (view === 'timeline') {
       renderTimeline();
+      renderSurgeryDetails();
       renderPhotos();
       renderXrays();
       renderDocuments();
