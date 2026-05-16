@@ -1783,9 +1783,11 @@
       </div>
     </div>
 
-    <div style="margin-top:14px;">
+    <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
       <button class="btn btn-primary btn-sm" onclick="openCostModal()">+ Add cost entry</button>
+      <button class="btn btn-sm btn-ghost" onclick="syncCostsFromServer(true)" id="costSyncBtn">⤓ Sync receipts</button>
     </div>
+    <div style="margin-top:6px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em;" id="costSyncStatus"></div>
   </div>
 
   <div class="section">
@@ -1914,7 +1916,7 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>About</span><span class="ord">v3.0</span></div>
+    <div class="section-label"><span>About</span><span class="ord">v3.1</span></div>
     <div style="font-size:11px; color:var(--mute); line-height:1.55;">
       로컬 저장소에만 데이터를 보관합니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 반드시 JSON으로 백업하세요.
       <div style="margin-top:8px;" class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
@@ -3805,6 +3807,49 @@ const SEED_IMAGES = {
     return buckets;
   }
 
+  // Fetch the deployed costs.json (receipts bundled with the app) and merge
+  // any new entries into state.costs. Dedup by date+label+amount+vendor so
+  // it's safe to call repeatedly — auto on startup AND from the Sync button.
+  async function syncCostsFromServer(showFeedback) {
+    const statusEl = document.getElementById('costSyncStatus');
+    const btn = document.getElementById('costSyncBtn');
+    if (showFeedback && btn) { btn.disabled = true; btn.textContent = 'Syncing…'; }
+    try {
+      const resp = await fetch('./costs.json', { cache: 'no-cache' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      const incoming = Array.isArray(data.costs) ? data.costs : [];
+
+      const key = c => `${c.date}|${c.label}|${c.amount}|${c.vendor || ''}`;
+      const existing = new Set(state.costs.map(key));
+      let added = 0;
+      for (const e of incoming) {
+        if (existing.has(key(e))) continue;
+        state.costs.push({
+          id: Date.now() + Math.floor(Math.random() * 10000) + added,
+          day: dayFromDate(e.date),
+          ...e
+        });
+        added++;
+      }
+      if (added > 0) {
+        state.costs.sort((a, b) => (b.date + String(b.id)).localeCompare(a.date + String(a.id)));
+        save();
+        if (document.getElementById('view-cost').classList.contains('active')) renderCost();
+      }
+      const msg = added === 0
+        ? `이미 최신 상태 (${incoming.length} on server)`
+        : `${added} new · ${incoming.length - added} already present`;
+      if (statusEl) statusEl.textContent = `Last sync: ${msg}`;
+      if (showFeedback) toast(added === 0 ? 'Already up to date' : `Imported ${added} receipt${added === 1 ? '' : 's'}`);
+    } catch (err) {
+      if (statusEl) statusEl.textContent = `Sync failed: ${err.message}`;
+      if (showFeedback) toast(`Sync failed: ${err.message}`);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '⤓ Sync receipts'; }
+    }
+  }
+
   function renderCost() {
     const totals = costTotals();
     document.getElementById('costEntryCount').textContent = `${state.costs.length} ${state.costs.length === 1 ? 'entry' : 'entries'}`;
@@ -4621,6 +4666,11 @@ const SEED_IMAGES = {
   if (!state.costFilter) state.costFilter = 'all';
   seedFirstRun();
   renderAll();
+
+  // Background auto-sync of receipts bundled with the app — silent on failure
+  // (offline / file not deployed yet). Re-runs are idempotent (dedup by
+  // date+label+amount+vendor). Delay slightly so first paint isn't blocked.
+  setTimeout(() => { syncCostsFromServer(false); }, 600);
 
   // Block iOS pinch / double-tap zoom that "sticks"
   document.addEventListener('gesturestart', (e) => e.preventDefault());

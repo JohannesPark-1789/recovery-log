@@ -2,13 +2,14 @@
 // Strategy: NETWORK-FIRST for app shell, with cache fallback for offline
 // Update CACHE version when you want to force eviction of old cached assets
 
-const CACHE = 'recovery-log-v4-2026-05-16';
+const CACHE = 'recovery-log-v5-2026-05-16';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './costs.json'
 ];
 
 // On install, pre-cache assets and immediately activate
