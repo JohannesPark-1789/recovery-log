@@ -4573,6 +4573,9 @@ const SEED_IMAGES = {
   // Fetch the deployed costs.json (receipts bundled with the app) and merge
   // any new entries into state.costs. Dedup by date+label+amount+vendor so
   // it's safe to call repeatedly — auto on startup AND from the Sync button.
+  // For entries that already exist, fill in any new top-level fields from the
+  // server (e.g. a later-added `breakdown` flag) without touching fields the
+  // local copy already has — preserves user edits to note/category/payer.
   async function syncCostsFromServer(showFeedback) {
     const statusEl = document.getElementById('costSyncStatus');
     const btn = document.getElementById('costSyncBtn');
@@ -4584,10 +4587,21 @@ const SEED_IMAGES = {
       const incoming = Array.isArray(data.costs) ? data.costs : [];
 
       const key = c => `${c.date}|${c.label}|${c.amount}|${c.vendor || ''}`;
-      const existing = new Set(state.costs.map(key));
-      let added = 0;
+      const localByKey = new Map(state.costs.map(c => [key(c), c]));
+      let added = 0, patched = 0;
       for (const e of incoming) {
-        if (existing.has(key(e))) continue;
+        const existing = localByKey.get(key(e));
+        if (existing) {
+          // Backfill any new server-side fields we don't have locally.
+          // Skip `receipt` (already imported) and `id`/`day` (local-managed).
+          let touched = false;
+          for (const [k, v] of Object.entries(e)) {
+            if (k === 'receipt' || k === 'id' || k === 'day') continue;
+            if (existing[k] === undefined) { existing[k] = v; touched = true; }
+          }
+          if (touched) patched++;
+          continue;
+        }
         state.costs.push({
           id: Date.now() + Math.floor(Math.random() * 10000) + added,
           day: dayFromDate(e.date),
@@ -4595,16 +4609,24 @@ const SEED_IMAGES = {
         });
         added++;
       }
-      if (added > 0) {
+      if (added > 0 || patched > 0) {
         state.costs.sort((a, b) => (b.date + String(b.id)).localeCompare(a.date + String(a.id)));
         save();
         if (document.getElementById('view-cost').classList.contains('active')) renderCost();
       }
-      const msg = added === 0
+      const parts = [];
+      if (added > 0) parts.push(`${added} new`);
+      if (patched > 0) parts.push(`${patched} updated`);
+      const msg = parts.length === 0
         ? `이미 최신 상태 (${incoming.length} on server)`
-        : `${added} new · ${incoming.length - added} already present`;
+        : `${parts.join(' · ')} · ${incoming.length - added} already present`;
       if (statusEl) statusEl.textContent = `Last sync: ${msg}`;
-      if (showFeedback) toast(added === 0 ? 'Already up to date' : `Imported ${added} receipt${added === 1 ? '' : 's'}`);
+      if (showFeedback) {
+        const toastMsg = parts.length === 0
+          ? 'Already up to date'
+          : `${parts.join(', ')}`;
+        toast(toastMsg);
+      }
     } catch (err) {
       if (statusEl) statusEl.textContent = `Sync failed: ${err.message}`;
       if (showFeedback) toast(`Sync failed: ${err.message}`);
