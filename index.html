@@ -2333,7 +2333,7 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>About</span><span class="ord">v3.3</span></div>
+    <div class="section-label"><span>About</span><span class="ord">v3.4</span></div>
     <div style="font-size:11px; color:var(--mute); line-height:1.55;">
       로컬 저장소에만 데이터를 보관합니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 반드시 JSON으로 백업하세요.
       <div style="margin-top:8px;" class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
@@ -2802,58 +2802,60 @@ const SEED_IMAGES = {
   ];
 
   // ────────────────────────────────────────────────────────
-  // MEDICATIONS — 청구성심병원 처방 (2026-05-11), 초기 시드 데이터
+  // MEDICATIONS — 청구성심병원 처방, 초기 시드 데이터
+  //   · 퇴원약 4종 (2026-05-15, 4일분, 1일 3회 식후 30분) — 복약안내문 PDF 기준
+  //   · 외래 처방 1종 (2026-05-09, 2일분) — 처방전 PDF 기준 (이미 복용 완료)
   // ────────────────────────────────────────────────────────
   const DEFAULT_MEDICATIONS = [
     {
-      id: 'caldi',
-      name: '칼디플러스정',
-      generic: 'Acetaminophen 325mg + Tramadol 37.5mg',
-      maker: '하나제약',
-      purpose: '중등도 통증 조절. Tramadol(중추성 진통제) + Acetaminophen 복합. 수술 후 흔히 처방되는 조합.',
-      schedule: '아침/저녁 식후 30분',
-      photoKey: 'med_morning',
-      caution: '졸음·어지러움 가능. SSRI 등과 병용 시 세로토닌 증후군 주의. 알코올 피할 것.'
-    },
-    {
-      id: 'beberan',
-      name: '베베란정',
-      generic: 'Eperisone HCl 50mg',
-      maker: '',
-      purpose: '근육 이완제. 골격근 긴장으로 인한 통증·강직 완화. 수술부 주변 근육 보호.',
-      schedule: '아침/저녁 식후 30분',
+      id: 'cefradine',
+      name: '한미세프라딘캡슐 500mg',
+      generic: 'Cefradine 500mg (1세대 cephalosporin 항생제)',
+      maker: '한미약품',
+      purpose: '수술부 감염 예방·치료를 위한 1세대 cephalosporin 항생제. 세균 증식·사멸로 감염성 질환을 치료·예방.',
+      schedule: '1일 3회 1캡슐 · 식후 30분 · 4일 (퇴원약 2026-05-15~)',
       photoKey: null,
-      caution: '졸음 가능. 가벼운 위장 불편감.'
+      caution: '증상이 호전되어도 임의 중단 금지(내성·재감염 위험). 페니실린/항생제 알레르기 시 사전 고지. 설사 유발 가능하나 임의로 지사제 복용 금지. 기밀용기, 실온(1~30°C) 보관.'
     },
     {
-      id: 'lastacaft',
+      id: 'lacstar',
       name: '락스타더블캡슐',
-      generic: 'Lansoprazole-based DR capsule (위장보호)',
+      generic: 'Lactobacillus (생균제 · 정장제)',
       maker: '',
-      purpose: 'PPI 계열 위산분비 억제제. 진통제·항생제로 인한 위점막 자극 예방.',
-      schedule: '아침/점심/저녁 식후 30분',
+      purpose: '장내 세균총을 정상화하여 항생제·수술 후 변비·묽은변·복부팽만감을 개선. 항생제와 함께 복용해 장 미생물 보호.',
+      schedule: '1일 3회 1캡슐 · 식후 30분 · 4일 (퇴원약 2026-05-15~)',
       photoKey: 'med_lunch',
-      caution: '장기 복용 시 비타민 B12·마그네슘 흡수 감소 가능. KL/LASR2 각인.'
+      caution: '캡슐을 개봉하지 말고 통째로 삼킬 것. 식사와 무관하게 복용 가능. 설사 시 수분·염분·당 보충. 복용 2일 후에도 개선 없으면 의사 상담. 기밀용기, 실온(1~30°C) 보관.'
     },
     {
-      id: 'sterene',
-      name: '스테렌정',
-      generic: 'Stillen / Eupatilin (애엽 추출물)',
-      maker: '',
-      purpose: '위점막 보호제. 항염·항산화 작용으로 위 점막 손상 완화.',
-      schedule: '아침/점심/저녁 식후 30분',
+      id: 'rodin',
+      name: '건일로딘정 200mg',
+      generic: 'Etodolac 200mg (NSAID 비스테로이드성 소염진통제)',
+      maker: '건일제약',
+      purpose: '수술부 급성 염증·통증 완화용 NSAID. COX-2 선택성이 비교적 높아 위장 부담이 상대적으로 적은 편.',
+      schedule: '1일 3회 1정 · 식후 30분 · 4일 (퇴원약 2026-05-15~) · 외래 처방분(2026-05-09 2일분)은 복용 완료',
       photoKey: null,
-      caution: '대체로 부작용 적음.'
+      caution: '복용 중 음주 금지. 출혈 위험 — 부상 주의, 부드러운 칫솔/전기면도기 사용. 태아 위험으로 임신 중/계획 시 금지. 알레르기 반응·속쓰림·피토함·호흡곤란·심한 복통·가슴통증 시 즉시 의사·약사 연락. 기밀용기 보관.'
     },
     {
-      id: 'nutraset',
-      name: '뉴트라셋세미정',
-      generic: 'Acetaminophen 325mg + Tramadol 18.75mg (저용량)',
-      maker: '',
-      purpose: '경도~중등도 통증 조절. 이전 처방 기록 (2025-02-28). 칼디플러스정 대비 절반 용량.',
-      schedule: '필요시 (PRN)',
+      id: 'stillen',
+      name: '스테렌정 60mg',
+      generic: 'Eupatilin 60mg (애엽 / Artemisia Herb 추출물)',
+      maker: '동아ST',
+      purpose: '위점막 보호제. NSAID(건일로딘)·항생제로 인한 위점막 자극 예방. 항염·항산화 작용으로 위 점막 손상 완화.',
+      schedule: '1일 3회 1정 · 식후 30분 · 4일 (퇴원약 2026-05-15~) · 외래 처방분(2026-05-09 2일분)은 복용 완료',
       photoKey: null,
-      caution: '같은 계열 약물과 중복 복용 금지.'
+      caution: '의사·약사 지시에 따라 복용 — 임의로 더 많이/오래 복용 금지. 2주 투여 후에도 개선 없으면 중지하고 상담. 기밀용기, 실온(1~30°C) 보관. 알약 각인 1H/60.'
+    },
+    {
+      id: 'eperisone',
+      name: '에릭손정 50mg',
+      generic: 'Eperisone HCl 50mg (근육이완제)',
+      maker: '',
+      purpose: '골격근 긴장으로 인한 통증·강직 완화. 외래 처방 시 수술부 주변 근육 보호 목적으로 함께 처방됨.',
+      schedule: '1일 3회 1정 · 식후 30분 · 2일 (외래 처방 2026-05-09, 복용 완료)',
+      photoKey: null,
+      caution: '졸음·어지러움 가능 — 운전 주의. 가벼운 위장 불편감 가능. 퇴원약에는 미포함.'
     }
   ];
 
