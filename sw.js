@@ -2,14 +2,17 @@
 // Strategy: NETWORK-FIRST for app shell, with cache fallback for offline
 // Update CACHE version when you want to force eviction of old cached assets
 
-const CACHE = 'recovery-log-v8-2026-05-16-meds';
+const CACHE = 'recovery-log-v10-2026-05-16-med-migrate';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  './costs.json'
+  './costs.json',
+  './docs/medication/복약안내문.pdf',
+  './docs/medication/처방전.pdf',
+  './docs/medication/퇴원약들.pdf'
 ];
 
 // On install, pre-cache assets and immediately activate
