@@ -724,6 +724,8 @@
   }
 
   /* ─── Surgery itemization ─── */
+  .sx-toggle:hover #sxChevron { color: var(--ink); }
+
   .sx-group-summary {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1889,17 +1891,19 @@
   </div>
 
   <div class="section">
-    <div class="section-label">
-      <span>Surgery itemization</span>
+    <div class="section-label sx-toggle" id="sxToggle" onclick="toggleSx()" style="cursor:pointer; user-select:none;">
+      <span><span id="sxChevron" style="display:inline-block; width:10px; color:var(--mute);">▸</span> Surgery itemization</span>
       <span class="ord" id="sxHeadCount">— items</span>
     </div>
-    <div id="sxHead" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em; margin: 4px 0 10px;"></div>
-    <div class="chip-row" id="sxGroupChips" style="margin-bottom: 6px;"></div>
-    <input type="text" id="sxSearch" placeholder="검색 · 항목명 / 메모" oninput="renderSxItems()" style="margin-top: 8px;" />
-    <div id="sxBody" style="margin-top:10px;"></div>
-    <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
-      출처: 청구성심병원 진료비 세부산정내역 (2026-05-15 발급, 11페이지).
-      Cost 탭에 등록된 입원 영수증의 항목별 내역입니다.
+    <div id="sxCollapsible" style="display:none;">
+      <div id="sxHead" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em; margin: 4px 0 10px;"></div>
+      <div class="chip-row" id="sxGroupChips" style="margin-bottom: 6px;"></div>
+      <input type="text" id="sxSearch" placeholder="검색 · 항목명 / 메모" oninput="renderSxItems()" style="margin-top: 8px;" />
+      <div id="sxBody" style="margin-top:10px;"></div>
+      <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
+        출처: 청구성심병원 진료비 세부산정내역 (2026-05-15 발급, 11페이지).
+        Cost 탭에 등록된 입원 영수증의 항목별 내역입니다.
+      </div>
     </div>
   </div>
 
@@ -4428,6 +4432,22 @@ const SEED_IMAGES = {
     renderSxItems();
   }
 
+  // Collapsible Surgery itemization (collapsed by default; user can expand).
+  // Open state is session-only — every fresh app load starts collapsed.
+  let _sxOpen = false;
+
+  function setSxOpen(open) {
+    _sxOpen = !!open;
+    const body = document.getElementById('sxCollapsible');
+    const chev = document.getElementById('sxChevron');
+    if (body) body.style.display = _sxOpen ? '' : 'none';
+    if (chev) chev.textContent = _sxOpen ? '▾' : '▸';
+  }
+
+  function toggleSx() {
+    setSxOpen(!_sxOpen);
+  }
+
   function renderCost() {
     const totals = costTotals();
     document.getElementById('costEntryCount').textContent = `${state.costs.length} ${state.costs.length === 1 ? 'entry' : 'entries'}`;
@@ -5354,7 +5374,8 @@ const SEED_IMAGES = {
             closeSearchModal();
             switchView('timeline');
             setTimeout(() => {
-              // Set Surgery itemization search box to the query so the matching item appears
+              // Auto-expand the collapsed section so the matching item is visible
+              setSxOpen(true);
               const sx = document.getElementById('sxSearch');
               if (sx) { sx.value = raw; renderSxItems(); }
               scrollToText(it.name);
