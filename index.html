@@ -2421,7 +2421,7 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>About</span><span class="ord">v3.4</span></div>
+    <div class="section-label"><span>About</span><span class="ord">v3.5</span></div>
     <div style="font-size:11px; color:var(--mute); line-height:1.55;">
       로컬 저장소에만 데이터를 보관합니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 반드시 JSON으로 백업하세요.
       <div style="margin-top:8px;" class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
@@ -3558,7 +3558,8 @@ const SEED_IMAGES = {
       medications: state.medications,
       documents: state.documents,
       xrays: state.xrays,
-      costs: state.costs
+      costs: state.costs,
+      seeded: state.seeded === true
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(persist));
@@ -5716,7 +5717,25 @@ const SEED_IMAGES = {
   // ────────────────────────────────────────────────────────
   // If no data exists, seed mobiCARE measurement and surgery-day baseline
   function seedFirstRun() {
-    if (state.vitals.length || state.pain.length || state.medications.length) return;
+    // Sticky sentinel — once this device has been seeded (or has already had
+    // user data observed), never seed again. Protects against catastrophic
+    // data loss if the user later deletes every vital/pain/medication entry,
+    // which used to silently re-trigger the seed and overwrite everything.
+    if (state.seeded === true) return;
+
+    // Old guard: any pre-existing data means this device was already in use
+    // before the sentinel was introduced. Mark it as seeded and bail out.
+    if (state.vitals.length || state.pain.length || state.medications.length ||
+        (state.schedule && state.schedule.length) ||
+        (state.documents && state.documents.length) ||
+        (state.journal && state.journal.length) ||
+        (state.costs && state.costs.length)) {
+      state.seeded = true;
+      save();
+      return;
+    }
+
+    // Fresh device → seed baseline vitals and medication library
     state.vitals.push({
       id: Date.now(),
       date: SURGERY_DATE,
@@ -5729,7 +5748,6 @@ const SEED_IMAGES = {
       sleep: null,
       note: 'mobiCARE +Pulse · PI 10.6%'
     });
-    // Seed default medications, attaching embedded photos
     state.medications = DEFAULT_MEDICATIONS.map(m => ({
       id: m.id,
       name: m.name,
@@ -5741,6 +5759,7 @@ const SEED_IMAGES = {
       caution: m.caution || '',
       custom: false
     }));
+    state.seeded = true;
     save();
   }
 
@@ -5768,6 +5787,7 @@ const SEED_IMAGES = {
         state.documents = data.documents || [];
         state.xrays = data.xrays || [];
         state.costs = data.costs || [];
+        state.seeded = true;  // imported data counts as seeded — never re-seed
         save();
         renderAll();
         toast('Imported successfully');
