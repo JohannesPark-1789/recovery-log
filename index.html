@@ -1789,6 +1789,76 @@
     text-align: center;
   }
 
+  /* ─── PDF viewer modal ─── */
+  /* Same overlay pattern as lightbox, but with a header bar (title + close)
+     so the user can always get back to the PWA. Crucial in standalone PWA
+     mode where window.open spawns a separate browser tab that's awkward to
+     navigate away from. */
+  .pdf-viewer {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    z-index: 500;
+    display: none;
+    flex-direction: column;
+  }
+  .pdf-viewer.show { display: flex; }
+  .pdf-viewer-header {
+    flex: 0 0 auto;
+    padding: calc(12px + var(--safe-top)) 16px 12px 16px;
+    background: rgba(0,0,0,0.85);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .pdf-viewer-title {
+    flex: 1 1 auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pdf-viewer-close {
+    flex: 0 0 auto;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    padding: 8px 14px;
+    border: none;
+  }
+  .pdf-viewer-close:hover { background: rgba(255,255,255,0.2); }
+  .pdf-viewer iframe {
+    flex: 1 1 auto;
+    width: 100%;
+    border: 0;
+    background: #0a0a0a;
+  }
+  .pdf-viewer-fallback {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .pdf-viewer-fallback a {
+    color: var(--paper);
+    text-decoration: underline;
+    margin-top: 12px;
+    display: inline-block;
+  }
+
   /* ─── Photo comparison modal ─── */
   .compare-modal {
     position: fixed;
@@ -2430,7 +2500,7 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>About</span><span class="ord">v3.7</span></div>
+    <div class="section-label"><span>About</span><span class="ord">v3.8</span></div>
     <div style="font-size:11px; color:var(--mute); line-height:1.55;">
       로컬 저장소에만 데이터를 보관합니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 반드시 JSON으로 백업하세요.
       <div style="margin-top:8px;" class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
@@ -2799,6 +2869,15 @@
       <div class="search-empty">검색어를 입력하세요</div>
     </div>
   </div>
+</div>
+
+<!-- ═══ PDF viewer ═══ -->
+<div class="pdf-viewer" id="pdfViewer">
+  <div class="pdf-viewer-header">
+    <div class="pdf-viewer-title" id="pdfViewerTitle"></div>
+    <button class="pdf-viewer-close" onclick="closePdfViewer()">CLOSE ✕</button>
+  </div>
+  <div id="pdfViewerBody"></div>
 </div>
 
 <!-- ═══ Image lightbox ═══ -->
@@ -4541,24 +4620,41 @@ const SEED_IMAGES = {
         `${d.title}${d.date ? ' · ' + d.date : ''}${d.from ? ' · ' + d.from : ''}`
       );
     } else if ((d.fileType || '') === 'application/pdf') {
-      // Seeded srcUrl PDFs open directly; uploaded data URLs need iframe wrapper
-      if (d.srcUrl && !d.fileData) {
-        const win = window.open(d.srcUrl, '_blank');
-        if (!win) toast('Popup blocked');
-      } else {
-        const win = window.open();
-        if (win) {
-          win.document.write(`
-            <html><head><title>${escapeHtml(d.title)}</title></head>
-            <body style="margin:0;background:#0a0a0a;">
-            <iframe src="${src}" style="width:100%;height:100vh;border:0;"></iframe>
-            </body></html>
-          `);
-        } else {
-          toast('Popup blocked');
-        }
-      }
+      openPdfViewer(src, d);
     }
+  }
+
+  // In-app PDF viewer — opens an iframe modal inside the PWA so a CLOSE button
+  // always exists. Avoids window.open which spawns a separate browser tab and
+  // strands the user when running in standalone PWA mode.
+  // Some mobile browsers refuse to render PDFs in iframes (they download
+  // instead). When that happens, the body falls back to a "Open in browser"
+  // link so the user still has an explicit exit path back to the PWA.
+  function openPdfViewer(src, d) {
+    const titleEl = document.getElementById('pdfViewerTitle');
+    const bodyEl = document.getElementById('pdfViewerBody');
+    const subtitle = [d.date, d.from].filter(Boolean).join(' · ');
+    titleEl.textContent = subtitle ? `${d.title} — ${subtitle}` : d.title;
+    bodyEl.innerHTML = `
+      <iframe src="${src}" title="${escapeHtml(d.title)}"></iframe>
+      <div class="pdf-viewer-fallback" id="pdfViewerFallback" style="display:none;">
+        브라우저가 이 PDF를 직접 표시하지 못합니다.<br>
+        <a href="${src}" target="_blank" rel="noopener">새 탭에서 열기</a>
+      </div>
+    `;
+    // If the iframe fails (rare on mobile), reveal the fallback link
+    const iframe = bodyEl.querySelector('iframe');
+    iframe.addEventListener('error', () => {
+      iframe.style.display = 'none';
+      document.getElementById('pdfViewerFallback').style.display = 'flex';
+    });
+    document.getElementById('pdfViewer').classList.add('show');
+  }
+
+  function closePdfViewer() {
+    document.getElementById('pdfViewer').classList.remove('show');
+    // Clear the iframe so the PDF stops loading / playing audio (some PDFs do)
+    document.getElementById('pdfViewerBody').innerHTML = '';
   }
 
   function openDocModal(docId) {
@@ -6453,6 +6549,8 @@ const SEED_IMAGES = {
     if (e.key === 'Escape') {
       const m = document.getElementById('searchModal');
       if (m && m.classList.contains('show')) closeSearchModal();
+      const pdf = document.getElementById('pdfViewer');
+      if (pdf && pdf.classList.contains('show')) closePdfViewer();
     }
   });
 
