@@ -857,6 +857,77 @@
     margin-top: 18px;
   }
   .sx-group-head:first-child { margin-top: 0; }
+
+  /* ─── Medical records (read-only documents) ─── */
+  .mr-record {
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .mr-record:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+  .mr-facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: 8px;
+  }
+  .mr-fact {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--line);
+    align-items: baseline;
+  }
+  .mr-fact:last-child { border-bottom: none; }
+  .mr-fact-k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .mr-fact-v {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .mr-proc-title {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .mr-proc {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .mr-proc li { margin: 3px 0; }
+  .mr-source {
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute-2);
+    letter-spacing: 0.04em;
+  }
+  .mr-source code {
+    background: var(--paper-2);
+    padding: 1px 5px;
+    border: 1px solid var(--line);
+    font-size: 10px;
+  }
+  @media (max-width: 380px) {
+    .mr-fact { grid-template-columns: 110px 1fr; gap: 8px; }
+  }
   .sx-group-head-name {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -2037,6 +2108,23 @@
   </div>
 
   <div class="section">
+    <div class="section-label sx-toggle" id="mrToggle" onclick="toggleMr()" style="cursor:pointer; user-select:none;">
+      <span><span id="mrChevron" style="display:inline-block; width:10px; color:var(--mute);">▸</span> Medical records</span>
+      <span class="ord" id="mrHeadCount">— records</span>
+    </div>
+    <div id="mrCollapsible" style="display:none;">
+      <div id="mrHead" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em; margin: 4px 0 10px;"></div>
+      <div class="chip-row" id="mrTypeChips" style="margin-bottom: 6px;"></div>
+      <input type="text" id="mrSearch" placeholder="검색 · 진단명 / 의사 / 항목" oninput="renderMrItems()" style="margin-top: 8px;" />
+      <div id="mrBody" style="margin-top:10px;"></div>
+      <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
+        출처: 청구성심병원 발급 공식 문서 5종 (경과기록지·수술기록지·진단서·입퇴원확인서·의무기록사본).
+        원본 PDF 는 <code>docs/others/</code> 폴더에 보관 · 검색은 헤더 🔍 에서도 가능합니다.
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <div class="section-label">
       <span>Surgical site photos</span>
       <span class="ord" style="display:flex; gap:8px; align-items:center;">
@@ -2669,7 +2757,7 @@
   <div class="search-modal">
     <div class="search-input-row">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="text" class="search-input" id="searchInput" placeholder="검색 · 저널·통증·약·비용·수술항목·용어집·문서…" oninput="runGlobalSearch()" />
+      <input type="text" class="search-input" id="searchInput" placeholder="검색 · 저널·통증·약·비용·수술항목·의무기록·용어집·문서…" oninput="runGlobalSearch()" />
       <button class="search-close" onclick="closeSearchModal()">CLOSE ✕</button>
     </div>
     <div class="search-results" id="searchResults">
@@ -3239,6 +3327,136 @@ const SEED_IMAGES = {
         ]
       }
     ]
+  };
+
+  // ════════════════════════════════════════════════════════════════
+  // MEDICAL RECORDS
+  // 청구성심병원 발급 공식 문서 5종 (docs/others/*.pdf) 에서 발췌.
+  // 주민번호·전화·자택주소 등 비임상 PII 는 의도적으로 제외.
+  // ════════════════════════════════════════════════════════════════
+  const MEDICAL_RECORDS = {
+    source: '청구성심병원 발급 공식 문서 (2026-05-09 ~ 2026-05-15)',
+    records: [
+      {
+        id: 'progress-d-2',
+        type: 'progress',
+        title: '경과기록지 · Progress Note',
+        sub: '수상 당일 OPD · OS 금세진',
+        date: '2026-05-09',
+        time: '10:57',
+        day: -2,
+        file: 'docs/others/경과기록지.pdf',
+        facts: [
+          { k: 'Onset',                 v: '2026-05-09' },
+          { k: 'CC (주호소)',           v: 'Rt shoulder pain' },
+          { k: 'PI (현병력)',           v: '자전거 타다가 넘어져 수상' },
+          { k: 'PE (이학적 검사)',      v: 'multiple abrasion (Rt shoulder, lat elbow) · Rt shoulder LOM · old OP scar' },
+          { k: 'PH 1 (과거력)',         v: 'Lt 5 finger PIP dorsal avulsion Fx (2024) — 전원 의뢰서' },
+          { k: 'PH 2 (과거력)',         v: 'Rt shoulder Fx OP — 금속 제거 상태' },
+          { k: 'Imaging',               v: 'XR: Rt Clavicle Shaft Fx' },
+          { k: 'Plan',                  v: 'Dressing · PO 2d · arm sling · NPO Adm · 5/11 OP' }
+        ]
+      },
+      {
+        id: 'op-record',
+        type: 'operation',
+        title: '수술기록지 · Operation Record',
+        sub: 'Rt Clavicle Shaft Fx · OR/IF · 작성 2026-05-11 14:22',
+        date: '2026-05-11',
+        day: 0,
+        file: 'docs/others/OPERATION_RECORD.pdf',
+        facts: [
+          { k: 'Preoperative Dx',       v: 'Rt Clavicle Shaft Fx' },
+          { k: 'Postoperative Dx',      v: 'Rt Clavicle Shaft Fx' },
+          { k: 'Operation',             v: 'OR/IF (관혈적 정복 + 내고정)' },
+          { k: '병동',                  v: '3W · Major surgery' },
+          { k: 'Surgeon',               v: '금세진 (OS)' },
+          { k: 'First Assistant',       v: '최승천' },
+          { k: 'Anesthetist',           v: '최희령' },
+          { k: 'Anesthesia',            v: 'General' },
+          { k: 'Surgical Nurse',        v: '정혜윤' },
+          { k: 'Instrument Nurse',      v: '강지애' },
+          { k: 'Drain',                 v: '유 · Hemo vac' },
+          { k: 'Sponge count',          v: '미확인 (무)' },
+          { k: 'Blood loss',            v: '80 cc' }
+        ],
+        procedure: [
+          '1. Sterile draping on Rt shoulder ~ clavicle area · semi-Fowler position',
+          '2. Skin incision over Rt clavicle area · dissection to Fx site',
+          '   소견 — long oblique displaced Fx with thin long oblique bone fragment between major Fx site',
+          '   → 2 circumferential wiring over long oblique Fx with 3rd butterfly fragment',
+          '   → good acceptable reduction',
+          '   → OR/IF with anatomical clavicle plate and screws fixation',
+          '   → one circumferential wiring over plate',
+          '3. Wd irrigation and hemostasis',
+          '4. Wd repair with drain',
+          '5. Wd dressing'
+        ]
+      },
+      {
+        id: 'diagnosis',
+        type: 'certificate',
+        title: '진단서 · Diagnostic Certificate',
+        sub: '발급 2026-05-15 · 연번호 2026-5658-1 · 보험·직장용',
+        date: '2026-05-15',
+        day: 4,
+        file: 'docs/others/진단서.pdf',
+        facts: [
+          { k: '병명 (최종 진단)',      v: '우 쇄골 간부 분쇄골절 (Rt clavicle shaft comminuted fracture)' },
+          { k: '질병분류기호 (KCD)',    v: 'S42.040' },
+          { k: '발병 연월일',           v: '2026-05-09' },
+          { k: '진단 연월일',           v: '2026-05-09' },
+          { k: '입원 기간',             v: '2026-05-11 ~ 2026-05-15 (5일)' },
+          { k: '시행 수술',             v: '관혈적 금속고정술 (2026-05-11)' },
+          { k: '향후 치료 소견',        v: '초진 수술일로부터 약 6주간 가료 예정. 추후 상태·검사에 따라 추가 가료 및 재판정 요함. 정형외과 영역에 한함.' },
+          { k: '치료 종료 (예정)',      v: '약 2026-06-22 (수술일 +6주)' },
+          { k: '용도',                  v: '보험용 · 직장용' },
+          { k: '발급의',                v: '금세진 (면허번호 29024)' }
+        ]
+      },
+      {
+        id: 'admission',
+        type: 'admission',
+        title: '입퇴원 확인서',
+        sub: '발급 2026-05-15 · 연번호 2026-5673-1',
+        date: '2026-05-15',
+        day: 4,
+        file: 'docs/others/입퇴원확인서.pdf',
+        facts: [
+          { k: '진료과',                v: '정형외과' },
+          { k: '입원일',                v: '2026-05-11' },
+          { k: '퇴원일',                v: '2026-05-15' },
+          { k: '재원 일수',             v: '5일' },
+          { k: '소견',                  v: '입원 안정 가료' },
+          { k: '병원 전화',             v: '02-350-3300' },
+          { k: '병원 팩스',             v: '02-356-6833' }
+        ]
+      },
+      {
+        id: 'medical-record-copy',
+        type: 'copy',
+        title: '의무기록사본',
+        sub: '발급 2026-05-15 · 발행번호 2026-02789 · 2매',
+        date: '2026-05-15',
+        day: 4,
+        file: 'docs/others/의무기록사본.pdf',
+        facts: [
+          { k: '용도',                  v: '보험회사 제출용' },
+          { k: '발행 매수',             v: '2매' },
+          { k: '발급 기관',             v: '의료법인 청구성심병원' },
+          { k: '병원 주소',             v: '서울시 은평구 통일로 873' },
+          { k: '병원 식별번호',         v: '11100711' }
+        ]
+      }
+    ]
+  };
+
+  const MR_TYPE_LABELS = {
+    progress:    '경과',
+    operation:   '수술',
+    certificate: '진단',
+    admission:   '입퇴원',
+    copy:        '사본'
   };
 
   const COST_CATEGORIES = ['treatment', 'medication', 'equipment', 'transport', 'supplies', 'admission', 'other'];
@@ -4664,6 +4882,110 @@ const SEED_IMAGES = {
     setSxOpen(!_sxOpen);
   }
 
+  // ─── Medical records (read-only, sourced from docs/others/*.pdf) ───
+  let _mrFilter = '';
+  let _mrOpen = false;
+
+  function setMrFilter(key) {
+    _mrFilter = (_mrFilter === key) ? '' : key;
+    renderMrTypeChips();
+    renderMrItems();
+  }
+
+  function renderMrTypeChips() {
+    const wrap = document.getElementById('mrTypeChips');
+    if (!wrap) return;
+    const types = ['', 'progress', 'operation', 'certificate', 'admission', 'copy'];
+    wrap.innerHTML = types.map(t => {
+      const active = _mrFilter === t ? ' active' : '';
+      const label = t === '' ? '전체' : MR_TYPE_LABELS[t];
+      return `<button class="chip${active}" onclick="setMrFilter('${t}')">${label}</button>`;
+    }).join('');
+  }
+
+  function renderMrHead() {
+    const head = document.getElementById('mrHead');
+    const countEl = document.getElementById('mrHeadCount');
+    if (countEl) countEl.textContent = `${MEDICAL_RECORDS.records.length} records · 청구성심병원`;
+    if (head) {
+      head.innerHTML = `
+        <div style="color:var(--ink); font-family:'Fraunces',serif; font-size:14px; font-weight:400; letter-spacing:-0.01em; margin-bottom:4px;">
+          공식 의무 문서
+        </div>
+        <div>${escapeHtml(MEDICAL_RECORDS.source)}</div>
+        <div>주민번호·전화·자택주소는 의도적으로 제외 (원본 PDF 참조)</div>
+      `;
+    }
+  }
+
+  function renderMrItems() {
+    const wrap = document.getElementById('mrBody');
+    if (!wrap) return;
+    const q = (document.getElementById('mrSearch')?.value || '').toLowerCase().trim();
+
+    const records = MEDICAL_RECORDS.records.filter(r => {
+      if (_mrFilter && _mrFilter !== r.type) return false;
+      if (!q) return true;
+      const hay = [
+        r.title, r.sub, r.date,
+        ...(r.facts || []).flatMap(f => [f.k, f.v]),
+        ...(r.procedure || [])
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+
+    if (!records.length) {
+      wrap.innerHTML = '<div class="empty">no records match</div>';
+      return;
+    }
+
+    wrap.innerHTML = records.map(r => {
+      const dayBadge = r.day != null
+        ? `<span class="tag">D${r.day >= 0 ? '+' + r.day : r.day}</span>`
+        : '';
+      const typeBadge = `<span class="tag ${r.type === 'operation' ? 'core' : r.type === 'certificate' ? 'implant' : ''}">${MR_TYPE_LABELS[r.type] || r.type}</span>`;
+      const facts = (r.facts || []).map(f => `
+        <div class="mr-fact">
+          <div class="mr-fact-k">${escapeHtml(f.k)}</div>
+          <div class="mr-fact-v">${escapeHtml(f.v)}</div>
+        </div>
+      `).join('');
+      const proc = (r.procedure && r.procedure.length) ? `
+        <div class="mr-proc-title">Procedure</div>
+        <ol class="mr-proc">${r.procedure.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ol>
+      ` : '';
+      return `
+        <div class="mr-record" id="mr-rec-${r.id}">
+          <div class="sx-group-head">
+            <div class="sx-group-head-name">${escapeHtml(r.title)}<em> · ${escapeHtml(r.sub || '')}</em></div>
+            <div class="sx-item-meta">${typeBadge}${dayBadge}</div>
+          </div>
+          <div class="mr-facts">${facts}</div>
+          ${proc}
+          <div class="mr-source">source: <code>${escapeHtml(r.file)}</code></div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderMedicalRecords() {
+    renderMrHead();
+    renderMrTypeChips();
+    renderMrItems();
+  }
+
+  function setMrOpen(open) {
+    _mrOpen = !!open;
+    const body = document.getElementById('mrCollapsible');
+    const chev = document.getElementById('mrChevron');
+    if (body) body.style.display = _mrOpen ? '' : 'none';
+    if (chev) chev.textContent = _mrOpen ? '▾' : '▸';
+  }
+
+  function toggleMr() {
+    setMrOpen(!_mrOpen);
+  }
+
   function renderCost() {
     const totals = costTotals();
     document.getElementById('costEntryCount').textContent = `${state.costs.length} ${state.costs.length === 1 ? 'entry' : 'entries'}`;
@@ -5602,7 +5924,48 @@ const SEED_IMAGES = {
       });
     }
 
-    // 9) Glossary
+    // 9) Medical records (read-only PDF-derived)
+    const mrHits = [];
+    MEDICAL_RECORDS.records.forEach(r => {
+      // Record-level hit (title / sub / type label) → surface whole record
+      if (_matches(q, r.title, r.sub, MR_TYPE_LABELS[r.type], r.date)) {
+        mrHits.push({ r, hit: { k: '', v: r.sub || '' } });
+        return;
+      }
+      // Per-fact / per-procedure-step hit → surface that specific line
+      (r.facts || []).forEach(f => {
+        if (_matches(q, f.k, f.v)) mrHits.push({ r, hit: f });
+      });
+      (r.procedure || []).forEach(s => {
+        if (_matches(q, s)) mrHits.push({ r, hit: { k: 'Procedure', v: s } });
+      });
+    });
+    if (mrHits.length) {
+      groups.push({
+        label: 'Medical records',
+        view: 'timeline',
+        items: mrHits.slice(0, 12).map(({ r, hit }) => ({
+          title: r.title,
+          meta: `PHASE → MEDICAL RECORDS · ${MR_TYPE_LABELS[r.type] || r.type} · ${r.date}${r.day != null ? ' · D' + (r.day >= 0 ? '+' + r.day : r.day) : ''}`,
+          snippet: hit.k ? `${hit.k} — ${hit.v}` : hit.v,
+          onClick: () => {
+            closeSearchModal();
+            switchView('timeline');
+            setTimeout(() => {
+              setMrOpen(true);
+              const ms = document.getElementById('mrSearch');
+              if (ms) { ms.value = raw; renderMrItems(); }
+              const el = document.getElementById('mr-rec-' + r.id);
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              else scrollToText(r.title);
+            }, 200);
+          }
+        })),
+        total: mrHits.length
+      });
+    }
+
+    // 10) Glossary
     const glossHits = GLOSSARY.filter(g =>
       _matches(q, g.en, g.ko, g.def, g.cat, g.abbr)
     );
@@ -5711,6 +6074,7 @@ const SEED_IMAGES = {
     if (view === 'timeline') {
       renderTimeline();
       renderSurgeryDetails();
+      renderMedicalRecords();
       renderPhotos();
       renderXrays();
       renderDocuments();
