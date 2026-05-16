@@ -1,6 +1,9 @@
 # Claude Code worktrees
 .claude/worktrees/
 
+# Claude Code runtime locks (scheduled_tasks.lock, etc.)
+.claude/*.lock
+
 # Python cache
 __pycache__/
 *.pyc
