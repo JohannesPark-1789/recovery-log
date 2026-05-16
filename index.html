@@ -548,12 +548,53 @@
     margin-top: 3px;
     line-height: 1.45;
   }
+  .phase.active {
+    background: var(--paper-2);
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    border-left: 2px solid var(--ink);
+  }
+  .phase.active::before { left: -30px; }
   .phase.active .phase-name { font-weight: 500; }
   .phase.active .phase-week::after {
     content: ' · NOW';
     font-weight: 500;
     color: var(--ink);
     letter-spacing: 0.1em;
+  }
+  .phase.past .phase-week::after {
+    content: ' · DONE';
+    color: var(--line-2);
+    letter-spacing: 0.1em;
+  }
+  .phase.past .phase-name,
+  .phase.past .phase-desc { color: var(--mute); }
+  .phase-progress {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .phase-progress-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-progress-bar > span {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--ink);
+  }
+  .phase-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
   }
 
   /* ─── Photo grid ─── */
@@ -1651,6 +1692,94 @@
     text-align: center;
   }
 
+  /* ─── Photo comparison modal ─── */
+  .compare-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.96);
+    z-index: 510;
+    display: none;
+    flex-direction: column;
+    padding: calc(20px + var(--safe-top)) 16px calc(20px + var(--safe-bottom));
+  }
+  .compare-modal.show { display: flex; }
+  .compare-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .compare-close {
+    cursor: pointer;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--paper);
+    padding: 6px 12px;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .compare-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    min-height: 0;
+  }
+  @media (max-width: 480px) {
+    .compare-body { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+  }
+  .compare-slot {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .compare-slot-pick {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+  }
+  .compare-slot-pick select {
+    width: 100%;
+    background: transparent;
+    color: var(--paper);
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    appearance: none;
+    cursor: pointer;
+    padding: 2px 0;
+  }
+  .compare-slot-pick select:focus { outline: none; }
+  .compare-slot-pick select option { background: #0a0a0a; color: var(--paper); }
+  .compare-img-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 6px;
+    min-height: 0;
+  }
+  .compare-img-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .compare-empty {
+    color: rgba(255,255,255,0.4);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
 </style>
 </head>
 <body>
@@ -1910,7 +2039,10 @@
   <div class="section">
     <div class="section-label">
       <span>Surgical site photos</span>
-      <span class="ord" id="photoCount">0 photos</span>
+      <span class="ord" style="display:flex; gap:8px; align-items:center;">
+        <button class="btn btn-sm btn-ghost" id="photoCompareBtn" onclick="openCompare()" disabled>Compare</button>
+        <span id="photoCount">0 photos</span>
+      </span>
     </div>
     <div class="photo-grid" id="photoGrid">
       <label class="photo-add">
@@ -2175,7 +2307,7 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>About</span><span class="ord">v3.2</span></div>
+    <div class="section-label"><span>About</span><span class="ord">v3.3</span></div>
     <div style="font-size:11px; color:var(--mute); line-height:1.55;">
       로컬 저장소에만 데이터를 보관합니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 반드시 JSON으로 백업하세요.
       <div style="margin-top:8px;" class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
@@ -2551,6 +2683,28 @@
   <span class="lightbox-close">CLOSE ✕</span>
   <img id="lightboxImg" src="" alt="" />
   <div class="lightbox-meta" id="lightboxMeta"></div>
+</div>
+
+<!-- ═══ Photo comparison modal ═══ -->
+<div class="compare-modal" id="compareModal">
+  <div class="compare-head">
+    <span>COMPARE · SURGICAL SITE</span>
+    <button class="compare-close" onclick="closeCompare()">CLOSE ✕</button>
+  </div>
+  <div class="compare-body">
+    <div class="compare-slot">
+      <div class="compare-slot-pick">
+        <select id="cmpSelectA" onchange="renderCompare()"></select>
+      </div>
+      <div class="compare-img-wrap" id="cmpImgA"></div>
+    </div>
+    <div class="compare-slot">
+      <div class="compare-slot-pick">
+        <select id="cmpSelectB" onchange="renderCompare()"></select>
+      </div>
+      <div class="compare-img-wrap" id="cmpImgB"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══ Toast ═══ -->
@@ -3696,13 +3850,34 @@ const SEED_IMAGES = {
     const wrap = document.getElementById('phaseTimeline');
     wrap.innerHTML = PHASES.map(p => {
       let cls = '';
-      if (dc > p.endDay) cls = 'past';
-      else if (dc >= p.startDay && dc <= p.endDay) cls = 'active';
+      let progressBlock = '';
+      if (dc > p.endDay) {
+        cls = 'past';
+      } else if (dc >= p.startDay && dc <= p.endDay) {
+        cls = 'active';
+        const span = p.endDay - p.startDay + 1;
+        const dayInPhase = dc - p.startDay + 1;
+        // For very long phases (M3–6, M6–12, Y1+), keep label compact.
+        const isLong = span > 60;
+        const pct = isLong
+          ? Math.min(100, Math.round((dayInPhase / span) * 100))
+          : Math.round((dayInPhase / span) * 100);
+        const label = isLong
+          ? `D${dc} · ${pct}%`
+          : `Day ${dayInPhase} / ${span}`;
+        progressBlock = `
+          <div class="phase-progress">
+            <div class="phase-progress-bar"><span style="width:${pct}%"></span></div>
+            <div class="phase-progress-label">${label}</div>
+          </div>
+        `;
+      }
       return `
         <div class="phase ${cls}">
           <div class="phase-week">${p.week} · day ${p.startDay}${p.endDay < 365 ? '–' + p.endDay : '+'}</div>
           <div class="phase-name">${p.name} <em>${p.sub}</em></div>
           <div class="phase-desc">${p.desc}</div>
+          ${progressBlock}
         </div>
       `;
     }).join('');
@@ -3737,6 +3912,47 @@ const SEED_IMAGES = {
     });
 
     document.getElementById('photoCount').textContent = `${state.photos.length} photos`;
+    const cmpBtn = document.getElementById('photoCompareBtn');
+    if (cmpBtn) cmpBtn.disabled = state.photos.length < 2;
+  }
+
+  // ─── Photo comparison ───
+  function openCompare() {
+    if (state.photos.length < 2) {
+      toast('최소 2장의 사진이 필요합니다');
+      return;
+    }
+    const sorted = state.photos.slice().sort((a, b) => a.date.localeCompare(b.date));
+    const opts = sorted.map(p =>
+      `<option value="${p.id}">Day ${p.day} · ${p.date}</option>`
+    ).join('');
+    const selA = document.getElementById('cmpSelectA');
+    const selB = document.getElementById('cmpSelectB');
+    selA.innerHTML = opts;
+    selB.innerHTML = opts;
+    selA.value = sorted[0].id;
+    selB.value = sorted[sorted.length - 1].id;
+    renderCompare();
+    document.getElementById('compareModal').classList.add('show');
+  }
+
+  function closeCompare() {
+    document.getElementById('compareModal').classList.remove('show');
+  }
+
+  function renderCompare() {
+    const idA = document.getElementById('cmpSelectA').value;
+    const idB = document.getElementById('cmpSelectB').value;
+    const pA = state.photos.find(p => p.id === idA);
+    const pB = state.photos.find(p => p.id === idB);
+    const wrapA = document.getElementById('cmpImgA');
+    const wrapB = document.getElementById('cmpImgB');
+    wrapA.innerHTML = pA
+      ? `<img src="${pA.data}" alt="day ${pA.day}" />`
+      : `<span class="compare-empty">no photo</span>`;
+    wrapB.innerHTML = pB
+      ? `<img src="${pB.data}" alt="day ${pB.day}" />`
+      : `<span class="compare-empty">no photo</span>`;
   }
 
   document.getElementById('photoInput').addEventListener('change', async (e) => {
