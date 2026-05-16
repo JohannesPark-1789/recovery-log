@@ -7,9 +7,12 @@
 - **Today** · Patient banner (ID·Room), 일일 NRS 통증 기록, vitals 로그 (SpO₂·PR·RR·BP·Temp·Sleep), 14일 통증 추세선
 - **Move** · 회복 단계별 재활운동 체크리스트 + ROM (굴곡/외전/외회전) 추적
 - **Plan** · 외래·드레싱·복약 일정 + 처방약 5종 라이브러리 (약 사진 + 성분 + 효능 + 주의사항)
-- **Phase** · 8단계 회복 타임라인, 수술부 사진 기록, Fraunces serif 저널
+- **Phase** · 8단계 회복 타임라인, 수술부 사진 / X-ray / 진단서 기록, Fraunces serif 저널 (사진 첨부 가능)
 - **Learn** · **의학용어집 66개 항목** 12개 카테고리 (해부학·진단·수술·골절치유·세포·조직회복·통증·활력징후·재활·약리·의료기기·상처관리), 한/영/약어 검색 지원
+- **Cost** · 사고 관련 전체 비용 추적 (진료비·약값·교통·보조용품·소모품·입원비·기타), 영수증 사진 첨부, 보험·산재·가족 환급 차감해 순 본인부담 계산, 카테고리별 비중 표시
 - **Data** · JSON export/import, Markdown 보고서 복사, 프로필 관리
+
+모든 날짜·시간은 **KST (Asia/Seoul) 기준**으로 고정되어 기기 시간대와 무관하게 동작합니다.
 
 ## First-run seeded data
 
@@ -57,6 +60,8 @@ icon-512.png    # 앱 아이콘
 - 회복 단계 조정: `PHASES` 배열
 - 의학 용어 추가: `GLOSSARY` 배열 (cat / en / ko / def)
 - 약 추가: `MEDICATIONS` 배열
+- 비용 카테고리 추가/변경: `COST_CATEGORIES`, `COST_CAT_LABELS`, `COST_CAT_EN`
+- 결제 출처 추가: `COST_PAYERS`, `COST_PAYER_LABELS`
 
 ## Disclaimer
 

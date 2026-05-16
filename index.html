@@ -626,6 +626,195 @@
     font-weight: 300;
     white-space: pre-wrap;
   }
+  .journal-photos {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 6px;
+  }
+  .journal-photo {
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .journal-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .journal-photo-strip-item {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+  .journal-photo-strip-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .journal-photo-strip-item .rm {
+    position: absolute;
+    top: 2px; right: 2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    font-size: 11px;
+    line-height: 18px;
+    text-align: center;
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* ─── Cost ─── */
+  .cost-summary {
+    margin-top: 14px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .cost-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cost-summary-row:last-child { border-bottom: none; }
+  .cost-summary-row.net {
+    background: var(--paper);
+    border-top: 2px solid var(--ink);
+  }
+  .cost-summary-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .cost-summary-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px;
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .cost-summary-val.refund { color: var(--mute); }
+  .cost-summary-row.net .cost-summary-val { font-size: 22px; }
+
+  .cost-cat-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 90px;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cost-cat-row:last-child { border-bottom: none; }
+  .cost-cat-name { color: var(--ink-2); letter-spacing: 0.04em; }
+  .cost-cat-name em { color: var(--mute); font-style: normal; margin-left: 4px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .cost-cat-bar {
+    height: 6px;
+    background: var(--paper-3);
+    position: relative;
+    overflow: hidden;
+  }
+  .cost-cat-bar-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--ink);
+  }
+  .cost-cat-amount { text-align: right; color: var(--ink); font-weight: 500; }
+
+  .cost-row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 12px;
+    align-items: start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .cost-row:last-child { border-bottom: none; }
+  .cost-row-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .cost-row-date strong {
+    display: block;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .cost-row-body {
+    min-width: 0;
+  }
+  .cost-row-label {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .cost-row-meta {
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.04em;
+  }
+  .cost-row-meta .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid var(--line-2);
+    background: var(--paper);
+    margin-right: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .cost-row-meta .tag.refund {
+    border-color: var(--ink-2);
+    background: var(--ink-2);
+    color: var(--paper);
+  }
+  .cost-row-note {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--mute);
+    line-height: 1.5;
+  }
+  .cost-row-receipt {
+    margin-top: 8px;
+    width: 60px;
+    height: 60px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .cost-row-receipt img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cost-row-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .cost-row-amount.refund { color: var(--mute); }
 
   /* ─── Bottom nav ─── */
   .nav {
@@ -636,7 +825,7 @@
     background: var(--paper);
     border-top: 1px solid var(--line);
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     padding-bottom: var(--safe-bottom);
     z-index: 100;
   }
@@ -645,11 +834,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 7px 4px 6px;
+    padding: 7px 2px 6px;
     color: var(--mute);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.1em;
+    font-size: 8.5px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     border-top: 2px solid transparent;
     margin-top: -1px;
@@ -1513,6 +1702,16 @@
     <div class="field">
       <textarea id="journalText" placeholder="오늘의 감각, 관찰, 회복에 대한 메모..." style="min-height: 100px;"></textarea>
     </div>
+
+    <div class="field">
+      <span class="field-label">Photos <span style="color:var(--line-2); text-transform:none; letter-spacing:0;">(optional · 여러 장 가능)</span></span>
+      <div id="journalPhotoStrip" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;"></div>
+      <input type="file" accept="image/*" id="journalPhotoInput" multiple style="display:none;" />
+      <div style="margin-top:8px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="document.getElementById('journalPhotoInput').click()">+ Add photo</button>
+      </div>
+    </div>
+
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
       <div class="field">
         <span class="field-label">Date</span>
@@ -1555,6 +1754,58 @@
       <span class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
         REVIEWED INTERNALLY · NOT MEDICAL ADVICE
       </span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ COST / EXPENSES ═══ -->
+<section class="view" id="view-cost">
+
+  <div class="section">
+    <div class="section-label"><span>Total cost</span><span class="ord" id="costEntryCount">0 entries</span></div>
+    <div class="intro-quote">
+      이 사고로 발생한 모든 비용을 한 곳에서. 진료비·약값·교통·보조용품, 그리고 보험·산재 환급까지.
+    </div>
+
+    <div class="cost-summary">
+      <div class="cost-summary-row">
+        <span class="cost-summary-label">Total expenses</span>
+        <span class="cost-summary-val" id="costTotalExpense">₩0</span>
+      </div>
+      <div class="cost-summary-row">
+        <span class="cost-summary-label">Refunded / covered</span>
+        <span class="cost-summary-val refund" id="costTotalRefund">−₩0</span>
+      </div>
+      <div class="cost-summary-row net">
+        <span class="cost-summary-label">Net out-of-pocket</span>
+        <span class="cost-summary-val" id="costNet">₩0</span>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <button class="btn btn-primary btn-sm" onclick="openCostModal()">+ Add cost entry</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><span>By category</span><span class="ord" id="costCatTotal">—</span></div>
+    <div id="costCategoryBreakdown"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">
+      <span>Filter</span>
+      <span class="ord" id="costFilteredCount">all</span>
+    </div>
+    <div class="chip-row" id="costFilterChips"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><span>Entries</span><span class="ord">latest first</span></div>
+    <div id="costList"></div>
+    <div style="margin-top:14px; font-size:11px; color:var(--mute); line-height:1.5;">
+      영수증 사진은 1400px / JPEG 78% 로 저장됩니다. 원본은 Documents 탭에도 함께 보관하세요.
     </div>
   </div>
 
@@ -1663,7 +1914,7 @@
   </div>
 
   <div class="section">
-    <div class="section-label"><span>About</span><span class="ord">v2.0</span></div>
+    <div class="section-label"><span>About</span><span class="ord">v3.0</span></div>
     <div style="font-size:11px; color:var(--mute); line-height:1.55;">
       로컬 저장소에만 데이터를 보관합니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 반드시 JSON으로 백업하세요.
       <div style="margin-top:8px;" class="mono" style="font-size:10px; letter-spacing:0.05em; color:var(--line-2);">
@@ -1695,6 +1946,10 @@
   <button class="nav-item" data-view="learn" onclick="switchView('learn')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
     Learn
+  </button>
+  <button class="nav-item" data-view="cost" onclick="switchView('cost')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 3h8l3 3v15a1 1 0 01-1.5.87L15 21l-2 1-2-1-2 1-2-1-1.5.87A1 1 0 014 21V4a1 1 0 011-1z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>
+    Cost
   </button>
   <button class="nav-item" data-view="data" onclick="switchView('data')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 8v8a2 2 0 002 2h12a2 2 0 002-2V8M4 8l8-5 8 5M4 8h16"/></svg>
@@ -1942,6 +2197,76 @@
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="saveDoc()">Save</button>
       <button class="btn btn-ghost" onclick="closeDocModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Cost modal ═══ -->
+<div class="modal-bg" id="costModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="costModalTitle">New <em>cost entry</em></span>
+      <span class="modal-close" onclick="closeCostModal()">CLOSE ✕</span>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Type</span>
+      <div class="chip-row" id="costTypeChips"></div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Category</span>
+      <div class="chip-row" id="costCategoryChips"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Date</span>
+        <input type="date" id="costDate" />
+      </div>
+      <div class="field">
+        <span class="field-label">Amount (₩)</span>
+        <input type="number" id="costAmount" placeholder="0" inputmode="numeric" min="0" step="1" />
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Label <span style="color:var(--accent); text-transform:none; letter-spacing:0;">*</span></span>
+      <input type="text" id="costLabel" placeholder="진찰료 / 처방약 / 택시 / 보조기 등" />
+    </div>
+
+    <div class="field">
+      <span class="field-label">Vendor / Payer</span>
+      <input type="text" id="costVendor" placeholder="청구성심병원 / 약국 / 카카오T 등" />
+    </div>
+
+    <div class="field">
+      <span class="field-label">Payment source</span>
+      <div class="chip-row" id="costPayerChips"></div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Receipt <span style="color:var(--line-2); text-transform:none; letter-spacing:0;">(optional)</span></span>
+      <div id="costReceiptPreview" style="margin-top:8px; padding:14px; border:1px dashed var(--line-2); background:var(--paper-2); text-align:center; color:var(--mute); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.05em;">
+        NO RECEIPT
+      </div>
+      <input type="file" accept="image/*" id="costReceiptInput" style="display:none;" />
+      <input type="hidden" id="costReceiptData" value="" />
+      <div style="margin-top:8px; display:flex; gap:6px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="document.getElementById('costReceiptInput').click()">Add receipt</button>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="clearCostReceipt()">Clear</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Note</span>
+      <textarea id="costNote" placeholder="비고 / 보험청구 진행상황 등"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveCost()">Save</button>
+      <button class="btn btn-ghost" onclick="deleteCost()" id="costDeleteBtn" style="display:none;">Delete</button>
+      <button class="btn btn-ghost" onclick="closeCostModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -2273,11 +2598,15 @@ const SEED_IMAGES = {
     medications: [],
     documents: [],   // [{id, title, category, date, from, fileData, fileType, fileName, note, day}]
     xrays: [],       // [{id, date, day, data, label, note}]
+    costs: [],       // [{id, date, day, category, label, vendor, amount, type, payer, receipt, note}]
     selected: { nrs: null, locations: [], qualities: [] },
     schedSelected: { type: 'med' },
     docSelected: { category: 'diagnosis' },
+    costDraft: { type: 'expense', category: 'treatment', payer: 'self' },
+    costFilter: 'all',
     editingMedId: null,
     editingDocId: null,
+    editingCostId: null,
     selectedExDate: null
   };
 
@@ -2292,6 +2621,36 @@ const SEED_IMAGES = {
     lab: '검사결과',
     other: '기타'
   };
+
+  const COST_CATEGORIES = ['treatment', 'medication', 'equipment', 'transport', 'supplies', 'admission', 'other'];
+  const COST_CAT_LABELS = {
+    treatment: '진료비',
+    medication: '약값',
+    equipment: '보조용품',
+    transport: '교통/주차',
+    supplies: '소모품',
+    admission: '입원비',
+    other: '기타'
+  };
+  const COST_CAT_EN = {
+    treatment: 'Treatment',
+    medication: 'Medication',
+    equipment: 'Equipment',
+    transport: 'Transport',
+    supplies: 'Supplies',
+    admission: 'Admission',
+    other: 'Other'
+  };
+  const COST_PAYERS = ['self', 'insurance', 'workersComp', 'family', 'other'];
+  const COST_PAYER_LABELS = {
+    self: '본인부담',
+    insurance: '보험',
+    workersComp: '산재',
+    family: '가족지원',
+    other: '기타'
+  };
+  const COST_TYPES = ['expense', 'refund'];
+  const COST_TYPE_LABELS = { expense: '지출', refund: '환급/보전' };
 
   // ════════════════════════════════════════════════════════════════
   // STORAGE
@@ -2311,7 +2670,8 @@ const SEED_IMAGES = {
       vitals: state.vitals,
       medications: state.medications,
       documents: state.documents,
-      xrays: state.xrays
+      xrays: state.xrays,
+      costs: state.costs
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(persist));
@@ -2337,34 +2697,68 @@ const SEED_IMAGES = {
   // DATE / PHASE
   // ════════════════════════════════════════════════════════════════
 
+  // All dates/times are normalized to KST (Asia/Seoul) so the app behaves
+  // correctly regardless of the device timezone (e.g. travel, VPN, server time).
+  const TZ = 'Asia/Seoul';
+
   function todayISO() {
-    const d = new Date();
-    return d.toISOString().split('T')[0];
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'
+    }).formatToParts(new Date());
+    const y = parts.find(p => p.type === 'year').value;
+    const m = parts.find(p => p.type === 'month').value;
+    const d = parts.find(p => p.type === 'day').value;
+    return `${y}-${m}-${d}`;
+  }
+
+  function nowHHMM() {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: TZ, hour: '2-digit', minute: '2-digit', hour12: false
+    }).formatToParts(new Date());
+    const h = parts.find(p => p.type === 'hour').value;
+    const m = parts.find(p => p.type === 'minute').value;
+    return `${h}:${m}`;
+  }
+
+  // Parse a YYYY-MM-DD into a UTC-midnight ms — safe for day-math regardless of TZ.
+  function isoToUTC(iso) {
+    if (!iso) return NaN;
+    const [y, m, d] = iso.split('-').map(Number);
+    return Date.UTC(y, m - 1, d);
+  }
+
+  // Add `n` days (positive or negative) to YYYY-MM-DD and return YYYY-MM-DD.
+  function addDaysISO(iso, n) {
+    const ms = isoToUTC(iso) + n * 86400000;
+    const d = new Date(ms);
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
   }
 
   function fmtDate(iso) {
-    const d = new Date(iso);
-    const m = d.getMonth() + 1;
-    const day = d.getDate();
-    return `${m}/${day}`;
+    if (!iso) return '';
+    const [, m, d] = iso.split('-').map(Number);
+    return `${m}/${d}`;
   }
 
   function fmtDateLong(iso) {
-    const d = new Date(iso);
-    const opts = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    return d.toLocaleDateString('ko-KR', opts);
+    if (!iso) return '';
+    const ms = isoToUTC(iso);
+    return new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+    }).format(new Date(ms));
   }
 
   function fmtDay(iso) {
-    const d = new Date(iso);
+    if (!iso) return '';
+    const ms = isoToUTC(iso);
     const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-    return days[d.getDay()];
+    return days[new Date(ms).getUTCDay()];
   }
 
   function dayCount() {
-    const surgery = new Date(state.profile.date);
-    const today = new Date(todayISO());
-    return Math.floor((today - surgery) / (1000 * 60 * 60 * 24));
+    const surgery = isoToUTC(state.profile.date);
+    const today = isoToUTC(todayISO());
+    return Math.floor((today - surgery) / 86400000);
   }
 
   function currentPhase() {
@@ -2432,20 +2826,16 @@ const SEED_IMAGES = {
 
     document.getElementById('logCountToday').textContent = `${todayLogs.length} today`;
     // Count recent 7-day entries for the label
-    const cutoff = new Date(today);
-    cutoff.setDate(cutoff.getDate() - 6);
-    const cutoffISO = cutoff.toISOString().split('T')[0];
+    const cutoffISO = addDaysISO(today, -6);
     const recent = state.pain.filter(p => p.date >= cutoffISO);
     document.getElementById('todayEntriesCount').textContent = `${recent.length}`;
   }
 
   function renderSparkline() {
-    const today = new Date(todayISO());
+    const today = todayISO();
     const days = [];
     for (let i = 13; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const iso = d.toISOString().split('T')[0];
+      const iso = addDaysISO(today, -i);
       const logs = state.pain.filter(p => p.date === iso);
       const avg = logs.length ? logs.reduce((s, p) => s + p.nrs, 0) / logs.length : null;
       days.push({ date: iso, avg });
@@ -2516,7 +2906,7 @@ const SEED_IMAGES = {
       return;
     }
     const date = document.getElementById('painDate').value || todayISO();
-    const time = document.getElementById('painTime').value || new Date().toTimeString().slice(0, 5);
+    const time = document.getElementById('painTime').value || nowHHMM();
     const entry = {
       id: Date.now(),
       date,
@@ -2542,24 +2932,22 @@ const SEED_IMAGES = {
     state.selected = { nrs: null, locations: [], qualities: [] };
     document.getElementById('painNote').value = '';
     document.getElementById('painDate').value = todayISO();
-    document.getElementById('painTime').value = new Date().toTimeString().slice(0, 5);
+    document.getElementById('painTime').value = nowHHMM();
     renderNRS();
     renderChips('locChips', LOCATIONS, state.selected.locations);
     renderChips('qualityChips', QUALITIES, state.selected.qualities);
   }
 
   function dayFromDate(iso) {
-    const surgery = new Date(state.profile.date);
-    const d = new Date(iso);
-    return Math.floor((d - surgery) / (1000 * 60 * 60 * 24));
+    const surgery = isoToUTC(state.profile.date);
+    const d = isoToUTC(iso);
+    return Math.floor((d - surgery) / 86400000);
   }
 
   function renderTodayEntries() {
     const today = todayISO();
     // Show recent 7 days of entries (including today and any backdated entries)
-    const cutoff = new Date(today);
-    cutoff.setDate(cutoff.getDate() - 6);
-    const cutoffISO = cutoff.toISOString().split('T')[0];
+    const cutoffISO = addDaysISO(today, -6);
     const logs = state.pain
       .filter(p => p.date >= cutoffISO)
       .slice()
@@ -2706,13 +3094,11 @@ const SEED_IMAGES = {
 
   function renderRomTrend() {
     const wrap = document.getElementById('romTrend');
-    const today = new Date(todayISO());
+    const today = todayISO();
     const trends = { flexion: [], abduction: [], er: [] };
 
     for (let i = 13; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const iso = d.toISOString().split('T')[0];
+      const iso = addDaysISO(today, -i);
       const dayEx = state.exercises[iso] || {};
       ['flexion', 'abduction', 'er'].forEach(t => {
         let max = 0;
@@ -2959,7 +3345,7 @@ const SEED_IMAGES = {
       : 'New <em>photo</em>';
     document.getElementById('pxLabelField').style.display = type === 'xray' ? 'block' : 'none';
     document.getElementById('pxDate').value = todayISO();
-    document.getElementById('pxTime').value = new Date().toTimeString().slice(0, 5);
+    document.getElementById('pxTime').value = nowHHMM();
     document.getElementById('pxLabel').value = '';
     document.getElementById('pxNote').value = '';
     document.getElementById('pxModal').classList.add('show');
@@ -3217,9 +3603,7 @@ const SEED_IMAGES = {
         state.documents[idx] = { ...state.documents[idx], ...data };
       }
     } else {
-      const surgery = new Date(state.profile.date);
-      const docDate = new Date(data.date || todayISO());
-      const day = Math.floor((docDate - surgery) / (1000*60*60*24));
+      const day = dayFromDate(data.date || todayISO());
       state.documents.push({
         id: 'doc_' + Date.now(),
         day,
@@ -3279,26 +3663,52 @@ const SEED_IMAGES = {
   // JOURNAL
   // ════════════════════════════════════════════════════════════════
 
+  // Pending photos buffered while composing a new journal entry.
+  let _journalDraftPhotos = [];
+
   function saveJournal() {
     const text = document.getElementById('journalText').value.trim();
-    if (!text) return;
+    if (!text && !_journalDraftPhotos.length) return;
     const date = document.getElementById('journalDate').value || todayISO();
-    const time = document.getElementById('journalTime').value || new Date().toTimeString().slice(0, 5);
+    const time = document.getElementById('journalTime').value || nowHHMM();
     state.journal.push({
       id: Date.now(),
       date,
       day: dayFromDate(date),
       time,
-      text
+      text,
+      photos: _journalDraftPhotos.slice()
     });
     // Sort by date+time descending
     state.journal.sort((a, b) => (b.date + (b.time || '00:00')).localeCompare(a.date + (a.time || '00:00')));
     save();
     document.getElementById('journalText').value = '';
     document.getElementById('journalDate').value = todayISO();
-    document.getElementById('journalTime').value = new Date().toTimeString().slice(0, 5);
+    document.getElementById('journalTime').value = nowHHMM();
+    _journalDraftPhotos = [];
+    renderJournalDraftPhotos();
     renderJournal();
     toast(`Journal saved · D${dayFromDate(date)}`);
+  }
+
+  function renderJournalDraftPhotos() {
+    const strip = document.getElementById('journalPhotoStrip');
+    if (!strip) return;
+    if (!_journalDraftPhotos.length) {
+      strip.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em;">NO PHOTOS</div>';
+      return;
+    }
+    strip.innerHTML = _journalDraftPhotos.map((_, i) => `
+      <div class="journal-photo-strip-item">
+        <img src="${_journalDraftPhotos[i]}" alt="" />
+        <button type="button" class="rm" onclick="removeJournalDraftPhoto(${i})" aria-label="remove">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function removeJournalDraftPhoto(i) {
+    _journalDraftPhotos.splice(i, 1);
+    renderJournalDraftPhotos();
   }
 
   function renderJournal() {
@@ -3308,15 +3718,40 @@ const SEED_IMAGES = {
       wrap.innerHTML = '<div class="empty">no journal entries yet</div>';
       return;
     }
-    wrap.innerHTML = state.journal.slice(0, 20).map(j => `
+    wrap.innerHTML = state.journal.slice(0, 20).map(j => {
+      const photos = Array.isArray(j.photos) ? j.photos : [];
+      const photosHtml = photos.length ? `
+        <div class="journal-photos">
+          ${photos.map((src, i) => `
+            <div class="journal-photo" onclick="openJournalPhoto(${j.id}, ${i})">
+              <img src="${src}" alt="" />
+            </div>
+          `).join('')}
+        </div>` : '';
+      return `
       <div class="journal-entry">
         <div class="journal-meta">
           <span>${fmtDateLong(j.date)} · ${j.time || ''}</span>
           <span>DAY ${j.day} · <button class="log-del" onclick="deleteJournal(${j.id})">✕</button></span>
         </div>
-        <div class="journal-text">${escapeHtml(j.text)}</div>
-      </div>
-    `).join('');
+        ${j.text ? `<div class="journal-text">${escapeHtml(j.text)}</div>` : ''}
+        ${photosHtml}
+      </div>`;
+    }).join('');
+  }
+
+  function openJournalPhoto(entryId, idx) {
+    const entry = state.journal.find(j => j.id === entryId);
+    if (!entry || !entry.photos || !entry.photos[idx]) return;
+    const src = entry.photos[idx];
+    const meta = `Journal · ${fmtDateLong(entry.date)} ${entry.time || ''} · D${entry.day} · ${idx + 1}/${entry.photos.length}`;
+    openLightbox(src, meta, () => {
+      if (!confirm('Remove this photo from the journal entry?')) return;
+      entry.photos.splice(idx, 1);
+      save();
+      renderJournal();
+      closeLightbox();
+    });
   }
 
   function deleteJournal(id) {
@@ -3324,6 +3759,299 @@ const SEED_IMAGES = {
     state.journal = state.journal.filter(j => j.id !== id);
     save();
     renderJournal();
+  }
+
+  // Wire up journal photo input — multi-select, compressed inline.
+  document.getElementById('journalPhotoInput').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    for (const file of files) {
+      try {
+        const compressed = await compressImage(file, 1400, 0.78);
+        _journalDraftPhotos.push(compressed);
+      } catch (_) { /* skip bad file */ }
+    }
+    e.target.value = '';
+    renderJournalDraftPhotos();
+  });
+
+  // ════════════════════════════════════════════════════════════════
+  // COST
+  // ════════════════════════════════════════════════════════════════
+
+  function fmtKRW(n) {
+    const v = Number(n) || 0;
+    const sign = v < 0 ? '-' : '';
+    return `${sign}₩${Math.abs(Math.round(v)).toLocaleString('ko-KR')}`;
+  }
+
+  function costTotals() {
+    let expense = 0, refund = 0;
+    state.costs.forEach(c => {
+      const a = Number(c.amount) || 0;
+      if (c.type === 'refund') refund += a;
+      else expense += a;
+    });
+    return { expense, refund, net: expense - refund };
+  }
+
+  function costByCategory() {
+    const buckets = {};
+    COST_CATEGORIES.forEach(k => buckets[k] = 0);
+    state.costs.forEach(c => {
+      if (c.type === 'refund') return; // only count expenses in category breakdown
+      const cat = COST_CATEGORIES.includes(c.category) ? c.category : 'other';
+      buckets[cat] += Number(c.amount) || 0;
+    });
+    return buckets;
+  }
+
+  function renderCost() {
+    const totals = costTotals();
+    document.getElementById('costEntryCount').textContent = `${state.costs.length} ${state.costs.length === 1 ? 'entry' : 'entries'}`;
+    document.getElementById('costTotalExpense').textContent = fmtKRW(totals.expense);
+    document.getElementById('costTotalRefund').textContent = `−${fmtKRW(totals.refund)}`;
+    document.getElementById('costNet').textContent = fmtKRW(totals.net);
+
+    // Category breakdown
+    const buckets = costByCategory();
+    const totalExp = totals.expense || 1; // avoid div-by-zero
+    const wrap = document.getElementById('costCategoryBreakdown');
+    const nonzero = COST_CATEGORIES.filter(k => buckets[k] > 0);
+    if (!nonzero.length) {
+      wrap.innerHTML = '<div class="empty">no expenses yet</div>';
+      document.getElementById('costCatTotal').textContent = '—';
+    } else {
+      document.getElementById('costCatTotal').textContent = `${nonzero.length} categories`;
+      // Sort descending by amount
+      nonzero.sort((a, b) => buckets[b] - buckets[a]);
+      wrap.innerHTML = nonzero.map(k => {
+        const v = buckets[k];
+        const pct = Math.round((v / totalExp) * 100);
+        return `
+          <div class="cost-cat-row">
+            <div class="cost-cat-name">${COST_CAT_LABELS[k]}<em>${COST_CAT_EN[k]}</em></div>
+            <div class="cost-cat-bar"><div class="cost-cat-bar-fill" style="width:${pct}%;"></div></div>
+            <div class="cost-cat-amount">${fmtKRW(v)}<div style="font-size:9px; color:var(--mute); font-weight:400;">${pct}%</div></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    renderCostFilterChips();
+    renderCostList();
+  }
+
+  function renderCostFilterChips() {
+    const wrap = document.getElementById('costFilterChips');
+    const chips = [
+      { key: 'all', label: '전체' },
+      ...COST_CATEGORIES.map(k => ({ key: k, label: COST_CAT_LABELS[k] })),
+      { key: 'refund', label: '환급만' }
+    ];
+    wrap.innerHTML = chips.map(c => {
+      const active = state.costFilter === c.key ? ' active' : '';
+      return `<button class="chip${active}" onclick="setCostFilter('${c.key}')">${c.label}</button>`;
+    }).join('');
+  }
+
+  function setCostFilter(key) {
+    state.costFilter = key;
+    renderCostFilterChips();
+    renderCostList();
+  }
+
+  function renderCostList() {
+    const wrap = document.getElementById('costList');
+    let list = state.costs.slice();
+    if (state.costFilter === 'refund') {
+      list = list.filter(c => c.type === 'refund');
+    } else if (state.costFilter !== 'all') {
+      list = list.filter(c => (c.category || 'other') === state.costFilter);
+    }
+    list.sort((a, b) => (b.date + String(b.id)).localeCompare(a.date + String(a.id)));
+
+    document.getElementById('costFilteredCount').textContent =
+      state.costFilter === 'all' ? 'all' : `${list.length} of ${state.costs.length}`;
+
+    if (!list.length) {
+      wrap.innerHTML = '<div class="empty">no entries match this filter</div>';
+      return;
+    }
+
+    wrap.innerHTML = list.map(c => {
+      const isRefund = c.type === 'refund';
+      const amount = (isRefund ? '−' : '') + fmtKRW(c.amount);
+      const cat = COST_CAT_LABELS[c.category] || c.category || '—';
+      const payer = COST_PAYER_LABELS[c.payer] || '';
+      const dayN = c.day != null ? `D${c.day}` : '';
+      const receiptHtml = c.receipt
+        ? `<div class="cost-row-receipt" onclick="event.stopPropagation(); openCostReceipt(${c.id})"><img src="${c.receipt}" alt="receipt" /></div>`
+        : '';
+      return `
+        <div class="cost-row" onclick="openCostModal(${c.id})">
+          <div class="cost-row-date">
+            ${fmtDate(c.date)}<strong>${dayN}</strong>
+          </div>
+          <div class="cost-row-body">
+            <div class="cost-row-label">${escapeHtml(c.label || '—')}</div>
+            <div class="cost-row-meta">
+              <span class="tag${isRefund ? ' refund' : ''}">${COST_TYPE_LABELS[c.type] || '지출'}</span>
+              <span class="tag">${cat}</span>
+              ${payer ? `<span class="tag">${payer}</span>` : ''}
+              ${c.vendor ? ` · ${escapeHtml(c.vendor)}` : ''}
+            </div>
+            ${c.note ? `<div class="cost-row-note">${escapeHtml(c.note)}</div>` : ''}
+            ${receiptHtml}
+          </div>
+          <div class="cost-row-amount${isRefund ? ' refund' : ''}">${amount}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openCostReceipt(id) {
+    const c = state.costs.find(x => x.id === id);
+    if (!c || !c.receipt) return;
+    const meta = `${COST_CAT_LABELS[c.category] || '—'} · ${escapeHtml(c.label || '')} · ${fmtDateLong(c.date)} · ${fmtKRW(c.amount)}`;
+    openLightbox(c.receipt, meta, () => {
+      if (!confirm('Remove this receipt photo?')) return;
+      c.receipt = '';
+      save();
+      renderCost();
+      closeLightbox();
+    });
+  }
+
+  function openCostModal(id) {
+    state.editingCostId = (typeof id === 'number') ? id : null;
+    const editing = state.editingCostId ? state.costs.find(c => c.id === state.editingCostId) : null;
+
+    document.getElementById('costModalTitle').innerHTML = editing
+      ? 'Edit <em>cost entry</em>'
+      : 'New <em>cost entry</em>';
+
+    const draft = editing ? {
+      type: editing.type || 'expense',
+      category: editing.category || 'treatment',
+      payer: editing.payer || 'self'
+    } : { ...state.costDraft };
+
+    state.costDraft = { ...draft };
+
+    renderCostTypeChips();
+    renderCostCategoryChips();
+    renderCostPayerChips();
+
+    document.getElementById('costDate').value = editing ? editing.date : todayISO();
+    document.getElementById('costAmount').value = editing ? editing.amount : '';
+    document.getElementById('costLabel').value = editing ? (editing.label || '') : '';
+    document.getElementById('costVendor').value = editing ? (editing.vendor || '') : '';
+    document.getElementById('costNote').value = editing ? (editing.note || '') : '';
+    document.getElementById('costReceiptData').value = editing ? (editing.receipt || '') : '';
+    updateCostReceiptPreview();
+
+    document.getElementById('costDeleteBtn').style.display = editing ? '' : 'none';
+    document.getElementById('costModal').classList.add('show');
+  }
+
+  function closeCostModal() {
+    document.getElementById('costModal').classList.remove('show');
+    state.editingCostId = null;
+  }
+
+  function renderCostTypeChips() {
+    const wrap = document.getElementById('costTypeChips');
+    wrap.innerHTML = COST_TYPES.map(t => {
+      const active = state.costDraft.type === t ? ' active' : '';
+      return `<button class="chip${active}" onclick="state.costDraft.type='${t}'; renderCostTypeChips()">${COST_TYPE_LABELS[t]}</button>`;
+    }).join('');
+  }
+
+  function renderCostCategoryChips() {
+    const wrap = document.getElementById('costCategoryChips');
+    wrap.innerHTML = COST_CATEGORIES.map(k => {
+      const active = state.costDraft.category === k ? ' active' : '';
+      return `<button class="chip${active}" onclick="state.costDraft.category='${k}'; renderCostCategoryChips()">${COST_CAT_LABELS[k]}</button>`;
+    }).join('');
+  }
+
+  function renderCostPayerChips() {
+    const wrap = document.getElementById('costPayerChips');
+    wrap.innerHTML = COST_PAYERS.map(k => {
+      const active = state.costDraft.payer === k ? ' active' : '';
+      return `<button class="chip${active}" onclick="state.costDraft.payer='${k}'; renderCostPayerChips()">${COST_PAYER_LABELS[k]}</button>`;
+    }).join('');
+  }
+
+  function updateCostReceiptPreview() {
+    const data = document.getElementById('costReceiptData').value;
+    const preview = document.getElementById('costReceiptPreview');
+    if (data) {
+      preview.style.cssText = 'margin-top:8px; padding:8px; border:1px solid var(--line); background:var(--paper);';
+      preview.innerHTML = `<img src="${data}" alt="receipt" style="max-width:100%; max-height:200px; display:block; margin:0 auto;" />`;
+    } else {
+      preview.style.cssText = 'margin-top:8px; padding:14px; border:1px dashed var(--line-2); background:var(--paper-2); text-align:center; color:var(--mute); font-family:\'JetBrains Mono\',monospace; font-size:10px; letter-spacing:0.05em;';
+      preview.innerHTML = 'NO RECEIPT';
+    }
+  }
+
+  function clearCostReceipt() {
+    document.getElementById('costReceiptData').value = '';
+    updateCostReceiptPreview();
+  }
+
+  document.getElementById('costReceiptInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const compressed = await compressImage(file, 1400, 0.78);
+    document.getElementById('costReceiptData').value = compressed;
+    updateCostReceiptPreview();
+    e.target.value = '';
+  });
+
+  function saveCost() {
+    const label = document.getElementById('costLabel').value.trim();
+    if (!label) { toast('Label required'); return; }
+    const amount = Number(document.getElementById('costAmount').value);
+    if (!isFinite(amount) || amount < 0) { toast('Amount required'); return; }
+    const date = document.getElementById('costDate').value || todayISO();
+    const vendor = document.getElementById('costVendor').value.trim();
+    const note = document.getElementById('costNote').value.trim();
+    const receipt = document.getElementById('costReceiptData').value;
+
+    const data = {
+      date,
+      day: dayFromDate(date),
+      category: state.costDraft.category,
+      type: state.costDraft.type,
+      payer: state.costDraft.payer,
+      label,
+      vendor,
+      amount,
+      receipt,
+      note
+    };
+
+    if (state.editingCostId) {
+      const idx = state.costs.findIndex(c => c.id === state.editingCostId);
+      if (idx >= 0) state.costs[idx] = { ...state.costs[idx], ...data };
+      toast('Cost updated');
+    } else {
+      state.costs.push({ id: Date.now(), ...data });
+      toast(`Cost added · ${fmtKRW(amount)}`);
+    }
+    save();
+    closeCostModal();
+    renderCost();
+  }
+
+  function deleteCost() {
+    if (!state.editingCostId) return;
+    if (!confirm('Delete this cost entry?')) return;
+    state.costs = state.costs.filter(c => c.id !== state.editingCostId);
+    save();
+    closeCostModal();
+    renderCost();
   }
 
   // ════════════════════════════════════════════════════════════════
@@ -3423,7 +4151,7 @@ const SEED_IMAGES = {
   function openVitalsModal() {
     document.getElementById('vitalsModal').classList.add('show');
     document.getElementById('vDate').value = todayISO();
-    document.getElementById('vTime').value = new Date().toTimeString().slice(0, 5);
+    document.getElementById('vTime').value = nowHHMM();
   }
 
   function closeVitalsModal() {
@@ -3435,7 +4163,7 @@ const SEED_IMAGES = {
 
   function saveVitals() {
     const date = document.getElementById('vDate').value || todayISO();
-    const time = document.getElementById('vTime').value || new Date().toTimeString().slice(0, 5);
+    const time = document.getElementById('vTime').value || nowHHMM();
     const v = {
       id: Date.now(),
       date,
@@ -3665,8 +4393,9 @@ const SEED_IMAGES = {
       medications: state.medications,
       documents: state.documents,
       xrays: state.xrays,
+      costs: state.costs,
       exportedAt: new Date().toISOString(),
-      version: 4
+      version: 5
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -3734,6 +4463,7 @@ const SEED_IMAGES = {
         state.medications = data.medications || [];
         state.documents = data.documents || [];
         state.xrays = data.xrays || [];
+        state.costs = data.costs || [];
         save();
         renderAll();
         toast('Imported successfully');
@@ -3772,9 +4502,40 @@ const SEED_IMAGES = {
     lines.push('## Journal');
     state.journal.forEach(j => {
       lines.push(`### ${j.date} (Day ${j.day})`);
-      lines.push(j.text);
+      if (j.text) lines.push(j.text);
+      if (Array.isArray(j.photos) && j.photos.length) {
+        lines.push(`*[${j.photos.length} photo${j.photos.length === 1 ? '' : 's'} attached]*`);
+      }
       lines.push('');
     });
+
+    if (state.costs.length) {
+      lines.push('');
+      lines.push('## Cost');
+      const totals = costTotals();
+      lines.push(`- **Total expenses:** ${fmtKRW(totals.expense)}`);
+      lines.push(`- **Refunded / covered:** −${fmtKRW(totals.refund)}`);
+      lines.push(`- **Net out-of-pocket:** ${fmtKRW(totals.net)}`);
+      lines.push('');
+      const buckets = costByCategory();
+      const nonzero = COST_CATEGORIES.filter(k => buckets[k] > 0);
+      if (nonzero.length) {
+        lines.push('### By category');
+        nonzero.sort((a, b) => buckets[b] - buckets[a]).forEach(k => {
+          lines.push(`- ${COST_CAT_LABELS[k]}: ${fmtKRW(buckets[k])}`);
+        });
+        lines.push('');
+      }
+      lines.push('### Entries');
+      state.costs.slice().sort((a, b) => (b.date + String(b.id)).localeCompare(a.date + String(a.id))).forEach(c => {
+        const sign = c.type === 'refund' ? '−' : '';
+        const cat = COST_CAT_LABELS[c.category] || '—';
+        const payer = COST_PAYER_LABELS[c.payer] || '';
+        const vendor = c.vendor ? ` @ ${c.vendor}` : '';
+        const note = c.note ? ` — ${c.note}` : '';
+        lines.push(`- ${c.date} (D${c.day}) · ${cat} · ${c.label}${vendor} · ${payer} · ${sign}${fmtKRW(c.amount)}${note}`);
+      });
+    }
 
     const text = lines.join('\n');
     navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard'));
@@ -3807,13 +4568,15 @@ const SEED_IMAGES = {
       renderXrays();
       renderDocuments();
       renderJournal();
+      renderJournalDraftPhotos();
       // Default journal date/time to today/now
       const jd = document.getElementById('journalDate');
       const jt = document.getElementById('journalTime');
       if (jd && !jd.value) jd.value = todayISO();
-      if (jt && !jt.value) jt.value = new Date().toTimeString().slice(0, 5);
+      if (jt && !jt.value) jt.value = nowHHMM();
     }
     if (view === 'learn') renderGlossary();
+    if (view === 'cost') renderCost();
     if (view === 'data') renderProfile();
   }
 
@@ -3852,7 +4615,10 @@ const SEED_IMAGES = {
   if (!Array.isArray(state.medications)) state.medications = [];
   if (!Array.isArray(state.documents)) state.documents = [];
   if (!Array.isArray(state.xrays)) state.xrays = [];
+  if (!Array.isArray(state.costs)) state.costs = [];
   if (!state.profile.doctor) state.profile.doctor = { name: '', dept: '', phone: '', email: '', note: '' };
+  if (!state.costDraft) state.costDraft = { type: 'expense', category: 'treatment', payer: 'self' };
+  if (!state.costFilter) state.costFilter = 'all';
   seedFirstRun();
   renderAll();
 
