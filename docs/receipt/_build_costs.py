@@ -53,6 +53,10 @@ sources = [
             'label': '입원 4박5일 진료비 (병실 312, 4인실)',
             'vendor': '청구성심병원',
             'amount': 2754090,
+            # PWA expands this lump-sum across surgery/anesthesia/admission/
+            # medication/exam/equipment using SURGERY_DETAILS group proportions
+            # so the Cost · By category view reflects the real breakdown.
+            'breakdown': 'surgery_details',
             'note': '진료기간 2026-05-11 ~ 05-15. 총진료비 ₩5,484,254 (급여 본인 1,032,937 + 공단 2,730,120 + 선택진료 87,297 + 비급여 1,633,900) / 본인부담 ₩2,754,090 (카드 일시불, 4619****, 승인 19904100). 영수증번호 20260515-S430. 세부산정내역서 별첨.'
         }
     },
