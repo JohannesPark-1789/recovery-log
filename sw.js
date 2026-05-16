@@ -2,7 +2,7 @@
 // Strategy: NETWORK-FIRST for app shell, with cache fallback for offline
 // Update CACHE version when you want to force eviction of old cached assets
 
-const CACHE = 'recovery-log-v13-2026-05-16-pdf-viewer';
+const CACHE = 'recovery-log-v14-2026-05-16-pdf-fullheight';
 const ASSETS = [
   './',
   './index.html',
