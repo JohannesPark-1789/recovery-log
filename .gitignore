@@ -1,0 +1,27 @@
+# Claude Code worktrees
+.claude/worktrees/
+
+# Claude Code runtime locks (scheduled_tasks.lock, etc.)
+.claude/*.lock
+
+# Claude Code local preview server config
+.claude/launch.json
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# ── Personal medical / financial data — NEVER commit ──
+# Photos of wounds, body scans, prescriptions, billing — keep on device only.
+costs.json
+docs/medication/*.pdf
+docs/receipt/*.pdf
+docs/others/
+photo/
+3D/
+_untracked_pdf_backup/
+_personal_backup/
