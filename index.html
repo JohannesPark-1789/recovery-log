@@ -2100,13 +2100,20 @@
 
   /* ─── Anatomy regional atlas (Learn tab) ─── */
   .an-fig { margin: 12px 0 2px; }
-  .an-fig svg {
+  .an-fig svg,
+  .an-fig img {
     display: block;
     width: 100%;
     height: auto;
     background: var(--paper-2);
     border: 1px solid var(--line);
   }
+  .an-attrib {
+    color: var(--mute-2);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--line-2);
+  }
+  .an-attrib:hover { color: var(--ink); border-bottom-color: var(--ink); }
   .an-fig-cap {
     margin-top: 6px;
     font-family: 'JetBrains Mono', monospace;
@@ -2116,34 +2123,6 @@
     color: var(--mute-2);
     line-height: 1.5;
   }
-  .an-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 14px;
-    margin-top: 9px;
-  }
-  .an-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10.5px;
-    color: var(--ink-2);
-  }
-  .an-legend-sw {
-    width: 12px;
-    height: 12px;
-    flex-shrink: 0;
-    border: 1px solid var(--line-2);
-  }
-  /* SVG text + shape classes (inline SVG inherits page CSS) */
-  .asvg-ko   { font-family: 'Pretendard Variable', sans-serif; font-size: 11px; fill: var(--ink); }
-  .asvg-en   { font-family: 'JetBrains Mono', monospace; font-size: 7.5px; fill: var(--mute); letter-spacing: 0.05em; }
-  .asvg-tag  { font-family: 'JetBrains Mono', monospace; font-size: 8px; fill: var(--mute-2); letter-spacing: 0.1em; }
-  .asvg-lead { stroke: var(--line-2); stroke-width: 1; fill: none; }
-  .asvg-dot  { fill: var(--ink); }
-  .asvg-bone { fill: var(--paper); stroke: var(--ink); stroke-width: 1.4; }
-  .asvg-bone-hi { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
-  .asvg-soft { fill: var(--paper-3); stroke: var(--line-2); stroke-width: 1; }
 
   /* Expandable structure card */
   .an-stage {
@@ -3284,43 +3263,8 @@
     <div id="anBonesCollapsible" style="display:none;">
 
       <div class="an-fig">
-        <svg viewBox="0 0 440 268" role="img" aria-label="앞에서 본 어깨이음뼈">
-          <path d="M198,138 Q128,156 80,132" class="asvg-lead" stroke-width="3.5"/>
-          <path d="M206,176 Q132,204 78,178" class="asvg-lead" stroke-width="3"/>
-          <path d="M242,138 Q312,156 360,132" class="asvg-lead" stroke-width="3.5"/>
-          <path d="M234,176 Q308,204 362,178" class="asvg-lead" stroke-width="3"/>
-          <path d="M50,126 L100,134 L76,222 Z" class="asvg-soft" opacity="0.55"/>
-          <path d="M390,126 L340,134 L364,222 Z" class="asvg-soft" opacity="0.55"/>
-          <polygon points="210,30 230,30 238,42 230,54 210,54 202,42" class="asvg-bone"/>
-          <polygon points="194,124 246,124 238,182 202,182" class="asvg-bone"/>
-          <rect x="206" y="182" width="28" height="34" rx="3" class="asvg-bone"/>
-          <rect x="42" y="104" width="40" height="22" rx="5" class="asvg-bone"/>
-          <rect x="358" y="104" width="40" height="22" rx="5" class="asvg-bone"/>
-          <path d="M196,128 C160,148 116,126 70,116" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round"/>
-          <path d="M244,128 C280,148 324,126 370,116" fill="none" stroke="var(--ink)" stroke-width="11" stroke-linecap="round"/>
-          <circle cx="196" cy="128" r="4.5" class="asvg-dot"/>
-          <circle cx="244" cy="128" r="4.5" class="asvg-dot"/>
-          <circle cx="70" cy="116" r="4.5" class="asvg-dot"/>
-          <circle cx="370" cy="116" r="4.5" class="asvg-dot"/>
-          <path d="M130,72 L130,118" class="asvg-lead"/>
-          <text x="130" y="56" text-anchor="middle" class="asvg-ko">오른쪽 쇄골</text>
-          <text x="130" y="66" text-anchor="middle" class="asvg-en">R · CLAVICLE</text>
-          <path d="M70,98 L70,106" class="asvg-lead"/>
-          <text x="70" y="92" text-anchor="middle" class="asvg-ko">견봉쇄골관절 · AC</text>
-          <text x="62" y="148" text-anchor="middle" class="asvg-tag">봉우리 ACROMION</text>
-          <path d="M196,134 L150,232" class="asvg-lead"/>
-          <text x="150" y="246" text-anchor="middle" class="asvg-ko">흉쇄관절</text>
-          <text x="150" y="256" text-anchor="middle" class="asvg-en">SC JOINT</text>
-          <path d="M220,158 L300,206" class="asvg-lead"/>
-          <text x="305" y="210" class="asvg-ko">복장뼈자루</text>
-          <text x="305" y="220" class="asvg-en">MANUBRIUM</text>
-          <path d="M100,146 L56,228" class="asvg-lead"/>
-          <text x="56" y="242" text-anchor="middle" class="asvg-ko">제1늑골</text>
-          <text x="56" y="252" text-anchor="middle" class="asvg-en">FIRST RIB</text>
-          <path d="M240,42 L252,42" class="asvg-lead"/>
-          <text x="256" y="46" class="asvg-tag">C7</text>
-        </svg>
-        <div class="an-fig-cap">앞에서 본 어깨이음뼈 — 쇄골은 복장뼈와 견갑골을 잇는 단 하나의 가로 버팀목</div>
+        <img src="assets/anatomy/01-pectoral-girdle.jpg" alt="앞에서 본 어깨이음뼈 (Pectoral girdle, anterior view)" loading="lazy" />
+        <div class="an-fig-cap">앞에서 본 어깨이음뼈 — 쇄골은 복장뼈와 견갑골을 잇는 단 하나의 가로 버팀목 · Source: <a class="an-attrib" href="https://anatomytool.org/content/openstax-anatphys-fig83-pectoral-girdle-english-labels" target="_blank" rel="noopener noreferrer">OpenStax · CC BY 4.0</a></div>
       </div>
 
       <div class="an-stage">
@@ -3456,40 +3400,8 @@
     <div id="anMusclesCollapsible" style="display:none;">
 
       <div class="an-fig">
-        <svg viewBox="0 0 460 264" role="img" aria-label="위에서 본 오른쪽 쇄골의 근육 부착">
-          <line x1="212" y1="74" x2="212" y2="182" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="3 3"/>
-          <line x1="326" y1="74" x2="326" y2="182" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="3 3"/>
-          <path d="M64,92 C120,86 200,90 252,98 C322,104 360,106 396,110 L396,134 C356,130 330,120 300,126 C252,136 212,162 152,156 C112,153 82,156 64,152 C46,134 46,110 64,92 Z" class="asvg-bone-hi"/>
-          <ellipse cx="240" cy="118" rx="64" ry="14" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
-          <text x="138" y="68" text-anchor="middle" class="asvg-tag">안쪽 1/3</text>
-          <text x="269" y="68" text-anchor="middle" class="asvg-tag">가운데 1/3</text>
-          <text x="361" y="68" text-anchor="middle" class="asvg-tag">바깥쪽 1/3</text>
-          <path d="M80,84 L80,78 L150,78 L150,84" class="asvg-lead"/>
-          <path d="M115,78 L115,58" class="asvg-lead"/>
-          <text x="115" y="46" text-anchor="middle" class="asvg-ko">흉쇄유돌근</text>
-          <text x="115" y="55" text-anchor="middle" class="asvg-en">SCM</text>
-          <path d="M332,98 L332,92 L392,92 L392,98" class="asvg-lead"/>
-          <path d="M362,92 L362,58" class="asvg-lead"/>
-          <text x="362" y="46" text-anchor="middle" class="asvg-ko">등세모근</text>
-          <text x="362" y="55" text-anchor="middle" class="asvg-en">TRAPEZIUS</text>
-          <path d="M84,166 L84,172 L210,172 L210,166" class="asvg-lead"/>
-          <path d="M147,172 L147,206" class="asvg-lead"/>
-          <text x="147" y="220" text-anchor="middle" class="asvg-ko">대흉근</text>
-          <text x="147" y="230" text-anchor="middle" class="asvg-en">PECTORALIS MAJOR</text>
-          <path d="M314,140 L314,146 L392,146 L392,140" class="asvg-lead"/>
-          <path d="M353,146 L353,206" class="asvg-lead"/>
-          <text x="353" y="220" text-anchor="middle" class="asvg-ko">어깨세모근 앞섬유</text>
-          <text x="353" y="230" text-anchor="middle" class="asvg-en">DELTOID</text>
-          <text x="240" y="121" text-anchor="middle" class="asvg-tag">쇄골하근 · 아래면 고랑</text>
-          <text x="20" y="118" class="asvg-tag">흉골단</text>
-          <text x="406" y="118" class="asvg-tag">봉우리단</text>
-          <text x="230" y="252" text-anchor="middle" class="asvg-tag">위에서 본 모습 · ↑ 뒤 · ↓ 앞</text>
-        </svg>
-        <div class="an-fig-cap">위에서 본 오른쪽 쇄골 — 여섯 근육이 안·중·바깥 1/3에 나눠 붙는 정거장. 점선은 아래면(보이지 않는 면)의 부착.</div>
-        <div class="an-legend">
-          <span class="an-legend-item"><span class="an-legend-sw" style="background:var(--accent-soft);border-color:var(--accent);"></span>쇄골 (위에서 본 면)</span>
-          <span class="an-legend-item"><span class="an-legend-sw" style="background:transparent;border-style:dashed;border-color:var(--accent);"></span>아래면 부착 (가려짐)</span>
-        </div>
+        <img src="assets/anatomy/02-pectoral-girdle-muscles.jpg" alt="어깨이음뼈를 움직이는 근육들 (Muscles that position the pectoral girdle, anterior view)" loading="lazy" />
+        <div class="an-fig-cap">어깨이음뼈를 움직이는 근육들 — 대흉근·삼각근을 일부 제거하고 더 깊은 층(쇄골하근·소흉근·전거근·견갑거근)을 드러낸 모습 · Source: <a class="an-attrib" href="https://anatomytool.org/content/openstax-anatphys-fig1122-muscles-position-pectoral-girdle-english-labels" target="_blank" rel="noopener noreferrer">OpenStax · CC BY 4.0</a></div>
       </div>
 
       <div class="an-stage">
@@ -3625,51 +3537,8 @@
     <div id="anVesselsCollapsible" style="display:none;">
 
       <div class="an-fig">
-        <svg viewBox="0 0 440 362" role="img" aria-label="쇄골과 제1늑골 사이 늑쇄공간 단면">
-          <path d="M120,300 Q210,212 300,300" fill="none" stroke="var(--line-2)" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <path d="M44,256 Q210,322 396,256 L380,272 Q210,306 60,272 Z" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.4"/>
-          <polygon points="312,120 336,120 322,258 302,258" class="asvg-soft" opacity="0.7"/>
-          <polygon points="150,118 196,118 222,256 198,260" class="asvg-soft"/>
-          <ellipse cx="196" cy="112" rx="50" ry="15" class="asvg-soft"/>
-          <ellipse cx="210" cy="70" rx="126" ry="26" class="asvg-bone-hi"/>
-          <circle cx="284" cy="150" r="12" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.4"/>
-          <circle cx="304" cy="168" r="12" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.4"/>
-          <circle cx="296" cy="188" r="12" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.4"/>
-          <circle cx="128" cy="182" r="23" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5"/>
-          <circle cx="256" cy="194" r="23" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5"/>
-          <text x="128" y="187" text-anchor="middle" class="asvg-ko" style="font-weight:500;">V</text>
-          <text x="256" y="199" text-anchor="middle" class="asvg-ko" style="font-weight:500;fill:var(--accent);">A</text>
-          <text x="210" y="67" text-anchor="middle" class="asvg-ko">쇄골 단면</text>
-          <text x="210" y="79" text-anchor="middle" class="asvg-en">CLAVICLE</text>
-          <path d="M148,108 L92,104" class="asvg-lead"/>
-          <text x="86" y="100" text-anchor="end" class="asvg-ko">쇄골하근</text>
-          <text x="86" y="110" text-anchor="end" class="asvg-en">SUBCLAVIUS</text>
-          <path d="M105,182 L70,182" class="asvg-lead"/>
-          <text x="64" y="178" text-anchor="end" class="asvg-ko">쇄골하정맥</text>
-          <text x="64" y="188" text-anchor="end" class="asvg-en">SUBCLAVIAN V.</text>
-          <path d="M279,192 L322,192" class="asvg-lead"/>
-          <text x="328" y="188" class="asvg-ko">쇄골하동맥</text>
-          <text x="328" y="198" class="asvg-en">SUBCLAVIAN A.</text>
-          <path d="M306,158 L356,140" class="asvg-lead"/>
-          <text x="362" y="138" class="asvg-ko">상완신경총</text>
-          <text x="362" y="148" class="asvg-en">BRACHIAL PLEXUS</text>
-          <path d="M180,200 L116,288" class="asvg-lead"/>
-          <text x="110" y="300" text-anchor="middle" class="asvg-ko">앞목갈비근</text>
-          <text x="110" y="310" text-anchor="middle" class="asvg-en">ANTERIOR SCALENE</text>
-          <path d="M322,200 L360,292" class="asvg-lead"/>
-          <text x="362" y="304" text-anchor="middle" class="asvg-ko">중간목갈비근</text>
-          <text x="362" y="314" text-anchor="middle" class="asvg-en">MIDDLE SCALENE</text>
-          <text x="210" y="320" text-anchor="middle" class="asvg-tag">제1늑골 FIRST RIB</text>
-          <text x="210" y="346" text-anchor="middle" class="asvg-ko" style="font-size:10px;">흉막 · 폐첨 pleura · lung apex</text>
-          <text x="24" y="64" class="asvg-tag">← 앞</text>
-          <text x="392" y="64" text-anchor="end" class="asvg-tag">뒤 →</text>
-        </svg>
-        <div class="an-fig-cap">쇄골(천장)과 제1늑골(바닥) 사이 — 팔로 가는 모든 큰 혈관·신경이 한 통로로 지난다. 앞목갈비근 기준 정맥은 앞, 동맥·신경은 뒤.</div>
-        <div class="an-legend">
-          <span class="an-legend-item"><span class="an-legend-sw" style="background:var(--accent-soft);border-color:var(--accent);"></span>동맥 artery</span>
-          <span class="an-legend-item"><span class="an-legend-sw" style="background:var(--paper);border-color:var(--ink);"></span>정맥 vein</span>
-          <span class="an-legend-item"><span class="an-legend-sw" style="background:var(--paper-3);border-color:var(--ink);"></span>신경 · 근육</span>
-        </div>
+        <img src="assets/anatomy/03-thoracic-outlet.jpg" alt="흉곽출구 · 늑쇄공간 (Superior thoracic aperture · thoracic outlet syndrome anatomy)" loading="lazy" />
+        <div class="an-fig-cap">흉곽출구의 세 좁은 지점 — 사각근 간격, 늑쇄공간(쇄골–제1늑골 사이), 작은가슴근 아래. 쇄골하동·정맥과 상완신경총이 한꺼번에 지나는 통로 · Source: <a class="an-attrib" href="https://anatomytool.org/content/slagter-drawing-superior-thoracic-aperture-and-thoracic-outlet-syndrome-tos-no-labels" target="_blank" rel="noopener noreferrer">Slagter et al. · LUMC · CC BY-NC-SA 4.0</a></div>
       </div>
 
       <div class="an-stage">
@@ -3824,54 +3693,8 @@
     <div id="anNeckCollapsible" style="display:none;">
 
       <div class="an-fig">
-        <svg viewBox="0 0 420 392" role="img" aria-label="목과 경추, 어깨이음뼈의 연결">
-          <path d="M110,60 L182,276 L356,302 Z" fill="var(--paper-3)" stroke="var(--line-2)" stroke-width="1" opacity="0.5"/>
-          <path d="M96,40 Q70,52 78,96 Q116,108 168,86 Q176,46 130,34 Q112,32 96,40 Z" class="asvg-bone"/>
-          <circle cx="150" cy="96" r="9" class="asvg-bone"/>
-          <polygon points="134,98 166,104 246,304 218,310" class="asvg-soft"/>
-          <polygon points="210,158 232,158 286,294 262,300" class="asvg-soft" opacity="0.8"/>
-          <rect x="168" y="104" width="42" height="15" rx="3" class="asvg-bone"/>
-          <rect x="168" y="123" width="42" height="15" rx="3" class="asvg-bone"/>
-          <rect x="168" y="142" width="42" height="15" rx="3" class="asvg-bone"/>
-          <rect x="168" y="161" width="42" height="15" rx="3" class="asvg-bone"/>
-          <rect x="168" y="180" width="42" height="15" rx="3" class="asvg-bone"/>
-          <rect x="168" y="199" width="42" height="15" rx="3" class="asvg-bone"/>
-          <rect x="166" y="218" width="46" height="16" rx="3" class="asvg-bone-hi"/>
-          <rect x="166" y="238" width="46" height="16" rx="3" class="asvg-bone"/>
-          <rect x="166" y="258" width="46" height="16" rx="3" class="asvg-bone"/>
-          <path d="M212,192 L300,300 M212,212 L300,300 M212,232 L300,300 M212,252 L300,300" stroke="var(--line-2)" stroke-width="1" fill="none"/>
-          <path d="M230,306 C270,300 320,294 350,292" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round"/>
-          <path d="M236,318 Q298,338 358,312" fill="none" stroke="var(--line-2)" stroke-width="5"/>
-          <rect x="222" y="302" width="16" height="44" rx="3" class="asvg-bone"/>
-          <path d="M86,72 L122,74" class="asvg-lead"/>
-          <text x="80" y="68" text-anchor="end" class="asvg-ko">머리뼈바닥</text>
-          <text x="80" y="78" text-anchor="end" class="asvg-en">OCCIPUT</text>
-          <path d="M142,100 L116,108" class="asvg-lead"/>
-          <text x="110" y="112" text-anchor="end" class="asvg-tag">꼭지돌기</text>
-          <path d="M232,111 L260,111" class="asvg-lead"/>
-          <text x="266" y="114" class="asvg-tag">C1 고리뼈</text>
-          <path d="M212,226 L262,222" class="asvg-lead"/>
-          <text x="268" y="219" class="asvg-ko">C7 솟을뼈</text>
-          <text x="268" y="229" class="asvg-en">VERTEBRA PROMINENS</text>
-          <path d="M212,246 L262,250" class="asvg-lead"/>
-          <text x="268" y="253" class="asvg-tag">T1 등뼈</text>
-          <path d="M188,200 L112,214" class="asvg-lead"/>
-          <text x="106" y="210" text-anchor="end" class="asvg-ko">흉쇄유돌근</text>
-          <text x="106" y="220" text-anchor="end" class="asvg-en">SCM</text>
-          <path d="M250,228 L322,214" class="asvg-lead"/>
-          <text x="328" y="211" class="asvg-ko">목갈비근</text>
-          <text x="328" y="221" class="asvg-en">SCALENES</text>
-          <path d="M206,252 L120,318" class="asvg-lead"/>
-          <text x="104" y="330" text-anchor="middle" class="asvg-ko">등세모근</text>
-          <text x="104" y="340" text-anchor="middle" class="asvg-en">TRAPEZIUS</text>
-          <path d="M296,300 L330,338" class="asvg-lead"/>
-          <text x="336" y="342" class="asvg-ko">상완신경총 뿌리</text>
-          <text x="298" y="286" text-anchor="middle" class="asvg-tag">쇄골 CLAVICLE</text>
-          <text x="332" y="324" text-anchor="middle" class="asvg-tag">제1늑골</text>
-          <path d="M222,330 L200,344" class="asvg-lead"/>
-          <text x="194" y="348" text-anchor="end" class="asvg-tag">복장뼈</text>
-        </svg>
-        <div class="an-fig-cap">쇄골에서 근육·신경을 따라가면 목뼈·머리뼈바닥·위쪽 등뼈·제1늑골이 하나의 사슬로 이어진다.</div>
+        <img src="assets/anatomy/04-neck-back-muscles.jpg" alt="목과 등의 근육 (Muscles of the neck and back, posterior view)" loading="lazy" />
+        <div class="an-fig-cap">목·등의 근육 — 등세모근(trapezius)·견갑거근·능형근이 어깨이음뼈를 머리뼈바닥과 척추로 연결, 사각근이 목뼈 가로돌기에서 위쪽 갈비뼈로 내려간다 · Source: <a class="an-attrib" href="https://anatomytool.org/content/openstax-anatphys-fig1115-muscles-neck-and-back-english-labels" target="_blank" rel="noopener noreferrer">OpenStax · CC BY 4.0</a></div>
       </div>
 
       <div class="an-stage">
@@ -4007,35 +3830,8 @@
     <div id="anSurgeryCollapsible" style="display:none;">
 
       <div class="an-fig">
-        <svg viewBox="0 0 460 220" role="img" aria-label="위에서 본 쇄골에 올린 금속판과 나사">
-          <path d="M64,92 C120,86 200,90 252,98 C322,104 360,106 396,110 L396,134 C356,130 330,120 300,126 C252,136 212,162 152,156 C112,153 82,156 64,152 C46,134 46,110 64,92 Z" class="asvg-bone-hi"/>
-          <path d="M252,82 L270,162" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="4 3" fill="none"/>
-          <rect x="140" y="86" width="220" height="24" rx="12" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/>
-          <circle cx="168" cy="98" r="5" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.2"/>
-          <circle cx="200" cy="98" r="5" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.2"/>
-          <circle cx="232" cy="98" r="5" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.2"/>
-          <circle cx="268" cy="98" r="5" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.2"/>
-          <circle cx="300" cy="98" r="5" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.2"/>
-          <circle cx="332" cy="98" r="5" fill="var(--paper-3)" stroke="var(--ink)" stroke-width="1.2"/>
-          <circle cx="168" cy="98" r="2" class="asvg-dot"/>
-          <circle cx="200" cy="98" r="2" class="asvg-dot"/>
-          <circle cx="232" cy="98" r="2" class="asvg-dot"/>
-          <circle cx="268" cy="98" r="2" class="asvg-dot"/>
-          <circle cx="300" cy="98" r="2" class="asvg-dot"/>
-          <circle cx="332" cy="98" r="2" class="asvg-dot"/>
-          <path d="M250,86 L250,40" class="asvg-lead"/>
-          <text x="250" y="30" text-anchor="middle" class="asvg-ko">금속판 (pre-contoured)</text>
-          <text x="250" y="40" text-anchor="middle" class="asvg-en">SUPERIOR PLATE</text>
-          <path d="M332,103 L380,60" class="asvg-lead"/>
-          <text x="450" y="56" text-anchor="end" class="asvg-ko">양피질 잠금 나사 ×6</text>
-          <text x="450" y="66" text-anchor="end" class="asvg-en">LOCKING SCREWS</text>
-          <path d="M268,158 L308,196" class="asvg-lead"/>
-          <text x="312" y="200" class="asvg-ko">원래 골절선</text>
-          <text x="312" y="210" class="asvg-en">FRACTURE LINE</text>
-          <text x="18" y="120" class="asvg-tag">흉골단</text>
-          <text x="442" y="120" text-anchor="end" class="asvg-tag">봉우리단</text>
-        </svg>
-        <div class="an-fig-cap">위에서 본 ORIF 후 모습 — 가운데 1/3에 사선으로 부러진 쇄골에 미리 굴곡 가공된 금속판을 윗면에 올리고, 골절선을 가운데 두고 양쪽으로 나사 3개씩.</div>
+        <img src="assets/anatomy/05-clavicle-plate-xray.jpg" alt="쇄골 ORIF 후 X-ray — 금속판과 나사로 고정된 쇄골 골절" loading="lazy" />
+        <div class="an-fig-cap">실제 ORIF 후 X-ray — 부러진 쇄골에 금속판을 올리고 나사로 고정한 모습. 양쪽 끝까지 균등하게 나사가 박혀 안정적 골유합 환경 제공 · Source: <a class="an-attrib" href="https://commons.wikimedia.org/wiki/File:Clavicula_mit_Platte.JPG" target="_blank" rel="noopener noreferrer">Renato Bär · Wikimedia Commons · CC BY-SA 3.0</a></div>
       </div>
 
       <div class="an-stage">
