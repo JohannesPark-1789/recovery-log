@@ -4960,8 +4960,17 @@
     </div>
 
     <div class="field">
-      <span class="field-label">Attachment · 캡쳐 파일명 (선택)</span>
-      <input type="text" id="gratitudeAttachment" placeholder="폰 사진첩에 있는 캡쳐 파일명만 메모 (앱 안에 저장되지는 않음)" />
+      <span class="field-label">Photos · 캡쳐 이미지 <span style="color:var(--line-2); text-transform:none; letter-spacing:0;">(선택 · 여러 장 가능)</span></span>
+      <div id="gratitudePhotoStrip" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;"></div>
+      <input type="file" accept="image/*" id="gratitudePhotoInput" multiple style="display:none;" />
+      <div style="margin-top:8px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="document.getElementById('gratitudePhotoInput').click()">+ 사진 추가</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Attachment · 파일명 메모 (선택)</span>
+      <input type="text" id="gratitudeAttachment" placeholder="별도 파일 메모가 필요할 때만 (이미지는 위에서 첨부)" />
     </div>
 
     <div style="margin-top:14px; display:flex; gap:8px;">
@@ -6548,18 +6557,20 @@ const SEED_IMAGES = {
   // migration source and an offline fallback.
   const IDB_NAME = 'recovery_log';
   const IDB_STORE = 'kv';
+  const IDB_IMG_STORE = 'gratitude-images';
   const IDB_KEY = 'appState';
+  const IDB_VERSION = 2;
   let _idbPromise = null;
   function idbOpen() {
     if (_idbPromise) return _idbPromise;
     _idbPromise = new Promise((resolve, reject) => {
       let req;
-      try { req = indexedDB.open(IDB_NAME, 1); }
+      try { req = indexedDB.open(IDB_NAME, IDB_VERSION); }
       catch (e) { reject(e); return; }
       req.onupgradeneeded = () => {
-        if (!req.result.objectStoreNames.contains(IDB_STORE)) {
-          req.result.createObjectStore(IDB_STORE);
-        }
+        const db = req.result;
+        if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+        if (!db.objectStoreNames.contains(IDB_IMG_STORE)) db.createObjectStore(IDB_IMG_STORE);
       };
       req.onsuccess = () => resolve(req.result);
       req.onerror = () => reject(req.error);
@@ -6587,6 +6598,50 @@ const SEED_IMAGES = {
     return idbOpen().then(db => new Promise((resolve, reject) => {
       const tx = db.transaction(IDB_STORE, 'readwrite');
       tx.objectStore(IDB_STORE).delete(key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    }));
+  }
+
+  // Image store — Blobs keyed by short ids generated at save time.
+  // Kept separate from the main kv store so the state JSON stays small.
+  function idbImgPut(key, blob) {
+    return idbOpen().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(IDB_IMG_STORE, 'readwrite');
+      tx.objectStore(IDB_IMG_STORE).put(blob, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    }));
+  }
+  function idbImgGet(key) {
+    return idbOpen().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(IDB_IMG_STORE, 'readonly');
+      const r = tx.objectStore(IDB_IMG_STORE).get(key);
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+    }));
+  }
+  function idbImgDel(key) {
+    return idbOpen().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(IDB_IMG_STORE, 'readwrite');
+      tx.objectStore(IDB_IMG_STORE).delete(key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    }));
+  }
+  function idbImgKeys() {
+    return idbOpen().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(IDB_IMG_STORE, 'readonly');
+      const r = tx.objectStore(IDB_IMG_STORE).getAllKeys();
+      r.onsuccess = () => resolve(r.result || []);
+      r.onerror = () => reject(r.error);
+    }));
+  }
+  function idbImgClear() {
+    return idbOpen().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(IDB_IMG_STORE, 'readwrite');
+      tx.objectStore(IDB_IMG_STORE).clear();
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     }));
@@ -8017,6 +8072,33 @@ const SEED_IMAGES = {
     });
   }
 
+  // Blob variant — used when we want to store the image in IndexedDB rather
+  // than as an inline data URL on the state object. Same resize logic.
+  async function compressImageBlob(file, maxDim, quality) {
+    if (maxDim == null) maxDim = 1400;
+    if (quality == null) quality = 0.78;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim) { h = (h / w) * maxDim; w = maxDim; }
+          else if (h > maxDim) { w = (w / h) * maxDim; h = maxDim; }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/jpeg', quality);
+        };
+        img.onerror = () => reject(new Error('image decode failed'));
+        img.src = e.target.result;
+      };
+      reader.onerror = () => reject(reader.error || new Error('read failed'));
+      reader.readAsDataURL(file);
+    });
+  }
+
   // ════════════════════════════════════════════════════════════════
   // JOURNAL
   // ════════════════════════════════════════════════════════════════
@@ -8172,6 +8254,21 @@ const SEED_IMAGES = {
     }
     e.target.value = '';
     renderJournalDraftPhotos();
+  });
+
+  // Wire up gratitude photo input — multi-select, compressed to Blob and held
+  // in memory until saveGratitude() actually writes them to IDB. Each draft
+  // gets an object URL for the preview strip; cancel/save tear them down.
+  document.getElementById('gratitudePhotoInput').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    for (const file of files) {
+      try {
+        const blob = await compressImageBlob(file, 1400, 0.78);
+        _gratitudeDraftPhotos.push({ blob, url: URL.createObjectURL(blob) });
+      } catch (_) { /* skip bad file */ }
+    }
+    e.target.value = '';
+    renderGratitudeDraftPhotos();
   });
 
   // ════════════════════════════════════════════════════════════════
@@ -9244,6 +9341,62 @@ const SEED_IMAGES = {
       : state.gratitude.filter(g => (g.source || 'other') === f);
   }
 
+  // Cache of object URLs for thumbnails currently displayed in the entry
+  // list. Lives across re-renders so we don't re-decode the same blob on
+  // every filter change; entries whose underlying keys disappear from state
+  // are revoked on the next hydrate pass.
+  const _gratitudeListImageURLs = new Map();
+
+  async function hydrateGratitudeListImages() {
+    const needed = new Set();
+    for (const g of state.gratitude) {
+      if (Array.isArray(g.imageKeys)) for (const k of g.imageKeys) needed.add(k);
+    }
+    for (const [k, url] of _gratitudeListImageURLs) {
+      if (!needed.has(k)) {
+        URL.revokeObjectURL(url);
+        _gratitudeListImageURLs.delete(k);
+      }
+    }
+    for (const k of needed) {
+      if (_gratitudeListImageURLs.has(k)) continue;
+      try {
+        const blob = await idbImgGet(k);
+        if (blob) _gratitudeListImageURLs.set(k, URL.createObjectURL(blob));
+      } catch (_) { /* skip */ }
+    }
+    document.querySelectorAll('#gratitudeList img[data-grat-key]').forEach(img => {
+      const k = img.getAttribute('data-grat-key');
+      const url = _gratitudeListImageURLs.get(k);
+      if (url) img.src = url;
+    });
+  }
+
+  async function openGratitudeImage(entryId, imgKey) {
+    const entry = state.gratitude.find(g => g.id === entryId);
+    if (!entry) return;
+    const keys = Array.isArray(entry.imageKeys) ? entry.imageKeys : [];
+    const idx = keys.indexOf(imgKey);
+    let url = _gratitudeListImageURLs.get(imgKey);
+    if (!url) {
+      try {
+        const blob = await idbImgGet(imgKey);
+        if (!blob) return;
+        url = URL.createObjectURL(blob);
+        _gratitudeListImageURLs.set(imgKey, url);
+      } catch (_) { return; }
+    }
+    const meta = `받은 마음 · ${fmtDateLong(entry.date)} · ${idx + 1}/${keys.length}`;
+    openLightbox(url, meta, () => {
+      if (!confirm('Remove this photo from the entry?')) return;
+      entry.imageKeys = keys.filter(k => k !== imgKey);
+      idbImgDel(imgKey).catch(() => {});
+      save();
+      renderGratitudeList();
+      closeLightbox();
+    });
+  }
+
   function renderGratitudeList() {
     const wrap = document.getElementById('gratitudeList');
     const countEl = document.getElementById('gratitudeCount');
@@ -9266,6 +9419,9 @@ const SEED_IMAGES = {
     wrap.innerHTML = (view === 'group')
       ? renderGratitudeGrouped(list)
       : renderGratitudeChronological(list);
+    // Fill in image thumbnails asynchronously — the structural HTML is up,
+    // so users can interact while blobs load from IDB.
+    hydrateGratitudeListImages();
   }
 
   function renderGratitudeEntry(g) {
@@ -9279,6 +9435,15 @@ const SEED_IMAGES = {
     const note = g.note
       ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--line); font-size:13px; color:var(--mute);">${escapeHtml(g.note)}</div>`
       : '';
+    const keys = Array.isArray(g.imageKeys) ? g.imageKeys : [];
+    const photosHtml = keys.length ? `
+        <div class="journal-photos">
+          ${keys.map(k => `
+            <div class="journal-photo" onclick="openGratitudeImage(${g.id}, '${escapeHtml(k)}')">
+              <img data-grat-key="${escapeHtml(k)}" alt="" />
+            </div>
+          `).join('')}
+        </div>` : '';
     return `
       <div class="journal-entry">
         <div class="journal-meta">
@@ -9286,6 +9451,7 @@ const SEED_IMAGES = {
           <span>${dayPart}<button class="log-del" onclick="editGratitude(${g.id})" title="Edit" style="margin-left:6px; margin-right:6px;">✎</button><button class="log-del" onclick="deleteGratitude(${g.id})">✕</button></span>
         </div>
         ${g.content ? `<div class="journal-text">${escapeHtml(g.content)}</div>` : ''}
+        ${photosHtml}
         ${note}
         ${attach}
       </div>`;
@@ -9336,7 +9502,49 @@ const SEED_IMAGES = {
     }).join('');
   }
 
-  function saveGratitude() {
+  // Draft photo buffer for the gratitude form. Each item is one of:
+  //   { key: 'grat-…', url }            ← already persisted (loaded for edit)
+  //   { blob: Blob,    url }            ← newly added this session, not yet in IDB
+  // Object URLs are revoked when the draft is cleared or the form is closed,
+  // so leaks don't accumulate across edits.
+  let _gratitudeDraftPhotos = [];
+
+  function clearGratitudeDraftPhotos() {
+    for (const p of _gratitudeDraftPhotos) {
+      if (p.url) URL.revokeObjectURL(p.url);
+    }
+    _gratitudeDraftPhotos = [];
+  }
+
+  function renderGratitudeDraftPhotos() {
+    const strip = document.getElementById('gratitudePhotoStrip');
+    if (!strip) return;
+    if (!_gratitudeDraftPhotos.length) {
+      strip.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace; font-size:10px; color:var(--mute); letter-spacing:0.05em;">NO PHOTOS</div>';
+      return;
+    }
+    strip.innerHTML = _gratitudeDraftPhotos.map((p, i) => `
+      <div class="journal-photo-strip-item">
+        <img src="${p.url}" alt="" />
+        <button type="button" class="rm" onclick="removeGratitudeDraftPhoto(${i})" aria-label="remove">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function removeGratitudeDraftPhoto(i) {
+    const p = _gratitudeDraftPhotos[i];
+    if (!p) return;
+    if (p.url) URL.revokeObjectURL(p.url);
+    _gratitudeDraftPhotos.splice(i, 1);
+    renderGratitudeDraftPhotos();
+  }
+
+  function newGratitudeImageKey() {
+    const rand = Math.random().toString(36).slice(2, 8);
+    return `grat-${Date.now()}-${rand}`;
+  }
+
+  async function saveGratitude() {
     const date = document.getElementById('gratitudeDate').value || todayISO();
     const from = document.getElementById('gratitudeFrom').value.trim();
     const content = document.getElementById('gratitudeContent').value.trim();
@@ -9344,10 +9552,29 @@ const SEED_IMAGES = {
     const attachmentRef = document.getElementById('gratitudeAttachment').value.trim();
     const room = document.getElementById('gratitudeRoom').value.trim();
     const source = _gratitudeDraftSource;
+    const hasPhotos = _gratitudeDraftPhotos.length > 0;
 
-    if (!content && !note && !attachmentRef) {
-      toast('내용·메모·캡쳐 파일명 중 하나는 입력하세요');
+    if (!content && !note && !attachmentRef && !hasPhotos) {
+      toast('내용·메모·사진 중 하나는 입력하세요');
       return;
+    }
+
+    // Persist any newly-added photos to IDB. On failure we surface a toast and
+    // bail before mutating the entry — saving half the photos would be worse
+    // than saving none, because the entry would silently drop the rest.
+    const finalKeys = [];
+    for (const p of _gratitudeDraftPhotos) {
+      if (p.key) { finalKeys.push(p.key); continue; }
+      const key = newGratitudeImageKey();
+      try {
+        await idbImgPut(key, p.blob);
+      } catch (e) {
+        console.error('gratitude image save failed', e);
+        toast('사진 저장 실패 — 다시 시도해주세요');
+        return;
+      }
+      p.key = key;
+      finalKeys.push(key);
     }
 
     const entry = {
@@ -9358,12 +9585,21 @@ const SEED_IMAGES = {
       from,
       content,
       note,
-      attachmentRef
+      attachmentRef,
+      imageKeys: finalKeys
     };
 
     if (state.editingGratitudeId) {
       const idx = state.gratitude.findIndex(g => g.id === state.editingGratitudeId);
-      if (idx >= 0) state.gratitude[idx] = { ...state.gratitude[idx], ...entry };
+      if (idx >= 0) {
+        const prevKeys = Array.isArray(state.gratitude[idx].imageKeys) ? state.gratitude[idx].imageKeys : [];
+        const finalSet = new Set(finalKeys);
+        // Remove blobs the user deleted in this edit session.
+        for (const k of prevKeys) {
+          if (!finalSet.has(k)) idbImgDel(k).catch(() => {});
+        }
+        state.gratitude[idx] = { ...state.gratitude[idx], ...entry };
+      }
     } else {
       state.gratitude.push({ id: Date.now(), ...entry });
     }
@@ -9375,7 +9611,7 @@ const SEED_IMAGES = {
     toast(wasEdit ? '받은 마음 · 수정됨' : '받은 마음 · 저장됨');
   }
 
-  function editGratitude(id) {
+  async function editGratitude(id) {
     const g = state.gratitude.find(x => x.id === id);
     if (!g) return;
     state.editingGratitudeId = id;
@@ -9388,6 +9624,20 @@ const SEED_IMAGES = {
     _gratitudeDraftSource = g.source || 'katalk';
     renderGratitudeSourceChips();
     renderGratitudeRoomVisibility();
+
+    // Load existing images into the draft buffer so the user can add/remove
+    // and we can compute the diff at save time. Missing blobs (e.g. corrupted
+    // store) are skipped silently — better to keep editing than to error out.
+    clearGratitudeDraftPhotos();
+    const keys = Array.isArray(g.imageKeys) ? g.imageKeys : [];
+    for (const k of keys) {
+      try {
+        const blob = await idbImgGet(k);
+        if (blob) _gratitudeDraftPhotos.push({ key: k, url: URL.createObjectURL(blob) });
+      } catch (_) { /* skip */ }
+    }
+    renderGratitudeDraftPhotos();
+
     const title = document.getElementById('gratitudeFormTitle');
     if (title) title.textContent = 'Edit entry';
     const saveBtn = document.getElementById('gratitudeSaveBtn');
@@ -9408,6 +9658,8 @@ const SEED_IMAGES = {
     _gratitudeDraftSource = 'katalk';
     renderGratitudeSourceChips();
     renderGratitudeRoomVisibility();
+    clearGratitudeDraftPhotos();
+    renderGratitudeDraftPhotos();
     const title = document.getElementById('gratitudeFormTitle');
     if (title) title.textContent = 'New entry';
     const saveBtn = document.getElementById('gratitudeSaveBtn');
@@ -9418,6 +9670,10 @@ const SEED_IMAGES = {
 
   function deleteGratitude(id) {
     if (!confirm('Delete this entry?')) return;
+    const entry = state.gratitude.find(g => g.id === id);
+    if (entry && Array.isArray(entry.imageKeys)) {
+      for (const k of entry.imageKeys) idbImgDel(k).catch(() => {});
+    }
     state.gratitude = state.gratitude.filter(g => g.id !== id);
     if (state.editingGratitudeId === id) cancelEditGratitude();
     save();
@@ -10109,7 +10365,37 @@ const SEED_IMAGES = {
   // EXPORT / IMPORT
   // ════════════════════════════════════════════════════════════════
 
-  function exportData() {
+  // ---- blob<->dataURL helpers, used by the backup pipeline so images stored
+  // in the gratitude-images store travel inside the single JSON backup file.
+  function blobToDataURL(blob) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(r.error || new Error('read failed'));
+      r.readAsDataURL(blob);
+    });
+  }
+  async function dataURLToBlob(dataURL) {
+    const res = await fetch(dataURL);
+    return res.blob();
+  }
+
+  async function exportData() {
+    // Pull every gratitude image referenced by the current state and inline
+    // it as base64 alongside the JSON. Backups stay single-file; restore on
+    // any device re-hydrates the IDB image store from this map.
+    const gratitudeImages = {};
+    const referenced = new Set();
+    for (const g of state.gratitude) {
+      if (Array.isArray(g.imageKeys)) for (const k of g.imageKeys) referenced.add(k);
+    }
+    for (const k of referenced) {
+      try {
+        const blob = await idbImgGet(k);
+        if (blob) gratitudeImages[k] = await blobToDataURL(blob);
+      } catch (_) { /* skip missing blob */ }
+    }
+
     const data = {
       profile: state.profile,
       pain: state.pain,
@@ -10125,8 +10411,9 @@ const SEED_IMAGES = {
       xrays: state.xrays,
       costs: state.costs,
       gratitude: state.gratitude,
+      gratitudeImages,
       exportedAt: new Date().toISOString(),
-      version: 7
+      version: 8
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -10192,7 +10479,7 @@ const SEED_IMAGES = {
       return;
     }
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
         state.profile = data.profile || state.profile;
@@ -10210,6 +10497,23 @@ const SEED_IMAGES = {
         state.xrays = data.xrays || [];
         state.costs = data.costs || [];
         state.gratitude = data.gratitude || [];
+
+        // Replace the gratitude-images store from the backup. Clear first so
+        // any blobs orphaned by the old state are gone, then re-hydrate every
+        // key listed in the backup's image map.
+        try {
+          await idbImgClear();
+          const imgs = (data.gratitudeImages && typeof data.gratitudeImages === 'object') ? data.gratitudeImages : {};
+          for (const k of Object.keys(imgs)) {
+            try {
+              const blob = await dataURLToBlob(imgs[k]);
+              await idbImgPut(k, blob);
+            } catch (_) { /* skip bad image */ }
+          }
+        } catch (e) {
+          console.error('gratitude image restore failed', e);
+        }
+
         state.seeded = true;  // imported data counts as seeded — never re-seed
         // Older backups carry an old/missing migrationVersion. Run migrations
         // against the freshly imported data so the user gets up-to-date meds
@@ -10240,10 +10544,14 @@ const SEED_IMAGES = {
       return;
     }
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
         const restored = [];
+        // Track image keys belonging to gratitude entries that the merge
+        // actually adopts, so we can hydrate only those from the backup's
+        // image map (existing entries keep their existing blobs untouched).
+        const adoptedGratitudeImageKeys = new Set();
         // Item-level merge: add every backup entry the live data is missing
         // (deduped by id), leaving all current entries untouched. The old
         // logic only adopted a backup field when the live field was entirely
@@ -10261,8 +10569,29 @@ const SEED_IMAGES = {
             state[f].push(item);
             if (item && item.id != null) seen.add(item.id);
             added++;
+            if (f === 'gratitude' && Array.isArray(item && item.imageKeys)) {
+              for (const k of item.imageKeys) adoptedGratitudeImageKeys.add(k);
+            }
           }
           if (added) restored.push(`${f}:${added}`);
+        }
+        // Hydrate gratitude image blobs only for entries we just adopted —
+        // skip if the key is already present (an existing entry shares it).
+        if (adoptedGratitudeImageKeys.size && data.gratitudeImages && typeof data.gratitudeImages === 'object') {
+          let existingKeys;
+          try { existingKeys = new Set(await idbImgKeys()); } catch (_) { existingKeys = new Set(); }
+          let imgAdded = 0;
+          for (const k of adoptedGratitudeImageKeys) {
+            if (existingKeys.has(k)) continue;
+            const dataURL = data.gratitudeImages[k];
+            if (!dataURL) continue;
+            try {
+              const blob = await dataURLToBlob(dataURL);
+              await idbImgPut(k, blob);
+              imgAdded++;
+            } catch (_) { /* skip */ }
+          }
+          if (imgAdded) restored.push(`gratitudeImages:${imgAdded}`);
         }
         // Re-sort the chronological lists so merged-in entries land in order.
         if (Array.isArray(state.journal))
