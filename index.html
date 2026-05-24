@@ -7575,8 +7575,8 @@ const SEED_IMAGES = {
   function renderCompare() {
     const idA = document.getElementById('cmpSelectA').value;
     const idB = document.getElementById('cmpSelectB').value;
-    const pA = state.photos.find(p => p.id === idA);
-    const pB = state.photos.find(p => p.id === idB);
+    const pA = state.photos.find(p => String(p.id) === idA);
+    const pB = state.photos.find(p => String(p.id) === idB);
     const wrapA = document.getElementById('cmpImgA');
     const wrapB = document.getElementById('cmpImgB');
     wrapA.innerHTML = pA
