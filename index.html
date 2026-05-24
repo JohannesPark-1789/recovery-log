@@ -1236,7 +1236,7 @@
     background: var(--paper);
     border-top: 1px solid var(--line);
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     padding-bottom: var(--safe-bottom);
     z-index: 100;
   }
@@ -5119,6 +5119,87 @@
 
 </section>
 
+<!-- ═══ GRATITUDE / RECEIVED CARE ═══ -->
+<section class="view" id="view-gratitude">
+
+  <div class="section">
+    <div class="section-label"><span>받은 마음</span><span class="ord" id="gratitudeCount">0 entries</span></div>
+    <div class="intro-quote">
+      사고 이후 받은 말·문자·카톡·선물·방문을 잊지 않게 모아두는 곳. 텍스트 위주로 가볍게.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><span id="gratitudeFormTitle">New entry</span><span class="ord">기록</span></div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="field">
+        <span class="field-label">Date</span>
+        <input type="date" id="gratitudeDate" />
+      </div>
+      <div class="field">
+        <span class="field-label">From · 보낸 사람</span>
+        <input type="text" id="gratitudeFrom" placeholder="이름 또는 관계" />
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Source · 형태</span>
+      <div class="chip-row" id="gratitudeSourceChips"></div>
+    </div>
+
+    <div class="field" id="gratitudeRoomField">
+      <span class="field-label">Room · 카톡 방 (카톡인 경우)</span>
+      <input type="text" id="gratitudeRoom" placeholder="예: 엄마, 이대 친구들, 회사 동기방" />
+    </div>
+
+    <div class="field">
+      <span class="field-label">Content · 내용</span>
+      <textarea id="gratitudeContent" placeholder="받은 말 그대로, 혹은 카톡 메시지를 붙여넣기" style="min-height: 90px;"></textarea>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Note · 메모 (선택)</span>
+      <textarea id="gratitudeNote" placeholder="그때 내 마음, 답례했는지 등" style="min-height: 50px;"></textarea>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Attachment · 캡쳐 파일명 (선택)</span>
+      <input type="text" id="gratitudeAttachment" placeholder="폰 사진첩에 있는 캡쳐 파일명만 메모 (앱 안에 저장되지는 않음)" />
+    </div>
+
+    <div style="margin-top:14px; display:flex; gap:8px;">
+      <button class="btn btn-primary btn-sm" id="gratitudeSaveBtn" onclick="saveGratitude()">Save entry</button>
+      <button class="btn btn-ghost btn-sm" id="gratitudeCancelBtn" onclick="cancelEditGratitude()" style="display:none;">Cancel</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">
+      <span>View</span>
+      <span class="ord" id="gratitudeViewLabel">시간순</span>
+    </div>
+    <div class="chip-row" id="gratitudeViewChips"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">
+      <span>Filter</span>
+      <span class="ord" id="gratitudeFilteredCount">all</span>
+    </div>
+    <div class="chip-row" id="gratitudeFilterChips"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><span>Entries</span><span class="ord">latest first</span></div>
+    <div id="gratitudeList"></div>
+    <div style="margin-top:14px; font-size:11px; color:var(--mute); line-height:1.5;">
+      개인 데이터는 이 기기에만 저장됩니다 (IndexedDB). 정기적으로 Settings에서 Export JSON으로 백업하세요.
+    </div>
+  </div>
+
+</section>
+
 <!-- ═══ SETTINGS / DATA ═══ -->
 <section class="view" id="view-data">
 
@@ -5267,6 +5348,10 @@
   <button class="nav-item" data-view="cost" onclick="switchView('cost')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 3h8l3 3v15a1 1 0 01-1.5.87L15 21l-2 1-2-1-2 1-2-1-1.5.87A1 1 0 014 21V4a1 1 0 011-1z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>
     Cost
+  </button>
+  <button class="nav-item" data-view="gratitude" onclick="switchView('gratitude')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0112 6a5.5 5.5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
+    Care
   </button>
   <button class="nav-item" data-view="data" onclick="switchView('data')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 8v8a2 2 0 002 2h12a2 2 0 002-2V8M4 8l8-5 8 5M4 8h16"/></svg>
@@ -6348,6 +6433,7 @@ const SEED_IMAGES = {
     documents: [],   // [{id, title, category, date, from, fileData, fileType, fileName, note, day}]
     xrays: [],       // [{id, date, day, data, label, note}]
     costs: [],       // [{id, date, day, category, label, vendor, amount, type, payer, receipt, note}]
+    gratitude: [],   // [{id, date, day, source, room, from, content, note, attachmentRef}]
     selected: { nrs: null, locations: [], qualities: [] },
     schedSelected: { type: 'med' },
     docSelected: { category: 'diagnosis' },
@@ -6355,6 +6441,8 @@ const SEED_IMAGES = {
     costFilter: 'all',
     docFilter: 'all',
     xrayFilter: 'all',
+    gratitudeFilter: 'all',
+    gratitudeView: 'time', // 'time' | 'group'
     dismissedReminders: {}, // { 'schedId|YYYY-MM-DD': true } — sticky-per-day
     editingMedId: null,
     editingDocId: null,
@@ -6363,6 +6451,7 @@ const SEED_IMAGES = {
     editingPainId: null,
     editingVitalId: null,
     editingSchedId: null,
+    editingGratitudeId: null,
     selectedExDate: null
   };
 
@@ -6722,6 +6811,7 @@ const SEED_IMAGES = {
       documents: state.documents,
       xrays: state.xrays,
       costs: state.costs,
+      gratitude: state.gratitude,
       dismissedReminders: state.dismissedReminders,
       seeded: state.seeded === true,
       migrationVersion: state.migrationVersion || 0
@@ -9256,6 +9346,289 @@ const SEED_IMAGES = {
   }
 
   // ════════════════════════════════════════════════════════════════
+  // GRATITUDE — received care log (말 · 문자 · 카톡 · 선물 · 방문)
+  // Personal archive of condolences, support, and gifts received after
+  // the accident. Text-first; screenshots stay in the phone gallery
+  // (only filename memo is stored) to keep IndexedDB lightweight.
+  // ════════════════════════════════════════════════════════════════
+
+  const GRATITUDE_SOURCES = [
+    { key: 'katalk', label: '카톡' },
+    { key: 'sms',    label: '문자' },
+    { key: 'word',   label: '말' },
+    { key: 'gift',   label: '선물' },
+    { key: 'visit',  label: '방문' },
+    { key: 'other',  label: '기타' }
+  ];
+  const GRATITUDE_SOURCE_LABEL = Object.fromEntries(
+    GRATITUDE_SOURCES.map(s => [s.key, s.label])
+  );
+
+  // Transient compose-form state — not persisted.
+  let _gratitudeDraftSource = 'katalk';
+
+  function renderGratitude() {
+    const dateInput = document.getElementById('gratitudeDate');
+    if (dateInput && !dateInput.value) dateInput.value = todayISO();
+    renderGratitudeSourceChips();
+    renderGratitudeRoomVisibility();
+    renderGratitudeViewChips();
+    renderGratitudeFilterChips();
+    renderGratitudeList();
+  }
+
+  function renderGratitudeSourceChips() {
+    const wrap = document.getElementById('gratitudeSourceChips');
+    if (!wrap) return;
+    wrap.innerHTML = GRATITUDE_SOURCES.map(s => {
+      const active = _gratitudeDraftSource === s.key ? ' active' : '';
+      return `<button class="chip${active}" onclick="setGratitudeDraftSource('${s.key}')">${s.label}</button>`;
+    }).join('');
+  }
+
+  function setGratitudeDraftSource(key) {
+    _gratitudeDraftSource = key;
+    renderGratitudeSourceChips();
+    renderGratitudeRoomVisibility();
+  }
+
+  // Hide the Room field unless source is katalk (only meaningful there).
+  function renderGratitudeRoomVisibility() {
+    const field = document.getElementById('gratitudeRoomField');
+    if (!field) return;
+    field.style.display = (_gratitudeDraftSource === 'katalk') ? '' : 'none';
+  }
+
+  function renderGratitudeViewChips() {
+    const wrap = document.getElementById('gratitudeViewChips');
+    if (!wrap) return;
+    const views = [
+      { key: 'time',  label: '시간순' },
+      { key: 'group', label: '방·사람별' }
+    ];
+    wrap.innerHTML = views.map(v => {
+      const active = (state.gratitudeView || 'time') === v.key ? ' active' : '';
+      return `<button class="chip${active}" onclick="setGratitudeView('${v.key}')">${v.label}</button>`;
+    }).join('');
+    const label = document.getElementById('gratitudeViewLabel');
+    if (label) label.textContent = (state.gratitudeView === 'group') ? '방·사람별' : '시간순';
+  }
+
+  function setGratitudeView(key) {
+    state.gratitudeView = key;
+    save();
+    renderGratitudeViewChips();
+    renderGratitudeList();
+  }
+
+  function renderGratitudeFilterChips() {
+    const wrap = document.getElementById('gratitudeFilterChips');
+    if (!wrap) return;
+    const chips = [
+      { key: 'all', label: '전체' },
+      ...GRATITUDE_SOURCES.map(s => ({ key: s.key, label: s.label }))
+    ];
+    wrap.innerHTML = chips.map(c => {
+      const active = (state.gratitudeFilter || 'all') === c.key ? ' active' : '';
+      return `<button class="chip${active}" onclick="setGratitudeFilter('${c.key}')">${c.label}</button>`;
+    }).join('');
+  }
+
+  function setGratitudeFilter(key) {
+    state.gratitudeFilter = key;
+    save();
+    renderGratitudeFilterChips();
+    renderGratitudeList();
+  }
+
+  function gratitudeFiltered() {
+    const f = state.gratitudeFilter || 'all';
+    return (f === 'all')
+      ? state.gratitude.slice()
+      : state.gratitude.filter(g => (g.source || 'other') === f);
+  }
+
+  function renderGratitudeList() {
+    const wrap = document.getElementById('gratitudeList');
+    const countEl = document.getElementById('gratitudeCount');
+    if (countEl) countEl.textContent = `${state.gratitude.length} entries`;
+    if (!wrap) return;
+
+    const list = gratitudeFiltered();
+    const filterEl = document.getElementById('gratitudeFilteredCount');
+    if (filterEl) {
+      const f = state.gratitudeFilter || 'all';
+      filterEl.textContent = f === 'all' ? 'all' : `${list.length} of ${state.gratitude.length}`;
+    }
+
+    if (!list.length) {
+      wrap.innerHTML = '<div class="empty">no entries yet</div>';
+      return;
+    }
+
+    const view = state.gratitudeView || 'time';
+    wrap.innerHTML = (view === 'group')
+      ? renderGratitudeGrouped(list)
+      : renderGratitudeChronological(list);
+  }
+
+  function renderGratitudeEntry(g) {
+    const sourceLabel = GRATITUDE_SOURCE_LABEL[g.source] || '기타';
+    const dayPart = Number.isFinite(g.day) ? `DAY ${g.day}` : '';
+    const fromPart = g.from ? escapeHtml(g.from) : '—';
+    const roomPart = g.room ? ` <span style="color:var(--mute);">(${escapeHtml(g.room)})</span>` : '';
+    const attach = g.attachmentRef
+      ? `<div style="font-size:11px; color:var(--mute); margin-top:6px; font-family:'JetBrains Mono',monospace;">📎 ${escapeHtml(g.attachmentRef)}</div>`
+      : '';
+    const note = g.note
+      ? `<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--line); font-size:13px; color:var(--mute);">${escapeHtml(g.note)}</div>`
+      : '';
+    return `
+      <div class="journal-entry">
+        <div class="journal-meta">
+          <span>${fmtDateLong(g.date)} · ${sourceLabel} · ${fromPart}${roomPart}</span>
+          <span>${dayPart}<button class="log-del" onclick="editGratitude(${g.id})" title="Edit" style="margin-left:6px; margin-right:6px;">✎</button><button class="log-del" onclick="deleteGratitude(${g.id})">✕</button></span>
+        </div>
+        ${g.content ? `<div class="journal-text">${escapeHtml(g.content)}</div>` : ''}
+        ${note}
+        ${attach}
+      </div>`;
+  }
+
+  function renderGratitudeChronological(list) {
+    return list
+      .slice()
+      .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.id - a.id))
+      .map(renderGratitudeEntry)
+      .join('');
+  }
+
+  function renderGratitudeGrouped(list) {
+    // Group by katalk room (when present) else by sender. Each group becomes
+    // its own block, ordered by most-recent entry desc.
+    const groups = new Map();
+    for (const g of list) {
+      const isKatalk = g.source === 'katalk';
+      const key = isKatalk && g.room
+        ? `room:${g.room}`
+        : `from:${g.from || '(이름 없음)'}`;
+      const label = isKatalk && g.room
+        ? `💬 ${g.room}`
+        : `${GRATITUDE_SOURCE_LABEL[g.source] || '기타'} · ${g.from || '(이름 없음)'}`;
+      if (!groups.has(key)) groups.set(key, { label, items: [] });
+      groups.get(key).items.push(g);
+    }
+    const sorted = [...groups.values()].sort((a, b) => {
+      const da = a.items.reduce((m, x) => x.date > m ? x.date : m, '');
+      const db = b.items.reduce((m, x) => x.date > m ? x.date : m, '');
+      return db.localeCompare(da);
+    });
+    return sorted.map(g => {
+      const entriesHtml = g.items
+        .slice()
+        .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.id - a.id))
+        .map(renderGratitudeEntry)
+        .join('');
+      return `
+        <div style="margin-bottom:24px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--ink); padding:8px 0; border-bottom:1px solid var(--line); margin-bottom:10px; display:flex; justify-content:space-between;">
+            <span>${escapeHtml(g.label)}</span>
+            <span style="color:var(--mute);">${g.items.length}</span>
+          </div>
+          ${entriesHtml}
+        </div>`;
+    }).join('');
+  }
+
+  function saveGratitude() {
+    const date = document.getElementById('gratitudeDate').value || todayISO();
+    const from = document.getElementById('gratitudeFrom').value.trim();
+    const content = document.getElementById('gratitudeContent').value.trim();
+    const note = document.getElementById('gratitudeNote').value.trim();
+    const attachmentRef = document.getElementById('gratitudeAttachment').value.trim();
+    const room = document.getElementById('gratitudeRoom').value.trim();
+    const source = _gratitudeDraftSource;
+
+    if (!content && !note && !attachmentRef) {
+      toast('내용·메모·캡쳐 파일명 중 하나는 입력하세요');
+      return;
+    }
+
+    const entry = {
+      date,
+      day: dayFromDate(date),
+      source,
+      room: (source === 'katalk' ? room : ''),
+      from,
+      content,
+      note,
+      attachmentRef
+    };
+
+    if (state.editingGratitudeId) {
+      const idx = state.gratitude.findIndex(g => g.id === state.editingGratitudeId);
+      if (idx >= 0) state.gratitude[idx] = { ...state.gratitude[idx], ...entry };
+    } else {
+      state.gratitude.push({ id: Date.now(), ...entry });
+    }
+    state.gratitude.sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.id - a.id));
+    save();
+    const wasEdit = !!state.editingGratitudeId;
+    cancelEditGratitude();
+    renderGratitudeList();
+    toast(wasEdit ? '받은 마음 · 수정됨' : '받은 마음 · 저장됨');
+  }
+
+  function editGratitude(id) {
+    const g = state.gratitude.find(x => x.id === id);
+    if (!g) return;
+    state.editingGratitudeId = id;
+    document.getElementById('gratitudeDate').value = g.date || todayISO();
+    document.getElementById('gratitudeFrom').value = g.from || '';
+    document.getElementById('gratitudeRoom').value = g.room || '';
+    document.getElementById('gratitudeContent').value = g.content || '';
+    document.getElementById('gratitudeNote').value = g.note || '';
+    document.getElementById('gratitudeAttachment').value = g.attachmentRef || '';
+    _gratitudeDraftSource = g.source || 'katalk';
+    renderGratitudeSourceChips();
+    renderGratitudeRoomVisibility();
+    const title = document.getElementById('gratitudeFormTitle');
+    if (title) title.textContent = 'Edit entry';
+    const saveBtn = document.getElementById('gratitudeSaveBtn');
+    if (saveBtn) saveBtn.textContent = 'Update entry';
+    const cancelBtn = document.getElementById('gratitudeCancelBtn');
+    if (cancelBtn) cancelBtn.style.display = '';
+    document.getElementById('gratitudeContent').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function cancelEditGratitude() {
+    state.editingGratitudeId = null;
+    document.getElementById('gratitudeDate').value = todayISO();
+    document.getElementById('gratitudeFrom').value = '';
+    document.getElementById('gratitudeRoom').value = '';
+    document.getElementById('gratitudeContent').value = '';
+    document.getElementById('gratitudeNote').value = '';
+    document.getElementById('gratitudeAttachment').value = '';
+    _gratitudeDraftSource = 'katalk';
+    renderGratitudeSourceChips();
+    renderGratitudeRoomVisibility();
+    const title = document.getElementById('gratitudeFormTitle');
+    if (title) title.textContent = 'New entry';
+    const saveBtn = document.getElementById('gratitudeSaveBtn');
+    if (saveBtn) saveBtn.textContent = 'Save entry';
+    const cancelBtn = document.getElementById('gratitudeCancelBtn');
+    if (cancelBtn) cancelBtn.style.display = 'none';
+  }
+
+  function deleteGratitude(id) {
+    if (!confirm('Delete this entry?')) return;
+    state.gratitude = state.gratitude.filter(g => g.id !== id);
+    if (state.editingGratitudeId === id) cancelEditGratitude();
+    save();
+    renderGratitudeList();
+  }
+
+  // ════════════════════════════════════════════════════════════════
   // PROFILE
   // ════════════════════════════════════════════════════════════════
 
@@ -9955,8 +10328,9 @@ const SEED_IMAGES = {
       documents: state.documents,
       xrays: state.xrays,
       costs: state.costs,
+      gratitude: state.gratitude,
       exportedAt: new Date().toISOString(),
-      version: 6
+      version: 7
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -10039,6 +10413,7 @@ const SEED_IMAGES = {
         state.documents = data.documents || [];
         state.xrays = data.xrays || [];
         state.costs = data.costs || [];
+        state.gratitude = data.gratitude || [];
         state.seeded = true;  // imported data counts as seeded — never re-seed
         // Older backups carry an old/missing migrationVersion. Run migrations
         // against the freshly imported data so the user gets up-to-date meds
@@ -10079,7 +10454,7 @@ const SEED_IMAGES = {
         // empty, so a single existing entry made the whole backup ignored.
         const arrayFields = ['pain', 'schedule', 'photos', 'journal',
                              'vitals', 'medications', 'documents', 'xrays', 'costs',
-                             'customExercises'];
+                             'gratitude', 'customExercises'];
         for (const f of arrayFields) {
           if (!Array.isArray(data[f]) || data[f].length === 0) continue;
           if (!Array.isArray(state[f])) state[f] = [];
@@ -10566,6 +10941,7 @@ const SEED_IMAGES = {
     }
     if (view === 'learn') { initBoneViewer(); initMechanics(); renderGlossary(); renderMedPharmacology(); renderHcWorkedExample(); renderHcMyCase(); }
     if (view === 'cost') renderCost();
+    if (view === 'gratitude') renderGratitude();
     if (view === 'data') renderProfile();
   }
 
@@ -10674,6 +11050,7 @@ const SEED_IMAGES = {
     if (!Array.isArray(state.documents)) state.documents = [];
     if (!Array.isArray(state.xrays)) state.xrays = [];
     if (!Array.isArray(state.costs)) state.costs = [];
+    if (!Array.isArray(state.gratitude)) state.gratitude = [];
     if (!state.profile.doctor) state.profile.doctor = { name: '', dept: '', phone: '', email: '', note: '' };
     if (!state.costDraft) state.costDraft = { type: 'expense', category: 'treatment', payer: 'self' };
     if (!state.costFilter) state.costFilter = 'all';
