@@ -25,3 +25,19 @@ photo/
 3D/
 _untracked_pdf_backup/
 _personal_backup/
+
+# Local-only markdown notes auto-imported by the PWA bootstrap.
+# Frontmatter contains PII (patient name / registration id / dob / clinicians).
+# Files are fetched at runtime from this folder and loaded into IndexedDB,
+# never committed.
+staple/
+staple.zip
+
+# Root-level dated markdown files — same PII-bearing notes format.
+# README.md and other non-dated docs stay tracked.
+/20*-*.md
+
+# Loose imaging / scan / drop folders — almost always PII
+docs/xray/
+docs/xray.zip
+files/
