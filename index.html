@@ -399,6 +399,15 @@
     border-bottom: 1px solid var(--line);
     align-items: center;
   }
+  /* min-width:0 lets the middle column shrink past its content's min-content
+     size — without it a long unbreakable token can blow the grid out.
+     keep-all + break-word makes Korean wrap at word boundaries and long
+     English tokens break only when forced. */
+  .exercise > div:nth-child(2) {
+    min-width: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
   .exercise:last-child { border-bottom: none; }
   .checkbox {
     width: 20px;
@@ -429,7 +438,11 @@
   .exercise-rom {
     text-align: right;
   }
-  .rom-input {
+  /* input.rom-input selector matches specificity of the generic
+     input[type="number"] above (0,0,1,1), and being defined later wins.
+     Without this, the generic rule stretches the ROM field to 100%
+     of its grid cell, crushing the middle column. */
+  input.rom-input {
     width: 56px;
     text-align: right;
     border: none;
@@ -440,7 +453,7 @@
     padding: 2px 0;
     outline: none;
   }
-  .rom-input:focus { border-bottom-color: var(--ink); }
+  input.rom-input:focus { border-bottom-color: var(--ink); }
   .rom-unit {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
