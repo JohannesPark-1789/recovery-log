@@ -2187,6 +2187,159 @@
   }
   .an-card.open .an-card-body { display: block; }
 
+  /* ─── Notes & cases (Timeline tab) — markdown record collection ─── */
+  .rec-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .rec-toolbar-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute-2);
+    letter-spacing: 0.04em;
+    flex: 1;
+    min-width: 0;
+  }
+  .rec-card {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    margin-top: 9px;
+  }
+  .rec-card.hub { border-color: var(--ink); }
+  .rec-card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+  .rec-card-head:hover { background: var(--paper-2); }
+  .rec-card-main { flex: 1; min-width: 0; }
+  .rec-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .rec-card-meta {
+    margin-top: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: var(--mute);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+  .rec-card-summary {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-top: 6px;
+  }
+  .rec-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1px 5px;
+    border: 1px solid var(--line);
+    color: var(--mute);
+  }
+  .rec-badge.private { color: var(--accent); border-color: var(--accent-soft); }
+  .rec-badge.public  { color: var(--ink-2); border-color: var(--line); }
+  .rec-badge.hub     { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+  .rec-badge.sample  { color: var(--mute-2); border-style: dashed; }
+  .rec-card-chev {
+    font-size: 11px;
+    color: var(--line-2);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .rec-card.open .rec-card-chev { color: var(--ink); }
+  .rec-card-body {
+    display: none;
+    padding: 4px 16px 14px;
+    border-top: 1px solid var(--line);
+  }
+  .rec-card.open .rec-card-body { display: block; }
+
+  /* Rendered markdown body */
+  .rec-md { font-size: 13px; line-height: 1.65; color: var(--ink-2); }
+  .rec-md h1 { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 500; letter-spacing: -0.01em; margin: 16px 0 8px; color: var(--ink); }
+  .rec-md h2 { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500; letter-spacing: -0.01em; margin: 14px 0 6px; color: var(--ink); }
+  .rec-md h3 { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute); margin: 12px 0 4px; }
+  .rec-md p { margin: 6px 0; }
+  .rec-md strong { font-weight: 500; color: var(--ink); }
+  .rec-md em { color: var(--ink-2); }
+  .rec-md ul, .rec-md ol { margin: 6px 0; padding-left: 22px; }
+  .rec-md li { margin: 2px 0; }
+  .rec-md code { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; background: var(--paper-2); padding: 1px 5px; color: var(--ink); }
+  .rec-md pre { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; background: var(--paper-2); padding: 10px 12px; overflow-x: auto; margin: 8px 0; line-height: 1.5; }
+  .rec-md pre code { background: none; padding: 0; }
+  .rec-md blockquote { border-left: 2px solid var(--ink); padding: 4px 10px; color: var(--mute); margin: 8px 0; }
+  .rec-md hr { border: none; border-top: 1px solid var(--line); margin: 12px 0; }
+  .rec-md a { color: var(--ink); border-bottom: 1px dotted var(--line-2); text-decoration: none; }
+  .rec-md a:hover { border-bottom-color: var(--ink); }
+  .rec-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    color: var(--mute);
+    border: 1px solid var(--line);
+    padding: 1px 5px;
+    margin: 2px 4px 2px 0;
+  }
+  .rec-refs {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .rec-refs-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 8px;
+  }
+  .rec-ref-chip {
+    display: block;
+    padding: 8px 10px;
+    margin-top: 5px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    cursor: pointer;
+  }
+  .rec-ref-chip:hover { background: var(--paper-2); }
+  .rec-ref-chip-title {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .rec-ref-chip-sum {
+    font-size: 11px;
+    color: var(--mute);
+    margin-top: 2px;
+  }
+  .rec-ref-chip-missing { color: var(--accent); font-size: 11px; }
+  .rec-del {
+    background: none;
+    border: none;
+    color: var(--line-2);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .rec-del:hover { color: var(--accent); }
+
   /* Patient banner */
   .patient-banner {
     background: var(--ink);
@@ -2710,6 +2863,21 @@
     }
     textarea { min-height: 100px; }
 
+    .rec-toolbar-hint { font-size: clamp(11px, 1.3vw, 16px); }
+    .rec-card-title { font-size: clamp(18px, 2.2vw, 26px); }
+    .rec-card-meta { font-size: clamp(11px, 1.3vw, 16px); }
+    .rec-card-summary { font-size: clamp(15px, 1.9vw, 22px); line-height: 1.6; }
+    .rec-badge { font-size: clamp(10px, 1.2vw, 14px); padding: 2px 7px; }
+    .rec-md { font-size: clamp(15px, 1.9vw, 22px); }
+    .rec-md h1 { font-size: clamp(22px, 2.7vw, 32px); }
+    .rec-md h2 { font-size: clamp(19px, 2.3vw, 27px); }
+    .rec-md h3 { font-size: clamp(13px, 1.5vw, 18px); }
+    .rec-md code, .rec-md pre { font-size: clamp(14px, 1.7vw, 20px); }
+    .rec-tag { font-size: clamp(11px, 1.3vw, 16px); }
+    .rec-refs-label { font-size: clamp(11px, 1.3vw, 15px); }
+    .rec-ref-chip-title { font-size: clamp(16px, 2vw, 23px); }
+    .rec-ref-chip-sum { font-size: clamp(13px, 1.6vw, 19px); }
+
     .patient-banner { padding: 24px 28px; margin-top: 18px; }
     .patient-banner .name { font-size: clamp(28px, 4vw, 50px); }
     .patient-banner .id { font-size: clamp(16px, 1.8vw, 22px); margin-top: 6px; }
@@ -3114,6 +3282,27 @@
       <div style="margin-top:10px; font-size:11px; color:var(--mute); line-height:1.5;">
         공식 의무 문서(경과기록지·수술기록지·진단서·입퇴원확인서·의무기록사본)는 기기에만 보관됩니다.
         원본 PDF 는 본인 기기의 <code>docs/others/</code> 폴더에 두세요 · 검색은 헤더 🔍 에서도 가능합니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- Knowledge / case markdown collection -->
+  <div class="section">
+    <div class="section-label sx-toggle" id="recToggle" onclick="toggleRec()" style="cursor:pointer; user-select:none;">
+      <span><span id="recChevron" style="display:inline-block; width:10px; color:var(--mute);">▸</span> Notes &amp; cases</span>
+      <span class="ord" id="recHeadCount">— notes</span>
+    </div>
+    <div id="recCollapsible" style="display:none;">
+      <div class="rec-toolbar">
+        <button class="btn btn-sm btn-primary" type="button" onclick="document.getElementById('recImportInput').click()">+ Import .md</button>
+        <input type="file" id="recImportInput" accept=".md,.markdown,text/markdown" multiple style="display:none;" onchange="onRecImport(event)" />
+        <button class="btn btn-sm btn-ghost" type="button" onclick="clearSampleRecords()" id="recClearSamplesBtn" style="display:none;">샘플 지우기</button>
+        <span class="rec-toolbar-hint">YAML frontmatter (title · date · category · privacy · refs · tags · summary) + 마크다운 본문</span>
+      </div>
+      <div id="recBody" style="margin-top:14px;"></div>
+      <div style="margin-top:14px; font-size:11px; color:var(--mute); line-height:1.55;">
+        외부 파일에서 가져온 노트와 본인이 작성한 케이스를 한곳에 모읍니다. <strong>PRIVATE</strong>로 표시된 노트는
+        앞으로 동기화·공유 기능이 추가될 때 자동으로 제외됩니다. 본인 기기의 백업·내보내기에는 그대로 포함됩니다.
       </div>
     </div>
   </div>
@@ -6267,6 +6456,8 @@ const SEED_IMAGES = {
     xrays: [],       // [{id, date, day, data, label, note}]
     costs: [],       // [{id, date, day, category, label, vendor, amount, type, payer, receipt, note}]
     gratitude: [],   // [{id, date, day, source, room, from, content, note, attachmentRef}]
+    records: [],     // [{id, filename, date, title, category, privacy, tags, refs, summary, body, importedAt, isSample}]
+    recordsSentinel: false,  // set once we've seeded sample records, never re-seed silently
     selected: { nrs: null, locations: [], qualities: [] },
     schedSelected: { type: 'med' },
     docSelected: { category: 'diagnosis' },
@@ -8943,6 +9134,392 @@ const SEED_IMAGES = {
     setMrOpen(!_mrOpen);
   }
 
+  // ════════════════════════════════════════════════════════════════
+  // NOTES & CASES — markdown record collection (Timeline tab)
+  //
+  // Each record is a frontmatter-with-markdown-body doc. A "hub" record
+  // (case category, refs: [...]) links to related spoke records and
+  // surfaces them inline in its detail view.
+  // ════════════════════════════════════════════════════════════════
+
+  let _recOpen = false;
+  function setRecOpen(open) {
+    _recOpen = !!open;
+    const body = document.getElementById('recCollapsible');
+    const chev = document.getElementById('recChevron');
+    if (body) body.style.display = _recOpen ? '' : 'none';
+    if (chev) chev.textContent = _recOpen ? '▾' : '▸';
+  }
+  function toggleRec() { setRecOpen(!_recOpen); }
+  function toggleRecCard(el) {
+    if (!el) return;
+    el.classList.toggle('open');
+    const chev = el.querySelector('.rec-card-chev');
+    if (chev) chev.textContent = el.classList.contains('open') ? '▾' : '▸';
+  }
+
+  // Sample records — installed once on first run via seedRecordsIfNeeded().
+  // Structure mirrors what the user's real .md exports look like so the
+  // import flow can drop in/replace them cleanly.
+  const REC_SAMPLES = [
+    {
+      id: 'MARSI-skin-reaction',
+      filename: '2026-05-25-MARSI-skin-reaction.md',
+      date: '2026-05-25',
+      title: 'MARSI 피부 반응 — 드레싱 자국과 후처치',
+      category: 'skin',
+      privacy: 'PRIVATE',
+      tags: ['MARSI', '수술자국', '드레싱', '알레르기'],
+      refs: [],
+      summary: '수술 후 드레싱 테이프 자국이 길게 남는 현상의 원인과 관리',
+      body: `# MARSI (Medical Adhesive-Related Skin Injury)\n\n수술 후 큰 드레싱을 제거할 때 피부가 빨갛게 자극된 띠 모양 자국이 남았다. 이건 **MARSI** — 의료용 점착제로 인한 피부 손상의 일종.\n\n## 왜 생기는가\n- **각질층의 손상**: 접착제가 표피의 가장 바깥층을 함께 떼어냄\n- **수분 손실 증가**: 떼어진 부위에서 TEWL(transepidermal water loss) 증가\n- **면역 반응**: 접착제 성분 자체가 자극원이거나 알레르겐일 수 있음\n\n## 관리\n- 보습제(저자극, 무향)을 하루 2-3회\n- 자외선 차단 — 새 피부는 색소 침착이 잘 생김\n- 가렵다고 긁지 않기\n- 가려움 심하면 항히스타민제 (의사 상담)\n\n## 외래 질문 메모\n- 다음 드레싱 시 다른 접착제 옵션 가능한지\n- 색소 침착이 영구적일 가능성`,
+      isSample: true
+    },
+    {
+      id: 'SCM-shortening-rehab',
+      filename: '2026-05-25-SCM-shortening-rehab.md',
+      date: '2026-05-25',
+      title: 'SCM 단축과 재활 전략',
+      category: 'rehab',
+      privacy: 'PRIVATE',
+      tags: ['SCM', '흉쇄유돌근', '재활', '스트레칭'],
+      refs: [],
+      summary: '쇄골 골절 후 SCM 단축에 의한 자세 변화와 풀어내는 방법',
+      body: `# 흉쇄유돌근 단축 (SCM shortening)\n\n쇄골 골절 후 SCM이 짧아지는 이유: 안쪽 골절편이 흉쇄유돌근의 당김에 의해 위·뒤로 끌어올려지면, SCM도 그 짧은 상태로 안정화되며 시간이 지나면 단축된 상태에 적응한다.\n\n## 증상\n- 같은 쪽으로 고개가 기울어짐\n- 반대쪽 회전 제한\n- 목 옆 통증, 두통\n\n## 재활 접근\n1. **수동 스트레칭** — 부드럽게 반대쪽으로 고개 기울이고 10초 유지 × 5회\n2. **자기 마사지** — SCM의 두 갈래(쇄골갈래·복장뼈갈래)를 따라 부드럽게\n3. **자세 교정** — 거울 보면서 양쪽 어깨 수평 인지\n4. **호흡 패턴** — SCM은 보조 호흡근. 흉식 호흡 우세하면 더 긴장됨\n\n## 주의\n- 쇄골 골유합 전이면 큰 스트레칭 금지\n- 통증이 1점 이상 증가하면 강도 줄이기`,
+      isSample: true
+    },
+    {
+      id: 'medical-knowledge',
+      filename: '2026-05-25-medical-knowledge.md',
+      date: '2026-05-25',
+      title: '쇄골 ORIF 회복기 — 학습한 의학 지식 정리',
+      category: 'knowledge',
+      privacy: 'PUBLIC',
+      tags: ['쇄골', 'ORIF', '골유합', '일반지식'],
+      refs: [],
+      summary: '골절 치유 과정과 ORIF 후 일반 회복 원리 (공개 가능 지식)',
+      body: `# 쇄골 ORIF 회복기에 알아두면 좋은 의학 지식\n\n이 노트는 **공개 가능한 일반 의학 지식**으로, 같은 부상을 겪는 분들이 참고할 수 있도록 작성되었다.\n\n## 골유합의 4단계\n1. **혈종기 (D0–7)** — 골절 부위에 혈종 형성, 염증\n2. **연성 가골 (W1–3)** — 콜라겐과 연골성 조직이 임시 연결\n3. **경성 가골 (W3–6)** — 칼슘 침착, 임시 뼈 형성\n4. **재형성 (M3–12)** — 골 재구성, 정상에 가까운 강도 회복\n\n## 회복기 흔한 문제\n- **견갑골 하수** — 쇄골이 짧아지면 견갑골이 앞·아래로 처짐\n- **frozen shoulder** — 통증으로 안 움직이면 관절막 단축\n- **불유합** — 가운데 1/3은 혈류가 적어 1–5% 발생\n\n## 회복 가속에 도움되는 것\n- **단백질 섭취** — 골유합에 필수\n- **칼슘·비타민 D** — 직접적 영향은 제한적이나 결핍 시 회복 지연\n- **금연** — 흡연은 골유합 지연의 명확한 위험 인자\n- **수면** — 성장호르몬 분비, 조직 복구\n\n## 운동 복귀 가이드 (일반)\n- W0–2 — 손가락·손목·팔꿈치만\n- W3–4 — passive ROM 시작\n- W5–6 — active-assisted\n- W7–8 — active + 저강도 저항\n- M3+ — 점진적 스포츠 복귀 (의료진과 상의)`,
+      isSample: true
+    },
+    {
+      id: 'personal-case',
+      filename: '2026-05-25-personal-case.md',
+      date: '2026-05-25',
+      title: '박해준 ORIF 회복 케이스 — 2026.05',
+      category: 'case',
+      privacy: 'PRIVATE',
+      tags: ['개인기록', '케이스', '허브'],
+      refs: ['MARSI-skin-reaction', 'SCM-shortening-rehab', 'medical-knowledge'],
+      summary: '이번 회복기 동안 정리한 모든 노트의 허브 — 본인 케이스 중심',
+      body: `# 개인 케이스 허브\n\n이 노트는 다른 세 노트(skin / rehab / knowledge)의 **허브** 역할을 한다. 본인의 케이스 맥락에서 필요한 모든 정보를 한곳에서 연결.\n\n## 사고 개요\n- 일시 — 2026-05-08\n- 부위 — 우측 쇄골 중간 1/3, 사선 골절, 단축 약 8 mm\n- 수술 — 2026-05-11 ORIF (superior plate, 잠금 나사 6개)\n- 퇴원 — 2026-05-15\n\n## 현재 단계 (D17)\n- Phase 2 — passive ROM 시작\n- 통증 NRS 2/10, 부종 거의 사라짐\n- 드레싱 제거 후 MARSI 자국 → 아래 \`skin\` 노트 참고\n- 어깨 라인 약간 처짐 → \`rehab\` 노트의 SCM 재활 시작\n\n## 다음 외래 질문 리스트\n- 골유합 진행 상황 (X-ray 비교)\n- MARSI 색소 침착 관리\n- 능동 운동 시작 시점\n- 금속판 제거 일정 (1년 후 권장 여부)\n\n> 아래 *Related notes* 칩을 누르면 각 노트가 펼쳐진다.`,
+      isSample: true
+    }
+  ];
+
+  // Seed sample records on very first run only. The sentinel prevents re-seed
+  // after a user has imported or deleted; per app policy seeds never silently
+  // overwrite user data.
+  function seedRecordsIfNeeded() {
+    if (state.recordsSentinel) return;
+    if (Array.isArray(state.records) && state.records.length > 0) {
+      state.recordsSentinel = true;
+      save();
+      return;
+    }
+    state.records = REC_SAMPLES.map(s => ({ ...s, importedAt: '2026-05-25T00:00:00.000Z' }));
+    state.recordsSentinel = true;
+    save();
+  }
+
+  // Minimal YAML-frontmatter + markdown parser. Recognises the keys we ship —
+  // title, date, category, privacy, tags, refs, summary — and leaves anything
+  // else on the meta object as a plain string.
+  function parseFrontmatter(text) {
+    const meta = {};
+    let body = text || '';
+    const fmMatch = body.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/);
+    if (fmMatch) {
+      const fm = fmMatch[1];
+      body = fmMatch[2] || '';
+      fm.split(/\r?\n/).forEach(line => {
+        const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$/);
+        if (!m) return;
+        const key = m[1].trim();
+        let val = (m[2] || '').trim();
+        // strip surrounding quotes
+        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+          val = val.slice(1, -1);
+        }
+        // inline array  →  [a, b, c]
+        const arr = val.match(/^\[(.*)\]$/);
+        if (arr) {
+          meta[key] = arr[1].split(',').map(s => s.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+        } else {
+          meta[key] = val;
+        }
+      });
+    }
+    return { meta, body };
+  }
+
+  // Filename → slug. Strips a leading YYYY-MM-DD- prefix and .md/.markdown
+  // extension. Falls back to the raw name without extension.
+  function slugFromFilename(name) {
+    const stripped = String(name || '').replace(/\.(md|markdown)$/i, '');
+    const m = stripped.match(/^\d{4}-\d{2}-\d{2}-(.+)$/);
+    return (m ? m[1] : stripped).trim();
+  }
+
+  // Conservative HTML-escape so we can safely splice user content into innerHTML.
+  function recEscape(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Minimal markdown → HTML. Supports headings (h1–h3), bold, italic, inline
+  // code, code blocks (```), unordered/ordered lists, blockquotes, paragraphs,
+  // horizontal rules, and inline links. Internal [text](slug) links — i.e.
+  // hrefs that match an existing record id — become clickable jump chips;
+  // anything else with a scheme renders as a normal external link.
+  function mdToHtml(md, recordIds) {
+    const idSet = new Set(recordIds || []);
+    const inline = (text) => {
+      let s = recEscape(text);
+      // code spans
+      s = s.replace(/`([^`]+)`/g, (_, c) => `<code>${c}</code>`);
+      // bold
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      // italic
+      s = s.replace(/(^|[^*])\*([^*]+)\*(?!\*)/g, '$1<em>$2</em>');
+      // links
+      s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, href) => {
+        if (idSet.has(href)) {
+          return `<a href="javascript:void(0)" onclick="event.stopPropagation(); openRecord('${href.replace(/'/g, "\\'")}')">${t}</a>`;
+        }
+        if (/^https?:\/\//i.test(href)) {
+          return `<a href="${href}" target="_blank" rel="noopener noreferrer">${t}</a>`;
+        }
+        return `<a href="${href}">${t}</a>`;
+      });
+      return s;
+    };
+
+    const lines = String(md || '').replace(/\r\n/g, '\n').split('\n');
+    const out = [];
+    let i = 0;
+    while (i < lines.length) {
+      const line = lines[i];
+      // code block
+      if (line.startsWith('```')) {
+        const buf = [];
+        i++;
+        while (i < lines.length && !lines[i].startsWith('```')) { buf.push(lines[i]); i++; }
+        i++; // skip closing fence
+        out.push('<pre><code>' + recEscape(buf.join('\n')) + '</code></pre>');
+        continue;
+      }
+      // horizontal rule
+      if (/^---+\s*$/.test(line)) { out.push('<hr/>'); i++; continue; }
+      // heading
+      const h = line.match(/^(#{1,3})\s+(.*)$/);
+      if (h) { out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`); i++; continue; }
+      // blockquote (collect consecutive)
+      if (/^>\s?/.test(line)) {
+        const buf = [];
+        while (i < lines.length && /^>\s?/.test(lines[i])) { buf.push(lines[i].replace(/^>\s?/, '')); i++; }
+        out.push('<blockquote>' + inline(buf.join(' ')) + '</blockquote>');
+        continue;
+      }
+      // ordered list
+      if (/^\s*\d+\.\s+/.test(line)) {
+        const buf = [];
+        while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
+          buf.push('<li>' + inline(lines[i].replace(/^\s*\d+\.\s+/, '')) + '</li>');
+          i++;
+        }
+        out.push('<ol>' + buf.join('') + '</ol>');
+        continue;
+      }
+      // unordered list
+      if (/^\s*[-*]\s+/.test(line)) {
+        const buf = [];
+        while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+          buf.push('<li>' + inline(lines[i].replace(/^\s*[-*]\s+/, '')) + '</li>');
+          i++;
+        }
+        out.push('<ul>' + buf.join('') + '</ul>');
+        continue;
+      }
+      // blank line
+      if (!line.trim()) { i++; continue; }
+      // paragraph (collect until blank line or block start)
+      const buf = [];
+      while (i < lines.length && lines[i].trim() && !/^(#{1,3}\s|>\s?|\s*\d+\.\s+|\s*[-*]\s+|```|---+\s*$)/.test(lines[i])) {
+        buf.push(lines[i]);
+        i++;
+      }
+      out.push('<p>' + inline(buf.join(' ')) + '</p>');
+    }
+    return out.join('\n');
+  }
+
+  // File-picker → parse each .md and merge into state.records. Records with a
+  // colliding slug are REPLACED (so re-importing a corrected file updates the
+  // existing entry rather than producing duplicates).
+  function onRecImport(event) {
+    const files = [...(event.target.files || [])];
+    if (!files.length) return;
+    let added = 0, replaced = 0, skipped = 0;
+    let remaining = files.length;
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const text = String(reader.result || '');
+          const { meta, body } = parseFrontmatter(text);
+          const id = slugFromFilename(file.name);
+          if (!id) { skipped++; return; }
+          const rec = {
+            id,
+            filename: file.name,
+            date: meta.date || meta.Date || '',
+            title: meta.title || meta.Title || id,
+            category: meta.category || meta.Category || '',
+            privacy: (meta.privacy || meta.Privacy || 'PRIVATE').toUpperCase(),
+            tags: Array.isArray(meta.tags) ? meta.tags : (meta.tags ? [meta.tags] : []),
+            refs: Array.isArray(meta.refs) ? meta.refs : (meta.refs ? [meta.refs] : []),
+            summary: meta.summary || meta.Summary || '',
+            body,
+            importedAt: new Date().toISOString(),
+            isSample: false
+          };
+          const existing = state.records.findIndex(r => r.id === id);
+          if (existing >= 0) { state.records[existing] = rec; replaced++; }
+          else { state.records.push(rec); added++; }
+        } catch (e) {
+          skipped++;
+          console.warn('Record import failed:', file.name, e);
+        } finally {
+          remaining--;
+          if (remaining === 0) {
+            // Sort newest first by date, then title
+            state.records.sort((a, b) => (b.date || '').localeCompare(a.date || '') || (a.title || '').localeCompare(b.title || ''));
+            state.recordsSentinel = true;
+            save();
+            renderRecords();
+            const parts = [];
+            if (added) parts.push(`${added} added`);
+            if (replaced) parts.push(`${replaced} replaced`);
+            if (skipped) parts.push(`${skipped} skipped`);
+            toast(`Records · ${parts.join(' · ') || 'no change'}`);
+          }
+        }
+      };
+      reader.onerror = () => {
+        skipped++;
+        remaining--;
+        if (remaining === 0) renderRecords();
+      };
+      reader.readAsText(file, 'utf-8');
+    });
+    // Reset the input so the same file can be re-picked
+    event.target.value = '';
+  }
+
+  function deleteRecord(id) {
+    const r = (state.records || []).find(x => x.id === id);
+    if (!r) return;
+    if (!confirm(`'${r.title || id}' 노트를 삭제할까요?`)) return;
+    state.records = state.records.filter(x => x.id !== id);
+    save();
+    renderRecords();
+  }
+
+  function clearSampleRecords() {
+    const samples = (state.records || []).filter(r => r.isSample);
+    if (!samples.length) return;
+    if (!confirm(`샘플 노트 ${samples.length}개를 모두 지울까요? (직접 작성·임포트한 노트는 남습니다)`)) return;
+    state.records = state.records.filter(r => !r.isSample);
+    save();
+    renderRecords();
+  }
+
+  // Tap a ref chip / inline jump-link → open the target record and scroll it
+  // into view. The target subsection is opened if it was collapsed.
+  function openRecord(id) {
+    setRecOpen(true);
+    const card = document.querySelector(`.rec-card[data-rec-id="${id}"]`);
+    if (!card) return;
+    if (!card.classList.contains('open')) toggleRecCard(card);
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+  }
+
+  function renderRecords() {
+    const wrap = document.getElementById('recBody');
+    const cnt = document.getElementById('recHeadCount');
+    const clearBtn = document.getElementById('recClearSamplesBtn');
+    if (!wrap) return;
+    const recs = state.records || [];
+    if (cnt) cnt.textContent = `${recs.length} ${recs.length === 1 ? 'note' : 'notes'}`;
+    if (clearBtn) clearBtn.style.display = recs.some(r => r.isSample) ? '' : 'none';
+
+    if (!recs.length) {
+      wrap.innerHTML = '<div style="font-size:11.5px; color:var(--mute); padding:10px 0;">아직 노트가 없습니다. 위의 + Import .md 로 마크다운 노트를 가져오세요.</div>';
+      return;
+    }
+
+    const ids = new Set(recs.map(r => r.id));
+    const html = recs.map(r => {
+      const isHub = Array.isArray(r.refs) && r.refs.length > 0;
+      const privacyClass = (r.privacy || '').toLowerCase() === 'public' ? 'public' : 'private';
+      const metaBits = [];
+      if (r.date) metaBits.push(recEscape(r.date));
+      if (r.category) metaBits.push(recEscape(r.category));
+      const badges = [
+        `<span class="rec-badge ${privacyClass}">${recEscape(r.privacy || 'PRIVATE')}</span>`,
+        isHub ? '<span class="rec-badge hub">HUB</span>' : '',
+        r.isSample ? '<span class="rec-badge sample">SAMPLE</span>' : ''
+      ].filter(Boolean).join(' ');
+
+      const refsHtml = isHub
+        ? `<div class="rec-refs"><div class="rec-refs-label">Related notes (refs)</div>${r.refs.map(rid => {
+            const target = recs.find(x => x.id === rid);
+            if (!target) return `<div class="rec-ref-chip rec-ref-chip-missing">↗ ${recEscape(rid)} <small>(no record found)</small></div>`;
+            return `<div class="rec-ref-chip" onclick="event.stopPropagation(); openRecord('${rid.replace(/'/g, "\\'")}')">`
+              + `<div class="rec-ref-chip-title">${recEscape(target.title || rid)}</div>`
+              + (target.summary ? `<div class="rec-ref-chip-sum">${recEscape(target.summary)}</div>` : '')
+              + '</div>';
+          }).join('')}</div>`
+        : '';
+
+      const tagsHtml = (Array.isArray(r.tags) && r.tags.length)
+        ? `<div style="margin-top:10px;">${r.tags.map(t => `<span class="rec-tag">${recEscape(t)}</span>`).join('')}</div>`
+        : '';
+
+      return `<div class="rec-card ${isHub ? 'hub' : ''}" data-rec-id="${recEscape(r.id)}" onclick="toggleRecCard(this)">`
+        + '<div class="rec-card-head">'
+        + '<div class="rec-card-main">'
+        + `<div class="rec-card-title">${recEscape(r.title || r.id)} ${badges}</div>`
+        + `<div class="rec-card-meta">${metaBits.join(' · ')}${r.filename ? ' · <span style="color:var(--line-2);">' + recEscape(r.filename) + '</span>' : ''}</div>`
+        + (r.summary ? `<div class="rec-card-summary">${recEscape(r.summary)}</div>` : '')
+        + '</div>'
+        + `<button class="rec-del" type="button" title="삭제" onclick="event.stopPropagation(); deleteRecord('${r.id.replace(/'/g, "\\'")}')">✕</button>`
+        + '<span class="rec-card-chev">▸</span>'
+        + '</div>'
+        + '<div class="rec-card-body">'
+        + `<div class="rec-md">${mdToHtml(r.body || '', [...ids])}</div>`
+        + tagsHtml
+        + refsHtml
+        + '</div>'
+        + '</div>';
+    }).join('');
+    wrap.innerHTML = html;
+  }
+
   function renderCost() {
     const totals = costTotals();
     document.getElementById('costEntryCount').textContent = `${state.costs.length} ${state.costs.length === 1 ? 'entry' : 'entries'}`;
@@ -10440,8 +11017,10 @@ const SEED_IMAGES = {
       costs: state.costs,
       gratitude: state.gratitude,
       gratitudeImages,
+      records: state.records,
+      recordsSentinel: state.recordsSentinel,
       exportedAt: new Date().toISOString(),
-      version: 8
+      version: 9
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -10525,6 +11104,10 @@ const SEED_IMAGES = {
         state.xrays = data.xrays || [];
         state.costs = data.costs || [];
         state.gratitude = data.gratitude || [];
+        // Markdown notes & cases — preserve sentinel so we don't re-seed samples
+        // on top of imported state.
+        state.records = Array.isArray(data.records) ? data.records : [];
+        state.recordsSentinel = !!data.recordsSentinel || state.records.length > 0;
 
         // Replace the gratitude-images store from the backup. Clear first so
         // any blobs orphaned by the old state are gone, then re-hydrate every
@@ -11081,6 +11664,7 @@ const SEED_IMAGES = {
       renderTimeline();
       renderSurgeryDetails();
       renderMedicalRecords();
+      renderRecords();
       renderPhotos();
       renderXrays();
       renderDocuments();
@@ -11217,6 +11801,7 @@ const SEED_IMAGES = {
     // fresh seed sets migrationVersion = MIGRATIONS.length so migrations don't
     // re-touch the brand-new data.
     seedFirstRun();
+    seedRecordsIfNeeded();
     runMigrations();
     renderAll();
   })();
