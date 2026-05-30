@@ -9535,6 +9535,74 @@ const SEED_IMAGES = {
     }
   }
 
+  // Local-only X-ray bootstrap. Same shape as the staple records loader:
+  // a manifest of clinically meaningful PNGs (converted from the local DICOM
+  // CD via files/_convert_xray.py), fetched on boot and added to state.xrays.
+  //
+  // The src paths live under files/ which is gitignored — the user's identifier
+  // appears in the path string but never reaches the repo. On GitHub Pages
+  // these fetches 404 silently and no entries appear.
+  //
+  // Each entry uses a stable `id` so re-running the bootstrap doesn't
+  // duplicate. Entries are tagged isLocal so the user can spot auto-loaded
+  // X-rays vs the ones they upload manually.
+  const XRAY_MANIFEST = [
+    // 사고 당일 (pre-op)
+    { id: 'local-xray-2026-05-09-clav-ap',        date: '2026-05-09', label: 'AP',    note: '양쪽 쇄골 — 사고 당일',                              src: 'files/xray_png/01463490/20260509/Series017/VR00001.dcm.png' },
+    { id: 'local-xray-2026-05-09-clav-axial',     date: '2026-05-09', label: 'Axial', note: '양쪽 쇄골 — 사고 당일',                              src: 'files/xray_png/01463490/20260509/Series016/VR00001.dcm.png' },
+    { id: 'local-xray-2026-05-09-shoulder-ap',    date: '2026-05-09', label: 'AP',    note: '우측 어깨 — 사고 당일',                              src: 'files/xray_png/01463490/20260509/Series018/VR00001.dcm.png' },
+    { id: 'local-xray-2026-05-09-shoulder-lat',   date: '2026-05-09', label: 'LAT',   note: '우측 어깨 — 사고 당일',                              src: 'files/xray_png/01463490/20260509/Series019/VR00001.dcm.png' },
+    // 수술 당일 — pre-op workup
+    { id: 'local-xray-2026-05-11-chest-ap',       date: '2026-05-11', label: 'AP',    note: 'Chest — 수술 전 평가',                              src: 'files/xray_png/01463490/20260511/Series006/VR00001.dcm.png' },
+    // 수술 당일 — CT (대표 슬라이스)
+    { id: 'local-xray-2026-05-11-ct-axial',       date: '2026-05-11', label: 'CT',    note: 'CT Bone Axial — 분쇄·butterfly fragment',          src: 'files/xray_png/01463490/20260511/Series009/VR00031.dcm.png' },
+    { id: 'local-xray-2026-05-11-ct-coronal',     date: '2026-05-11', label: 'CT',    note: 'CT Bone Coronal',                                   src: 'files/xray_png/01463490/20260511/Series010/VR00040.dcm.png' },
+    { id: 'local-xray-2026-05-11-ct-sagittal',    date: '2026-05-11', label: 'CT',    note: 'CT Bone Sagittal',                                  src: 'files/xray_png/01463490/20260511/Series011/VR00053.dcm.png' },
+    { id: 'local-xray-2026-05-11-ct-3dvr',        date: '2026-05-11', label: '3D',    note: '3D Volume Rendering — 12 angles 中 1',              src: 'files/xray_png/01463490/20260511/Series012/VR00006.dcm.png' },
+    // 수술 직후
+    { id: 'local-xray-2026-05-11-postop-clav-ap',    date: '2026-05-11', label: 'AP',    note: '우측 쇄골 — 수술 직후 (D0)',                       src: 'files/xray_png/01463490/20260511/Series005/VR00001.dcm.png' },
+    { id: 'local-xray-2026-05-11-postop-clav-axial', date: '2026-05-11', label: 'Axial', note: '우측 쇄골 — 수술 직후 (D0)',                       src: 'files/xray_png/01463490/20260511/Series004/VR00001.dcm.png' },
+    { id: 'local-xray-2026-05-11-postop-chest-pa',   date: '2026-05-11', label: 'PA',    note: 'Chest — 수술 후 확인',                              src: 'files/xray_png/01463490/20260511/Series014/VR00001.dcm.png' },
+    // 1주차 추적
+    { id: 'local-xray-2026-05-18-clav-ap',        date: '2026-05-18', label: 'AP',    note: '우측 쇄골 — 1주차 추적',                              src: 'files/xray_png/01463490/20260518/Series003/VR00001.DCM.png' },
+    { id: 'local-xray-2026-05-18-clav-axial',     date: '2026-05-18', label: 'Axial', note: '우측 쇄골 — 1주차 추적',                              src: 'files/xray_png/01463490/20260518/Series002/VR00001.dcm.png' },
+    // 외래 (스테이플 제거)
+    { id: 'local-xray-2026-05-27-clav-ap',        date: '2026-05-27', label: 'AP',    note: '우측 쇄골 — 외래 (스테이플 제거일)',                  src: 'files/xray_png/01463490/20260527/Series000/VR00001.dcm.png' },
+    { id: 'local-xray-2026-05-27-clav-axial',     date: '2026-05-27', label: 'Axial', note: '우측 쇄골 — 외래 (스테이플 제거일)',                  src: 'files/xray_png/01463490/20260527/Series001/VR00001.dcm.png' }
+  ];
+
+  async function loadLocalXrays() {
+    if (!Array.isArray(state.xrays)) state.xrays = [];
+    let touched = 0;
+    for (const entry of XRAY_MANIFEST) {
+      try {
+        // HEAD-style check: just confirm the file exists. Image element does
+        // the actual decode when rendered.
+        const res = await fetch('./' + entry.src, { method: 'HEAD', cache: 'no-store' });
+        if (!res.ok) continue;
+        if (state.xrays.some(x => x.id === entry.id)) continue; // already added
+        let day = null;
+        try { day = dayFromDate(entry.date); if (!isFinite(day)) day = null; } catch (_) {}
+        state.xrays.push({
+          id: entry.id,
+          date: entry.date,
+          day,
+          data: './' + entry.src,
+          label: entry.label,
+          note: entry.note,
+          isLocal: true
+        });
+        touched++;
+      } catch (_) { /* missing file — skip silently */ }
+    }
+    if (touched) {
+      // Sort newest-first so most recent recovery state surfaces first.
+      state.xrays.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+      save();
+      renderXrays();
+    }
+  }
+
   // Tap a ref chip / inline jump-link → open the target record and scroll it
   // into view. The target subsection is opened if it was collapsed.
   function openRecord(id) {
@@ -11896,6 +11964,7 @@ const SEED_IMAGES = {
     // Render once async work completes; we don't await it because boot
     // shouldn't block on a folder that may not exist.
     loadLocalStapleRecords();
+    loadLocalXrays();
   })();
 
   // Block iOS pinch / double-tap zoom that "sticks"
