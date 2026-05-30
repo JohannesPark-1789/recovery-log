@@ -9571,32 +9571,71 @@ const SEED_IMAGES = {
     { id: 'local-xray-2026-05-27-clav-axial',     date: '2026-05-27', label: 'Axial', note: '우측 쇄골 — 외래 (스테이플 제거일)',                  src: 'files/xray_png/01463490/20260527/Series001/VR00001.dcm.png' }
   ];
 
+  // Fetch a local PNG and return a downsized JPEG data URL. Downsizing to
+  // ~1400px max-side + JPEG@88 keeps each X-ray ~80–150 KB instead of the
+  // 100–400 KB raw PNG, so the embedded copies fit comfortably in IndexedDB
+  // and the exported JSON backup. Resolves to null if anything fails.
+  async function _xrayFetchToDataUrl(path, maxSide = 1400, jpegQuality = 0.88) {
+    try {
+      const res = await fetch('./' + path, { cache: 'no-store' });
+      if (!res.ok) return null;
+      const blob = await res.blob();
+      const objUrl = URL.createObjectURL(blob);
+      const dataUrl = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            let w = img.naturalWidth, h = img.naturalHeight;
+            const scale = Math.min(1, maxSide / Math.max(w, h));
+            w = Math.max(1, Math.round(w * scale));
+            h = Math.max(1, Math.round(h * scale));
+            const cv = document.createElement('canvas');
+            cv.width = w; cv.height = h;
+            cv.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(cv.toDataURL('image/jpeg', jpegQuality));
+          } catch (e) { reject(e); }
+        };
+        img.onerror = reject;
+        img.src = objUrl;
+      });
+      URL.revokeObjectURL(objUrl);
+      return dataUrl;
+    } catch (_) { return null; }
+  }
+
   async function loadLocalXrays() {
     if (!Array.isArray(state.xrays)) state.xrays = [];
-    let touched = 0;
+    let added = 0, embedded = 0;
     for (const entry of XRAY_MANIFEST) {
-      try {
-        // HEAD-style check: just confirm the file exists. Image element does
-        // the actual decode when rendered.
-        const res = await fetch('./' + entry.src, { method: 'HEAD', cache: 'no-store' });
-        if (!res.ok) continue;
-        if (state.xrays.some(x => x.id === entry.id)) continue; // already added
-        let day = null;
-        try { day = dayFromDate(entry.date); if (!isFinite(day)) day = null; } catch (_) {}
+      const existing = state.xrays.find(x => x.id === entry.id);
+      // Already embedded as data URL on this device — skip.
+      if (existing && typeof existing.data === 'string' && existing.data.startsWith('data:')) continue;
+
+      const dataUrl = await _xrayFetchToDataUrl(entry.src);
+      if (!dataUrl) continue; // file missing (GitHub Pages, phone install) → silent
+
+      let day = null;
+      try { day = dayFromDate(entry.date); if (!isFinite(day)) day = null; } catch (_) {}
+      if (existing) {
+        // Upgrade prior path-based entry to embedded data URL so it survives
+        // moving to a device that doesn't have the local files/ folder.
+        existing.data = dataUrl;
+        existing.date = entry.date;
+        existing.label = entry.label;
+        existing.note = entry.note;
+        existing.isLocal = true;
+        if (day != null) existing.day = day;
+        embedded++;
+      } else {
         state.xrays.push({
-          id: entry.id,
-          date: entry.date,
-          day,
-          data: './' + entry.src,
-          label: entry.label,
-          note: entry.note,
+          id: entry.id, date: entry.date, day,
+          data: dataUrl, label: entry.label, note: entry.note,
           isLocal: true
         });
-        touched++;
-      } catch (_) { /* missing file — skip silently */ }
+        added++;
+      }
     }
-    if (touched) {
-      // Sort newest-first so most recent recovery state surfaces first.
+    if (added || embedded) {
       state.xrays.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
       save();
       renderXrays();
