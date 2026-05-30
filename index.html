@@ -2255,6 +2255,7 @@
   .rec-badge.public  { color: var(--ink-2); border-color: var(--line); }
   .rec-badge.hub     { color: var(--paper); background: var(--ink); border-color: var(--ink); }
   .rec-badge.sample  { color: var(--mute-2); border-style: dashed; }
+  .rec-badge.local   { color: var(--ink); border-color: var(--ink); }
   .rec-card-chev {
     font-size: 11px;
     color: var(--line-2);
@@ -9232,33 +9233,53 @@ const SEED_IMAGES = {
   }
 
   // Minimal YAML-frontmatter + markdown parser. Recognises the keys we ship —
-  // title, date, category, privacy, tags, refs, summary — and leaves anything
-  // else on the meta object as a plain string.
+  // title, date, category, privacy, tags, refs, summary — plus YAML block-list
+  // form (key:\n  - a\n  - b) for tags/refs/related_records that real exports
+  // commonly use. Nested object blocks (key:\n  child: val) are tolerated:
+  // the parent gets an empty array, the indented children are silently skipped
+  // since we don't display them.
   function parseFrontmatter(text) {
     const meta = {};
     let body = text || '';
     const fmMatch = body.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/);
-    if (fmMatch) {
-      const fm = fmMatch[1];
-      body = fmMatch[2] || '';
-      fm.split(/\r?\n/).forEach(line => {
-        const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$/);
-        if (!m) return;
-        const key = m[1].trim();
-        let val = (m[2] || '').trim();
-        // strip surrounding quotes
-        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-          val = val.slice(1, -1);
-        }
-        // inline array  →  [a, b, c]
-        const arr = val.match(/^\[(.*)\]$/);
-        if (arr) {
-          meta[key] = arr[1].split(',').map(s => s.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
-        } else {
-          meta[key] = val;
-        }
-      });
+    if (!fmMatch) return { meta, body };
+    body = fmMatch[2] || '';
+    const lines = fmMatch[1].split(/\r?\n/);
+    let currentListKey = null;
+    for (const line of lines) {
+      // block-list continuation: "  - value" — append to currentListKey
+      if (currentListKey && /^\s+-\s+/.test(line)) {
+        const v = line.replace(/^\s+-\s+/, '').trim().replace(/^['"]|['"]$/g, '');
+        if (v) meta[currentListKey].push(v);
+        continue;
+      }
+      // top-level key (no leading whitespace)
+      const m = line.match(/^([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$/);
+      if (!m) { continue; }
+      const key = m[1].trim();
+      let val = (m[2] || '').trim();
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      }
+      // empty value → block-list or nested object begins on next line
+      if (val === '') {
+        meta[key] = [];
+        currentListKey = key;
+        continue;
+      }
+      // inline array  →  [a, b, c]
+      const arr = val.match(/^\[(.*)\]$/);
+      if (arr) {
+        meta[key] = arr[1].split(',').map(s => s.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+      } else {
+        meta[key] = val;
+      }
+      currentListKey = null;
     }
+    // Drop empty arrays left behind by nested-object keys we didn't parse
+    Object.keys(meta).forEach(k => {
+      if (Array.isArray(meta[k]) && meta[k].length === 0) delete meta[k];
+    });
     return { meta, body };
   }
 
@@ -9367,6 +9388,33 @@ const SEED_IMAGES = {
     return out.join('\n');
   }
 
+  // Build a record from parsed frontmatter. Handles a few common authorial
+  // conventions our internal samples don't use but real exports do:
+  //   - refs OR related_records (block list of either slugs or filenames)
+  //   - privacy strings with trailing commentary ("PRIVATE — 식별 정보…")
+  function buildRecordFromMeta(meta, body, filename, id) {
+    const asList = v => Array.isArray(v) ? v : (v ? [v] : []);
+    const refsRaw = asList(meta.refs).concat(asList(meta.related_records));
+    const refs = refsRaw.map(slugFromFilename).filter(Boolean);
+    // first whitespace-or-em-dash-delimited token, uppercased
+    const privacyRaw = String(meta.privacy || meta.Privacy || 'PRIVATE');
+    const privacy = privacyRaw.toUpperCase().split(/[\s—,]/).filter(Boolean)[0] || 'PRIVATE';
+    return {
+      id,
+      filename,
+      date: meta.date || meta.Date || '',
+      title: meta.title || meta.Title || id,
+      category: meta.category || meta.Category || '',
+      privacy,
+      tags: asList(meta.tags),
+      refs,
+      summary: meta.summary || meta.Summary || '',
+      body,
+      importedAt: new Date().toISOString(),
+      isSample: false
+    };
+  }
+
   // File-picker → parse each .md and merge into state.records. Records with a
   // colliding slug are REPLACED (so re-importing a corrected file updates the
   // existing entry rather than producing duplicates).
@@ -9383,20 +9431,7 @@ const SEED_IMAGES = {
           const { meta, body } = parseFrontmatter(text);
           const id = slugFromFilename(file.name);
           if (!id) { skipped++; return; }
-          const rec = {
-            id,
-            filename: file.name,
-            date: meta.date || meta.Date || '',
-            title: meta.title || meta.Title || id,
-            category: meta.category || meta.Category || '',
-            privacy: (meta.privacy || meta.Privacy || 'PRIVATE').toUpperCase(),
-            tags: Array.isArray(meta.tags) ? meta.tags : (meta.tags ? [meta.tags] : []),
-            refs: Array.isArray(meta.refs) ? meta.refs : (meta.refs ? [meta.refs] : []),
-            summary: meta.summary || meta.Summary || '',
-            body,
-            importedAt: new Date().toISOString(),
-            isSample: false
-          };
+          const rec = buildRecordFromMeta(meta, body, file.name, id);
           const existing = state.records.findIndex(r => r.id === id);
           if (existing >= 0) { state.records[existing] = rec; replaced++; }
           else { state.records.push(rec); added++; }
@@ -9448,6 +9483,45 @@ const SEED_IMAGES = {
     renderRecords();
   }
 
+  // Local-only auto-import: if the user keeps real (PII-bearing) .md notes in
+  // a `staple/` folder next to index.html, fetch them on boot and load into
+  // IndexedDB. Same slug → replace, new slug → add. On GitHub Pages the
+  // folder doesn't exist, fetches 404 silently, and nothing happens.
+  //
+  // The list below is the manifest of expected files. To pick up a new note
+  // locally, add its filename here. The folder is gitignored, so the file
+  // itself never reaches the repo even though the manifest entry does.
+  const STAPLE_MANIFEST = [
+    '2026-05-31-personal-case-v2.md',
+    '2026-05-31-xray-ct-analysis-v4.md'
+  ];
+
+  async function loadLocalStapleRecords() {
+    let touched = 0;
+    for (const filename of STAPLE_MANIFEST) {
+      try {
+        const res = await fetch('./staple/' + encodeURIComponent(filename), { cache: 'no-store' });
+        if (!res.ok) continue;
+        const text = await res.text();
+        const { meta, body } = parseFrontmatter(text);
+        const id = slugFromFilename(filename);
+        if (!id) continue;
+        const rec = buildRecordFromMeta(meta, body, filename, id);
+        rec.isLocal = true;   // tag so the user can spot auto-loaded notes
+        const i = (state.records || []).findIndex(r => r.id === id);
+        if (i >= 0) state.records[i] = rec;
+        else state.records.push(rec);
+        touched++;
+      } catch (_) { /* file missing or network issue — skip silently */ }
+    }
+    if (touched) {
+      state.records.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      state.recordsSentinel = true;
+      save();
+      renderRecords();
+    }
+  }
+
   // Tap a ref chip / inline jump-link → open the target record and scroll it
   // into view. The target subsection is opened if it was collapsed.
   function openRecord(id) {
@@ -9482,7 +9556,8 @@ const SEED_IMAGES = {
       const badges = [
         `<span class="rec-badge ${privacyClass}">${recEscape(r.privacy || 'PRIVATE')}</span>`,
         isHub ? '<span class="rec-badge hub">HUB</span>' : '',
-        r.isSample ? '<span class="rec-badge sample">SAMPLE</span>' : ''
+        r.isSample ? '<span class="rec-badge sample">SAMPLE</span>' : '',
+        r.isLocal ? '<span class="rec-badge local">LOCAL</span>' : ''
       ].filter(Boolean).join(' ');
 
       const refsHtml = isHub
@@ -11804,6 +11879,10 @@ const SEED_IMAGES = {
     seedRecordsIfNeeded();
     runMigrations();
     renderAll();
+    // Fire-and-forget — auto-import any local staple/ notes if present.
+    // Render once async work completes; we don't await it because boot
+    // shouldn't block on a folder that may not exist.
+    loadLocalStapleRecords();
   })();
 
   // Block iOS pinch / double-tap zoom that "sticks"
