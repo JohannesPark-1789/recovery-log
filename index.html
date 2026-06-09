@@ -1991,6 +1991,22 @@
     color: var(--ink-2);
   }
   .rx-field-text strong { font-weight: 500; color: var(--ink); }
+  /* Inline figure inside a rx-card-body — image + caption, scoped so it
+     doesn't leak the styling onto every other rx-field. */
+  .rx-fig img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 4px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+  .rx-fig-cap {
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--mute);
+  }
 
   /* ─── Anatomy 3D viewer (Learn tab) ─── */
   .bone-viewer {
@@ -3065,6 +3081,7 @@
     .rx-card-chev { font-size: clamp(16px, 1.9vw, 24px); }
     .rx-field-label { font-size: clamp(13px, 1.5vw, 18px); }
     .rx-field-text { font-size: clamp(16px, 2vw, 24px); line-height: 1.7; }
+    .rx-fig-cap { font-size: clamp(13px, 1.6vw, 19px); line-height: 1.6; }
   }
 
   /* Very wide landscape / desktop — cap so reading lines don't run too long */
@@ -4249,6 +4266,11 @@
             <span class="an-card-chev">▸</span>
           </div>
           <div class="an-card-body">
+            <div class="rx-field rx-fig">
+              <div class="rx-field-label">시각 비교 · diagram</div>
+              <img src="assets/learn/locking-screw.jpg" alt="왼쪽 일반 나사: 머리가 플레이트를 뼈 쪽으로 압박해 고정. 오른쪽 락킹 나사: 머리의 나사산이 플레이트 구멍 나사산과 맞물려 잠기며 플레이트와 나사가 한 프레임처럼 작동, 뼈에 덜 의존." loading="lazy" />
+              <div class="rx-fig-cap">왼쪽 — 일반(압박) 나사는 머리가 플레이트를 뼈에 눌러 붙임. 오른쪽 — 락킹 나사는 머리의 나사산이 플레이트 구멍과 맞물려, 플레이트와 나사가 한 프레임처럼 작동(뼈에 덜 의존).</div>
+            </div>
             <div class="rx-field"><div class="rx-field-label">잠금 나사 · locking</div>
               <div class="rx-field-text">나사 머리가 <strong>금속판의 나사선과 잠겨</strong> 일체가 됨. 금속판이 뼈에 닿지 않아도 안정 — 골막 혈류 보존에 유리(<em>biological fixation</em>). 골다공증 뼈에도 강함.</div></div>
             <div class="rx-field"><div class="rx-field-label">압박 나사 · compression / cortical</div>
